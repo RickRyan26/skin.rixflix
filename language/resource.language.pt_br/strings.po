@@ -1,6 +1,6 @@
 # Kodi Media Center language file
 # Addon Name: Arctic Fuse 3
-# Addon Name: skin.arctic.fuse.3
+# Addon Name: skin.rixflix
 # Addon Provider: jurialmunkey
 msgid ""
 msgstr ""

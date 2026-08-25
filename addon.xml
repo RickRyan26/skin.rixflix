@@ -1,4 +1,4 @@
-<addon id="skin.arctic.fuse.3" name="Arctic Fuse 3" provider-name="jurialmunkey" version="3.2.16">
+<addon id="skin.rixflix" name="RixFlix" provider-name="jurialmunkey, RickRyan26" version="1.0.0">
     <requires>
         <import addon="xbmc.gui" version="5.17.0" />
         <import addon="script.skinvariables" version="2.2.2" />
@@ -19,12 +19,12 @@
         <res aspect="18:9" default="false" folder="1080i" width="2160" height="1080" />
     </extension>
     <extension point="xbmc.addon.metadata">
-        <summary lang="en">A minimal row based skin</summary>
+        <summary lang="en">A fast, remote-first row based skin for RixFlix</summary>
         <summary lang="es">Una skin minimalista de diseño horizontal</summary>
         <summary lang="de">Ein minimalistisches, zeilenbasiertes Skin</summary>
         <summary lang="zh">简约行式布局皮肤</summary>
         <summary lang="ar">سكن مخفف بقوائم افقية</summary>
-        <description lang="en">Arctic Fuse 3 is a minimal row based skin with customisable widgets</description>
+        <description lang="en">RixFlix is a performance-focused fork of Arctic Fuse 3 for the Ugoos AM9 home-theater client</description>
         <description lang="es">Arctic Fuse 3 es una skin minimalista de diseño horizontal con widgets personalizables</description>
         <description lang="de">Arctic Fuse 3 ist ein minimalistisches, zeilenbasiertes Skin mit anpassbaren Widgets</description>
         <description lang="zh">Arctic Fuse 3 是一款采用简约行式布局的 Kodi 皮肤，支持小组件自定义功能</description>
@@ -32,7 +32,7 @@
         <platform>all</platform>
         <license>Creative Commons Attribution Non-Commercial Share-Alike 4.0</license>
         <forum />
-        <source />
+        <source>https://github.com/RickRyan26/skin.rixflix</source>
         <assets>
             <icon>icon.png</icon>
             <fanart>fanart.jpg</fanart>

@@ -664,6 +664,17 @@
             <textcolor>panel_fg_100</textcolor>
             <font>font_main</font>
         </control>
+        <control type="label">
+            <height>12</height>
+            <left>view_pad</left>
+            <right>view_pad</right>
+            <centerbottom>210</centerbottom>
+            <align>center</align>
+            <aligny>center</aligny>
+            <label>$VAR[Label_OSD_StartFinishTime]</label>
+            <textcolor>panel_fg_90</textcolor>
+            <font>font_main</font>
+        </control>
     </include>
 
     <include name="OSD_Progress_BarControls">
@@ -1251,5 +1262,4 @@
         </definition>
     </include>
 </includes>
-
 
