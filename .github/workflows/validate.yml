@@ -23,7 +23,7 @@ jobs:
           addon = ET.parse('addon.xml').getroot()
           assert addon.get('id') == 'skin.rixflix'
           assert addon.get('name') == 'RixFlix'
-          assert addon.get('version') == '1.1.0'
+          assert addon.get('version') == '1.1.1'
           assets = {
               'media/rixflix/rix-badge.png',
               'media/rixflix/rixflix-splash.png',
@@ -38,8 +38,10 @@ jobs:
                      item.get('path') == 'System.Exec(/storage/.config/rixflix-kodi-safe-quit.sh)'
                      for item in power)
           startup_actions = Path('shortcuts/skinvariables-startup.json').read_text()
-          assert 'Skin.Reset(TMDbHelper.EnableBlur)' in startup_actions
-          assert 'Skin.Reset(TMDbHelper.EnableCrop)' in startup_actions
+          assert 'Skin.Reset(tmdbhelper.enableblur)' in startup_actions
+          assert 'Skin.Reset(tmdbhelper.enablecrop)' in startup_actions
+          assert 'Skin.Reset(TMDbHelper.EnableBlur)' not in startup_actions
+          assert 'Skin.Reset(TMDbHelper.EnableCrop)' not in startup_actions
           stale = [str(path) for path in Path('.').rglob('*')
                    if path.is_file() and '.git' not in path.parts
                    and 'skin.arctic.fuse.3' in path.read_text(errors='ignore')]

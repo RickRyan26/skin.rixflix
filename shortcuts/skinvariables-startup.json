@@ -38,8 +38,8 @@
                         "Skin.SetBool(DefaultConfig.InitDone)"
                     ]
                 }],
-                "Skin.Reset(TMDbHelper.EnableCrop)",
-                "Skin.Reset(TMDbHelper.EnableBlur)",
+                "Skin.Reset(tmdbhelper.enablecrop)",
+                "Skin.Reset(tmdbhelper.enableblur)",
                 "Skin.SetBool(TMDbHelper.UseLocalWidgetContainer)",
                 "Skin.SetBool(TMDbHelper.DisableExtendedProperties)",
                 "Skin.SetBool(TMDbHelper.EnableCurrentWindowImages)",
