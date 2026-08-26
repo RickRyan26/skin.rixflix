@@ -1,7 +1,7 @@
 
-# RixFlix [![License](https://img.shields.io/badge/license-CC--NC--SA%204.0-green)](http://creativecommons.org/licenses/by-nc-sa/4.0/)
+# RIXFLIX app [![License](https://img.shields.io/badge/license-CC--NC--SA%204.0-green)](http://creativecommons.org/licenses/by-nc-sa/4.0/)
 
-RixFlix is Rick Ryan's performance-focused Kodi skin for the Ugoos AM9. It is a
+The RIXFLIX app is Rick Ryan's performance-focused Kodi experience for the Ugoos AM9. It is a
 fork of [Arctic Fuse 3](https://github.com/jurialmunkey/skin.arctic.fuse.3) by
 Jurial Munkey and retains that project's full Git history.
 
@@ -18,6 +18,9 @@ lowercase ids, verified by a true -> restart -> false test on the AM9.
 Version 1.2 gives the real startup overlay a deterministic full-screen RixFlix splash
 and native busy badge, while removing the unrelated weather fanart/temperature work.
 Profile-login screens retain their lightweight RixFlix wordmark and custom background.
+Version 1.3 makes remote search commit-based: Kodi collects the full title in its
+keyboard before refreshing results, avoiding an expensive provider reload after every
+letter. The search page then moves directly from the title field to the result types.
 
 This work is licensed under Creative Commons Attribution-NonCommercial-ShareAlike 4.0 Unported License. To view a copy of this license, visit http://creativecommons.org/licenses/by-nc-sa/4.0/
 or send a letter to Creative Commons, 171 Second Street, Suite 300, San Francisco, California, 94105, USA.

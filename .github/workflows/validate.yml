@@ -23,7 +23,7 @@ jobs:
           addon = ET.parse('addon.xml').getroot()
           assert addon.get('id') == 'skin.rixflix'
           assert addon.get('name') == 'RixFlix'
-          assert addon.get('version') == '1.2.0'
+          assert addon.get('version') == '1.3.0'
           assets = {
               'media/rixflix/rix-badge.png',
               'media/rixflix/rixflix-splash.png',
@@ -51,6 +51,12 @@ jobs:
           assert 'Skin.Reset(tmdbhelper.enablecrop)' in startup_actions
           assert 'Skin.Reset(TMDbHelper.EnableBlur)' not in startup_actions
           assert 'Skin.Reset(TMDbHelper.EnableCrop)' not in startup_actions
+          search = Path('1080i/Includes_Search.xml').read_text()
+          active_search = search[:search.index('<include name="Search_Bar_Keys">')]
+          assert '<include>Search_Bar_Help</include>' in active_search
+          assert '<include>Search_Bar_Keys</include>' not in active_search
+          assert '<hinttext>Press OK to enter a title</hinttext>' in active_search
+          assert '<ondown>601</ondown>' in active_search
           stale = [str(path) for path in Path('.').rglob('*')
                    if path.is_file() and '.git' not in path.parts
                    and 'skin.arctic.fuse.3' in path.read_text(errors='ignore')]

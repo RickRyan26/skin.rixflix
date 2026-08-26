@@ -34,7 +34,7 @@
                                     <include>Search_Bar_Defs</include>
                                     <include>Search_Bar_Edit</include>
                                     <include>Search_Bar_Icon</include>
-                                    <include>Search_Bar_Keys</include>
+                                    <include>Search_Bar_Help</include>
                                 </control>
                                 <include condition="!Skin.HasSetting(HomeSwitcher.Vertical)">Home_Switcher_Right_Buttons</include>
                             </control>
@@ -267,6 +267,7 @@
         <control type="edit" id="3000">
             <left>40</left>
             <font>font_main</font>
+            <hinttext>Press OK to enter a title</hinttext>
             <textcolor>main_fg_30</textcolor>
             <focusedcolor>$VAR[ColorSelected]</focusedcolor>
             <align>left</align>
@@ -282,7 +283,7 @@
             <onright condition="!Skin.HasSetting(HomeSwitcher.Vertical)">$INFO[Container(399).ListItem(1).Property(action)]</onright>
 
             <onup condition="!Skin.HasSetting(Search.DisableDiscover) + !Skin.HasSetting(Search.DisableCombined)">RunPlugin(plugin://plugin.video.themoviedb.helper/?info=user_discover$INFO[Window(Home).Property(TMDbHelper.UserDiscover.Folderpath.ParamString),&amp;,])</onup>
-            <ondown>301</ondown>
+            <ondown>601</ondown>
 
             <texturefocus />
             <texturenofocus />
@@ -303,6 +304,21 @@
                 <texture background="true" colordiffuse="$VAR[ColorSelected]">special://skin/extras/icons/search.png</texture>
                 <visible>Control.HasFocus(3000)</visible>
             </control>
+        </control>
+    </include>
+
+
+    <include name="Search_Bar_Help">
+        <control type="label">
+            <top>95</top>
+            <left>40</left>
+            <width>760</width>
+            <height>50</height>
+            <font>font_tiny</font>
+            <label>Enter the full title, then choose Movies or TV Shows</label>
+            <textcolor>main_fg_30</textcolor>
+            <align>left</align>
+            <visible>String.IsEmpty(Control.GetLabel(3000).index(1))</visible>
         </control>
     </include>
 
