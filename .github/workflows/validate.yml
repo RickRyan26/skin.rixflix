@@ -23,7 +23,7 @@ jobs:
           addon = ET.parse('addon.xml').getroot()
           assert addon.get('id') == 'skin.rixflix'
           assert addon.get('name') == 'RixFlix'
-          assert addon.get('version') == '1.1.1'
+          assert addon.get('version') == '1.2.0'
           assets = {
               'media/rixflix/rix-badge.png',
               'media/rixflix/rixflix-splash.png',
@@ -33,6 +33,15 @@ jobs:
           startup = Path('1080i/Includes_Objects.xml').read_text()
           assert 'special://skin/media/rixflix/rixflix-wordmark.png' in startup
           assert '[COLOR=main_logo]Arctic[/COLOR] Fuse' not in startup
+          assert 'Window(Weather).Property(Current.Temperature)' not in startup
+          background = Path('1080i/Includes_Background.xml').read_text()
+          assert '<include name="Background_RixFlix_StartUp">' in background
+          assert 'special://skin/media/rixflix/rixflix-splash.png' in background
+          hubs = Path('1080i/Includes_Hubs.xml').read_text()
+          splash = hubs[hubs.index('<include name="Hub_Widget_Splash">'):]
+          assert '<include>Background_RixFlix_StartUp</include>' in splash
+          assert '<include>Object_StartUp_Logo</include>' not in splash
+          assert 'special://skin/media/rixflix/rix-badge.png' in splash
           power = json.loads(Path('shortcuts/skinvariables-shortcut-powermenu.json').read_text())
           assert any(item.get('label') == 'Restart Kodi' and
                      item.get('path') == 'System.Exec(/storage/.config/rixflix-kodi-safe-quit.sh)'

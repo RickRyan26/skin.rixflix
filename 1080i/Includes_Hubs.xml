@@ -1024,21 +1024,20 @@
         <definition>
             <control type="group">
                 <visible>$PARAM[condition]</visible>
-                <include>Background_StartUp</include>
-                <include>Object_StartUp_Logo</include>
+                <include>Background_RixFlix_StartUp</include>
                 <control type="label">
-                    <centertop>610</centertop>
+                    <centertop>850</centertop>
                     <height>40</height>
                     <aligny>center</aligny>
                     <align>center</align>
-                    <textcolor>main_logo</textcolor>
+                    <textcolor>main_fg_90</textcolor>
                     <label>$PARAM[label]...</label>
                 </control>
                 <include content="Furniture_Busy" condition="$PARAM[busyspinner]">
                     <param name="hasspinner">true</param>
                     <param name="spinspinner">true</param>
                     <param name="spinnervisible">[!Window.IsActive(DialogVolumeBar.xml) | Player.Muted]</param>
-                    <param name="icon">special://skin/extras/icons/kodi.png</param>
+                    <param name="icon">special://skin/media/rixflix/rix-badge.png</param>
                     <param name="haslabel">false</param>
                 </include>
             </control>

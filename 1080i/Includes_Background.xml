@@ -106,6 +106,13 @@
         </definition>
     </include>
 
+    <include name="Background_RixFlix_StartUp">
+        <control type="image">
+            <aspectratio>scale</aspectratio>
+            <texture background="true">special://skin/media/rixflix/rixflix-splash.png</texture>
+        </control>
+    </include>
+
     <include name="Background_Image">
         <param name="texture">$VAR[Image_SimpleBackground]</param>
         <definition>
