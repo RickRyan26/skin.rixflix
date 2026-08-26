@@ -27,8 +27,6 @@
                         "!Skin.HasSetting(DefaultConfig.InitDone)"],
                     "value": [
                         "Skin.SetBool(TMDbHelper.EnableData)",
-                        "Skin.SetBool(TMDbHelper.EnableCrop)",
-                        "Skin.SetBool(TMDbHelper.EnableBlur)",
                         "Skin.SetBool(TMDbHelper.Service)",
                         "Skin.SetString(Background.DialogImage,Adaptive)",
                         "Skin.SetString(Background.Image,special://skin/extras/backgrounds/blur/purple_blur.jpg)",
@@ -40,6 +38,8 @@
                         "Skin.SetBool(DefaultConfig.InitDone)"
                     ]
                 }],
+                "Skin.Reset(TMDbHelper.EnableCrop)",
+                "Skin.Reset(TMDbHelper.EnableBlur)",
                 "Skin.SetBool(TMDbHelper.UseLocalWidgetContainer)",
                 "Skin.SetBool(TMDbHelper.DisableExtendedProperties)",
                 "Skin.SetBool(TMDbHelper.EnableCurrentWindowImages)",

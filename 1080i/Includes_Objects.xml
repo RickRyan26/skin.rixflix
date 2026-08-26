@@ -716,49 +716,13 @@
     </include>
 
     <include name="Object_StartUp_Logo">
-        <control type="grouplist">
-            <height>128</height>
-            <centertop>400</centertop>
-            <orientation>vertical</orientation>
-            <align>center</align>
-            <control type="image">
-                <width>96</width>
-                <height>96</height>
-                <centerleft>50%</centerleft>
-                <aspectratio>keep</aspectratio>
-                <texture colordiffuse="$VAR[ColorHighlight]">special://skin/extras/icons/kodi.png</texture>
-            </control>
-            <control type="label">
-                <height>32</height>
-                <textcolor>main_fg_100</textcolor>
-                <label>KODI</label>
-                <font>font_logo_large</font>
-                <align>center</align>
-            </control>
-        </control>
-        <control type="grouplist">
-            <height>80</height>
-            <centertop>50%</centertop>
-            <orientation>horizontal</orientation>
-            <itemgap>10</itemgap>
-            <align>center</align>
-            <control type="label">
-                <aligny>center</aligny>
-                <align>center</align>
-                <width>auto</width>
-                <font>font_title_huge</font>
-                <textcolor>$VAR[ColorHighlight]</textcolor>
-                <label>[COLOR=main_logo]Arctic[/COLOR] Fuse</label>
-            </control>
-            <control type="label">
-                <aligny>center</aligny>
-                <height>50</height>
-                <align>center</align>
-                <width>auto</width>
-                <font>font_head_bold</font>
-                <textcolor>$VAR[ColorHighlight]</textcolor>
-                <label>$NUMBER[3]</label>
-            </control>
+        <control type="image">
+            <width>720</width>
+            <height>218</height>
+            <centerleft>50%</centerleft>
+            <centertop>46%</centertop>
+            <aspectratio>keep</aspectratio>
+            <texture>special://skin/media/rixflix/rixflix-wordmark.png</texture>
         </control>
         <control type="group">
             <bottom>80</bottom>
