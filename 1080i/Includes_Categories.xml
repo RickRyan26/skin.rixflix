@@ -269,6 +269,7 @@
         <param name="itemlayout_w">240</param>
         <param name="scrolltime">400</param>
         <param name="extended">false</param>
+        <param name="wide">false</param>
         <definition>
             <include content="List_ButtonMenu_Row">
                 <param name="id">$PARAM[id]</param>
@@ -299,10 +300,16 @@
                 <include content="Object_Movement" condition="$PARAM[extended]">
                     <param name="movement">4</param>
                 </include>
+                <include content="Object_Movement" condition="$PARAM[wide]">
+                    <param name="movement">8</param>
+                </include>
                 <movement>3</movement>
 
                 <include content="Object_Width" condition="$PARAM[extended]">
                     <param name="width">1000</param>
+                </include>
+                <include content="Object_Width" condition="$PARAM[wide]">
+                    <param name="width">view_banner_item_w</param>
                 </include>
                 <width>800</width>
             </include>
