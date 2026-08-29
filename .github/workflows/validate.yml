@@ -23,7 +23,7 @@ jobs:
           addon = ET.parse('addon.xml').getroot()
           assert addon.get('id') == 'skin.rixflix'
           assert addon.get('name') == 'RixFlix'
-          assert addon.get('version') == '1.5.2'
+          assert addon.get('version') == '1.5.3'
           assets = {
               'media/rixflix/rix-badge.png',
               'media/rixflix/rixflix-splash.png',
@@ -77,6 +77,10 @@ jobs:
           trailer = next(timer for timer in timers.findall('timer')
                          if timer.findtext('name') == 'rixflix_spotlight_trailer')
           assert 'Container(301).ListItem.Trailer' in trailer.findtext('start')
+          assert 'Window.IsVisible(home)' in trailer.findtext('start')
+          assert '!Window.IsVisible(home)' in trailer.findtext('stop')
+          assert 'Window.IsActive(home)' not in trailer.findtext('start')
+          assert 'Window.IsActive(home)' not in trailer.findtext('stop')
           assert all('$EXP[' not in (timer.findtext(tag) or '')
                      for timer in timers.findall('timer')
                      for tag in ('start', 'reset', 'stop'))
