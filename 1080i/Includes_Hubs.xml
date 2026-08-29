@@ -601,7 +601,7 @@
                 <left>-1920</left>
 
                 <include content="Defs_AutoScroll">
-                    <param name="condition">[!ControlGroup(310).HasFocus() | System.IdleTime(3)]</param>
+                    <param name="condition">[!ControlGroup(310).HasFocus() | System.IdleTime(3)] + String.IsEmpty(Window(Home).Property(RixFlix.AutoplayTrailer))</param>
                 </include>
 
                 <itemlayout />
