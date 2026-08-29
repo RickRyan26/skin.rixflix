@@ -4,13 +4,14 @@
         <name>rixflix_spotlight_trailer</name>
         <description>Play the selected Home spotlight trailer behind the menu after three idle seconds</description>
         <!-- Skin timers are parsed before include expressions and therefore cannot use $EXP. -->
-        <start reset="true">System.IdleTime(3) + Window.IsVisible(home) + Integer.IsEqual(Window(Home).Property(TMDBHelper.WidgetContainer),301) + [!Integer.IsEqual(Container(301).NumItems,0) | Container(301).IsUpdating] + !Player.HasMedia + !String.IsEmpty(Container(301).ListItem.Trailer) + !String.IsEqual(Window(Home).Property(RixFlix.AutoplayTrailerPlayed),Container(301).ListItem.Trailer)</start>
-        <!-- The YouTube resolver temporarily hides Home and exposes no player/container. Give that handoff 15 seconds; once Home returns, hero changes remain immediate. -->
-        <stop>[Integer.IsGreaterOrEqual(Skin.TimerElapsedSecs(rixflix_spotlight_trailer),15) + !Window.IsVisible(home)] | [Window.IsVisible(home) + [!Integer.IsEqual(Window(Home).Property(TMDBHelper.WidgetContainer),301) | [Integer.IsEqual(Container(301).NumItems,0) + !Container(301).IsUpdating] | String.IsEmpty(Container(301).ListItem.Trailer) | !String.IsEqual(Window(Home).Property(RixFlix.AutoplayTrailer),Container(301).ListItem.Trailer)]] | [Integer.IsGreaterOrEqual(Skin.TimerElapsedSecs(rixflix_spotlight_trailer),20) + !Player.HasMedia + !String.IsEmpty(Window(Home).Property(RixFlix.AutoplayTrailer))]</stop>
+        <!-- Background video makes Window.IsVisible(home) false even while System.CurrentWindow remains Home. -->
+        <start reset="true">System.IdleTime(3) + String.IsEqual(System.CurrentWindow,Home) + Integer.IsEqual(Window(Home).Property(TMDBHelper.WidgetContainer),301) + [!Integer.IsEqual(Container(301).NumItems,0) | Container(301).IsUpdating] + !Player.HasMedia + !String.IsEmpty(Container(301).ListItem.Trailer) + !String.IsEqual(Window(Home).Property(RixFlix.AutoplayTrailerPlayed),Container(301).ListItem.Trailer)</start>
+        <!-- The YouTube resolver exposes an empty current-window label. Preserve ownership through that handoff, then stop on real navigation, hero changes, or a failed 20-second resolution. -->
+        <stop>[!String.IsEmpty(System.CurrentWindow) + !String.IsEqual(System.CurrentWindow,Home)] | [String.IsEqual(System.CurrentWindow,Home) + [!Integer.IsEqual(Window(Home).Property(TMDBHelper.WidgetContainer),301) | [Integer.IsEqual(Container(301).NumItems,0) + !Container(301).IsUpdating] | String.IsEmpty(Container(301).ListItem.Trailer) | !String.IsEqual(Window(Home).Property(RixFlix.AutoplayTrailer),Container(301).ListItem.Trailer)]] | [Integer.IsGreaterOrEqual(Skin.TimerElapsedSecs(rixflix_spotlight_trailer),20) + !Player.HasMedia + !String.IsEmpty(Window(Home).Property(RixFlix.AutoplayTrailer))]</stop>
         <onstart>SetProperty(RixFlix.AutoplayTrailer,$ESCINFO[Container(301).ListItem.Trailer],Home)</onstart>
         <onstart>SetProperty(RixFlix.AutoplayTrailerPlayed,$ESCINFO[Container(301).ListItem.Trailer],Home)</onstart>
         <onstart>PlayMedia($ESCINFO[Container(301).ListItem.Trailer],1,noresume)</onstart>
-        <onstop condition="Player.HasMedia + !String.IsEmpty(Window(Home).Property(RixFlix.AutoplayTrailer))">PlayerControl(Stop)</onstop>
+        <onstop condition="!String.IsEmpty(Window(Home).Property(RixFlix.AutoplayTrailer))">PlayerControl(Stop)</onstop>
         <onstop>ClearProperty(RixFlix.AutoplayTrailer,Home)</onstop>
     </timer>
 </timers>
