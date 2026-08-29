@@ -1,4 +1,4 @@
-"""Resolve a library YouTube trailer to a signed HLS manifest and play it windowed."""
+"""Resolve a library YouTube trailer to signed HLS for background or on-demand play."""
 
 import json
 import os
@@ -14,6 +14,7 @@ import xbmcvfs
 
 REQUEST_PROPERTY = "RixFlix.AutoplayTrailer"
 RESOLVED_PROPERTY = "RixFlix.AutoplayTrailerResolved"
+UNAVAILABLE_PROPERTY = "RixFlix.UnavailableTrailer"
 VIDEO_ID = re.compile(r"^[A-Za-z0-9_-]{11}$")
 
 
@@ -57,9 +58,12 @@ def hls_manifest(document):
 
 
 def main():
-    requested = sys.argv[1] if len(sys.argv) == 2 else ""
+    requested = sys.argv[1] if len(sys.argv) >= 2 else ""
+    mode = sys.argv[2] if len(sys.argv) == 3 else "background"
     home = xbmcgui.Window(10000)
     try:
+        if mode not in ("background", "foreground"):
+            raise ValueError("unsupported playback mode")
         watch_url = youtube_watch_url(requested)
         resolver = xbmcvfs.translatePath("special://skin/resources/bin/yt-dlp")
         if not os.path.isfile(resolver):
@@ -72,14 +76,24 @@ def main():
             timeout=15,
         )
         manifest = hls_manifest(json.loads(result.stdout))
-        if home.getProperty(REQUEST_PROPERTY) != requested:
-            log("selection changed during resolution; discarded stale result")
-            return
-        home.setProperty(RESOLVED_PROPERTY, manifest)
-        xbmc.Player().play(manifest, windowed=True)
-        log("started owned HLS trailer")
+        if mode == "background":
+            if home.getProperty(REQUEST_PROPERTY) != requested:
+                log("selection changed during resolution; discarded stale result")
+                return
+            home.setProperty(RESOLVED_PROPERTY, manifest)
+            xbmc.Player().play(manifest, windowed=True)
+            log("started owned background HLS trailer")
+        else:
+            if home.getProperty(UNAVAILABLE_PROPERTY) == requested:
+                home.clearProperty(UNAVAILABLE_PROPERTY)
+            xbmc.Player().play(manifest, windowed=False)
+            log("started on-demand HLS trailer")
     except (OSError, ValueError, json.JSONDecodeError, subprocess.SubprocessError) as exc:
-        clear_if_owned(home, requested)
+        if mode == "background":
+            clear_if_owned(home, requested)
+        elif requested:
+            # Hide this button for the rest of the session; the underlying movie UI stays put.
+            home.setProperty(UNAVAILABLE_PROPERTY, requested)
         log(f"resolution failed: {type(exc).__name__}: {exc}", xbmc.LOGWARNING)
 
 

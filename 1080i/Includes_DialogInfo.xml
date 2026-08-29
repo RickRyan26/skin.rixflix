@@ -1360,13 +1360,9 @@
             <icon>special://skin/extras/icons/video.png</icon>
             <label>$LOCALIZE[31393]</label>
             <onclick>Dialog.Close(1172,true)</onclick>
-            <include content="Action_PlayTrailer_OnClick">
-                <param name="trailer">ListItem.Trailer</param>
-                <param name="trailer_fallback">Window(Home).Property(TMDbHelper.ListItem.Trailer)</param>
-                <param name="title">$VAR[Label_Title]</param>
-                <param name="items">$VAR[Path_VideoInfo_Trailers]</param>
-            </include>
-            <visible>!String.IsEmpty(ListItem.Trailer) | !String.IsEmpty(Window(Home).Property(TMDbHelper.ListItem.Trailer))</visible>
+            <onclick condition="String.StartsWith(ListItem.Trailer,plugin://plugin.video.youtube/play/?video_id=)">RunScript(special://skin/scripts/rixflix_trailer.py,$ESCINFO[ListItem.Trailer],foreground)</onclick>
+            <onclick condition="!String.StartsWith(ListItem.Trailer,plugin://plugin.video.youtube/play/?video_id=) + String.StartsWith(Window(Home).Property(TMDbHelper.ListItem.Trailer),plugin://plugin.video.youtube/play/?video_id=)">RunScript(special://skin/scripts/rixflix_trailer.py,$ESCINFO[Window(Home).Property(TMDbHelper.ListItem.Trailer)],foreground)</onclick>
+            <visible>[String.StartsWith(ListItem.Trailer,plugin://plugin.video.youtube/play/?video_id=) + !String.IsEqual(Window(Home).Property(RixFlix.UnavailableTrailer),ListItem.Trailer)] | [String.StartsWith(Window(Home).Property(TMDbHelper.ListItem.Trailer),plugin://plugin.video.youtube/play/?video_id=) + !String.IsEqual(Window(Home).Property(RixFlix.UnavailableTrailer),Window(Home).Property(TMDbHelper.ListItem.Trailer))]</visible>
         </item>
     </include>
 

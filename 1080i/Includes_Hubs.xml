@@ -528,6 +528,31 @@
                             <param name="id">311</param>
                             <param name="window">$PARAM[window]</param>
                         </include>
+                        <onleft>311</onleft>
+                        <onright condition="String.StartsWith(Container(301).ListItem.Trailer,plugin://plugin.video.youtube/play/?video_id=) + !String.IsEqual(Window(Home).Property(RixFlix.UnavailableTrailer),Container(301).ListItem.Trailer)">313</onright>
+                    </include>
+
+                    <!-- On-demand is intentionally separate from the parked idle-autoplay flag. -->
+                    <include content="Hub_Spotlight_Button_Circle">
+                        <param name="id">313</param>
+                        <param name="groupid">323</param>
+                        <param name="label">Play Trailer</param>
+                        <param name="image">special://skin/extras/icons/trailer.png</param>
+                        <param name="size">60</param>
+                        <param name="bordersize">12</param>
+                        <param name="left">40</param>
+                        <visible>String.StartsWith(Container(301).ListItem.Trailer,plugin://plugin.video.youtube/play/?video_id=) + !String.IsEqual(Window(Home).Property(RixFlix.UnavailableTrailer),Container(301).ListItem.Trailer)</visible>
+                        <onclick>RunScript(special://skin/scripts/rixflix_trailer.py,$ESCINFO[Container(301).ListItem.Trailer],foreground)</onclick>
+                        <include content="Hub_Spotlight_Button">
+                            <param name="id">313</param>
+                            <param name="window">$PARAM[window]</param>
+                        </include>
+                        <onleft>312</onleft>
+                        <onright>noop</onright>
+                        <onup condition="Skin.HasSetting(HomeSwitcher.Vertical)">SetProperty(Bumper.Direction,Up,Home)</onup>
+                        <onup condition="Skin.HasSetting(HomeSwitcher.Vertical)">ActivateWindow(1180)</onup>
+                        <onup condition="!Skin.HasSetting(HomeSwitcher.Vertical)">300</onup>
+                        <ondown>$VAR[Hub_Action_Widgets]</ondown>
                     </include>
 
                     <control type="image" id="315">
