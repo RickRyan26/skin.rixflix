@@ -578,6 +578,11 @@
         <value>$LOCALIZE[31077]</value>
     </variable>
 
+    <variable name="Label_RixFlix_TrailerButton">
+        <value condition="String.IsEqual(Window(Home).Property(RixFlix.TrailerResolving),Container(301).ListItem.Trailer)">Loading Trailer…</value>
+        <value>Play Trailer</value>
+    </variable>
+
     <variable name="Label_Setting_Spotlight_UseMenuButton">
         <value condition="Skin.HasSetting(Spotlight.UseMenuButton)">$LOCALIZE[33061]</value>
         <value>$LOCALIZE[29915]</value>

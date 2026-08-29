@@ -5,6 +5,7 @@ import os
 import re
 import subprocess
 import sys
+import time
 from urllib.parse import parse_qs, urlparse
 
 import xbmc
@@ -15,6 +16,8 @@ import xbmcvfs
 REQUEST_PROPERTY = "RixFlix.AutoplayTrailer"
 RESOLVED_PROPERTY = "RixFlix.AutoplayTrailerResolved"
 UNAVAILABLE_PROPERTY = "RixFlix.UnavailableTrailer"
+RESOLVING_PROPERTY = "RixFlix.TrailerResolving"
+ON_DEMAND_PROPERTY = "RixFlix.OnDemandTrailerResolved"
 VIDEO_ID = re.compile(r"^[A-Za-z0-9_-]{11}$")
 
 
@@ -26,6 +29,11 @@ def clear_if_owned(home, requested):
     if home.getProperty(REQUEST_PROPERTY) == requested:
         home.clearProperty(RESOLVED_PROPERTY)
         home.clearProperty(REQUEST_PROPERTY)
+
+
+def clear_if_equal(home, name, value):
+    if home.getProperty(name) == value:
+        home.clearProperty(name)
 
 
 def youtube_watch_url(plugin_url):
@@ -61,9 +69,16 @@ def main():
     requested = sys.argv[1] if len(sys.argv) >= 2 else ""
     mode = sys.argv[2] if len(sys.argv) == 3 else "background"
     home = xbmcgui.Window(10000)
+    foreground_claimed = False
     try:
         if mode not in ("background", "foreground"):
             raise ValueError("unsupported playback mode")
+        if mode == "foreground":
+            if home.getProperty(RESOLVING_PROPERTY):
+                log("ignored duplicate on-demand request")
+                return
+            home.setProperty(RESOLVING_PROPERTY, requested)
+            foreground_claimed = True
         watch_url = youtube_watch_url(requested)
         resolver = xbmcvfs.translatePath("special://skin/resources/bin/yt-dlp")
         if not os.path.isfile(resolver):
@@ -84,10 +99,50 @@ def main():
             xbmc.Player().play(manifest, windowed=True)
             log("started owned background HLS trailer")
         else:
+            if home.getProperty(RESOLVING_PROPERTY) != requested:
+                log("on-demand request cancelled during resolution")
+                return
             if home.getProperty(UNAVAILABLE_PROPERTY) == requested:
                 home.clearProperty(UNAVAILABLE_PROPERTY)
-            xbmc.Player().play(manifest, windowed=False)
-            log("started on-demand HLS trailer")
+            home.setProperty(ON_DEMAND_PROPERTY, manifest)
+            player = xbmc.Player()
+            player.play(manifest, windowed=False)
+            monitor = xbmc.Monitor()
+            deadline = time.monotonic() + 20
+            started = False
+            saw_fullscreen = False
+            while not monitor.abortRequested():
+                player_path = xbmc.getInfoLabel("Player.Filenameandpath")
+                playing = player.isPlayingVideo()
+                if not started and home.getProperty(RESOLVING_PROPERTY) != requested:
+                    if player_path == manifest:
+                        player.stop()
+                    log("on-demand request cancelled before playback")
+                    break
+                if playing and player_path and player_path != manifest:
+                    break
+                if playing:
+                    if not started:
+                        started = True
+                        clear_if_equal(home, RESOLVING_PROPERTY, requested)
+                        log("started on-demand HLS trailer")
+                    if xbmc.getCondVisibility("Window.IsActive(fullscreenvideo)"):
+                        saw_fullscreen = True
+                    elif saw_fullscreen:
+                        # Back returned to the movie surface: stop only our exact signed URL.
+                        if xbmc.getInfoLabel("Player.Filenameandpath") == manifest:
+                            player.stop()
+                        break
+                elif started:
+                    break
+                elif time.monotonic() >= deadline:
+                    if player_path == manifest:
+                        player.stop()
+                    home.setProperty(UNAVAILABLE_PROPERTY, requested)
+                    log("on-demand player did not start before deadline", xbmc.LOGWARNING)
+                    break
+                if monitor.waitForAbort(0.2):
+                    break
     except (OSError, ValueError, json.JSONDecodeError, subprocess.SubprocessError) as exc:
         if mode == "background":
             clear_if_owned(home, requested)
@@ -95,6 +150,10 @@ def main():
             # Hide this button for the rest of the session; the underlying movie UI stays put.
             home.setProperty(UNAVAILABLE_PROPERTY, requested)
         log(f"resolution failed: {type(exc).__name__}: {exc}", xbmc.LOGWARNING)
+    finally:
+        if foreground_claimed:
+            clear_if_equal(home, RESOLVING_PROPERTY, requested)
+            clear_if_equal(home, ON_DEMAND_PROPERTY, locals().get("manifest", ""))
 
 
 if __name__ == "__main__":

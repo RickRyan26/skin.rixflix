@@ -536,22 +536,25 @@
                     <include content="Hub_Spotlight_Button_Circle">
                         <param name="id">313</param>
                         <param name="groupid">323</param>
-                        <param name="label">Play Trailer</param>
+                        <param name="label">$VAR[Label_RixFlix_TrailerButton]</param>
                         <param name="image">special://skin/extras/icons/trailer.png</param>
                         <param name="size">60</param>
                         <param name="bordersize">12</param>
                         <param name="left">40</param>
                         <visible>String.StartsWith(Container(301).ListItem.Trailer,plugin://plugin.video.youtube/play/?video_id=) + !String.IsEqual(Window(Home).Property(RixFlix.UnavailableTrailer),Container(301).ListItem.Trailer)</visible>
-                        <onclick>RunScript(special://skin/scripts/rixflix_trailer.py,$ESCINFO[Container(301).ListItem.Trailer],foreground)</onclick>
+                        <onclick condition="String.IsEmpty(Window(Home).Property(RixFlix.TrailerResolving))">RunScript(special://skin/scripts/rixflix_trailer.py,$ESCINFO[Container(301).ListItem.Trailer],foreground)</onclick>
                         <include content="Hub_Spotlight_Button">
                             <param name="id">313</param>
                             <param name="window">$PARAM[window]</param>
                         </include>
+                        <onleft condition="!String.IsEmpty(Window(Home).Property(RixFlix.TrailerResolving))">ClearProperty(RixFlix.TrailerResolving,Home)</onleft>
                         <onleft>312</onleft>
                         <onright>noop</onright>
+                        <onback condition="!String.IsEmpty(Window(Home).Property(RixFlix.TrailerResolving))">ClearProperty(RixFlix.TrailerResolving,Home)</onback>
                         <onup condition="Skin.HasSetting(HomeSwitcher.Vertical)">SetProperty(Bumper.Direction,Up,Home)</onup>
                         <onup condition="Skin.HasSetting(HomeSwitcher.Vertical)">ActivateWindow(1180)</onup>
                         <onup condition="!Skin.HasSetting(HomeSwitcher.Vertical)">300</onup>
+                        <ondown condition="!String.IsEmpty(Window(Home).Property(RixFlix.TrailerResolving))">ClearProperty(RixFlix.TrailerResolving,Home)</ondown>
                         <ondown>$VAR[Hub_Action_Widgets]</ondown>
                     </include>
 
