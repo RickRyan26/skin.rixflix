@@ -23,7 +23,7 @@ jobs:
           addon = ET.parse('addon.xml').getroot()
           assert addon.get('id') == 'skin.rixflix'
           assert addon.get('name') == 'RixFlix'
-          assert addon.get('version') == '1.5.0'
+          assert addon.get('version') == '1.5.1'
           assets = {
               'media/rixflix/rix-badge.png',
               'media/rixflix/rixflix-splash.png',
@@ -77,6 +77,9 @@ jobs:
           trailer = next(timer for timer in timers.findall('timer')
                          if timer.findtext('name') == 'rixflix_spotlight_trailer')
           assert 'Container(301).ListItem.Trailer' in trailer.findtext('start')
+          assert all('$EXP[' not in (timer.findtext(tag) or '')
+                     for timer in timers.findall('timer')
+                     for tag in ('start', 'reset', 'stop'))
           assert any('PlayMedia(' in (action.text or '') and ',1,noresume)' in (action.text or '')
                      for action in trailer.findall('onstart'))
           assert any('PlayerControl(Stop)' in (action.text or '')
