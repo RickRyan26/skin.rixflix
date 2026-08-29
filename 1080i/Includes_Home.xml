@@ -240,9 +240,9 @@
             <param name="window">$PARAM[window]</param>
         </include>
 
-        <onback condition="Player.HasMedia">SetProperty(FullscreenRefocus,SetFocus(300))</onback>
-        <onback condition="Player.HasMedia">309</onback>
-        <onback condition="!Player.HasMedia">303</onback>
+        <onback condition="$EXP[Exp_RixFlix_HasForegroundMedia]">SetProperty(FullscreenRefocus,SetFocus(300))</onback>
+        <onback condition="$EXP[Exp_RixFlix_HasForegroundMedia]">309</onback>
+        <onback condition="$EXP[Exp_RixFlix_NoForegroundMedia]">303</onback>
     </include>
 
     <include name="Home_Control">

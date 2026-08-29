@@ -4,7 +4,7 @@
     <!-- ============= -->
     <!-- Movement Defs -->
     <!-- ============= -->
-    <!-- 7 Item: Poster, Square -->
+    <!-- 6 Item: Poster, Square -->
     <include name="List_Poster_Row_Movement">
         <movement>view_poster_movement</movement>
     </include>

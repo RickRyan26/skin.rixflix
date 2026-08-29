@@ -101,16 +101,16 @@
                     <onup>601</onup>
                     <include>$PARAM[include_action]</include>
                     <include>Hub_Grouplist_OnLeftRight</include>
-                    <onback condition="$EXP[Exp_Navigation_OnParent] + !Player.HasMedia">SetFocus($PARAM[id],0,absolute)</onback>
+                    <onback condition="$EXP[Exp_Navigation_OnParent] + $EXP[Exp_RixFlix_NoForegroundMedia]">SetFocus($PARAM[id],0,absolute)</onback>
                     <include content="Action_Widget_OnBack">
                         <param name="id">$PARAM[id]</param>
                         <param name="grouplistid">500</param>
                         <param name="refocus">SetFocus(601)</param>
-                        <param name="enable">!Player.HasMedia</param>
+                        <param name="enable">$EXP[Exp_RixFlix_NoForegroundMedia]</param>
                     </include>
 
-                    <onback condition="Player.HasMedia">SetProperty(FullscreenRefocus,SetFocus($PARAM[id]))</onback>
-                    <onback condition="Player.HasMedia">309</onback>
+                    <onback condition="$EXP[Exp_RixFlix_HasForegroundMedia]">SetProperty(FullscreenRefocus,SetFocus($PARAM[id]))</onback>
+                    <onback condition="$EXP[Exp_RixFlix_HasForegroundMedia]">309</onback>
 
                     <ondown>ActivateWindow(1180)</ondown>
                     <onfocus>SetProperty(TMDbHelper.WidgetContainer,$PARAM[id])</onfocus>
@@ -152,10 +152,10 @@
                     <param name="id">$PARAM[id]</param>
                     <param name="grouplistid">500</param>
                     <param name="refocus">SetFocus(601)</param>
-                    <param name="enable">!Player.HasMedia</param>
+                    <param name="enable">$EXP[Exp_RixFlix_NoForegroundMedia]</param>
                 </include>
-                <onback condition="Player.HasMedia">SetProperty(FullscreenRefocus,SetFocus($PARAM[id]))</onback>
-                <onback condition="Player.HasMedia">309</onback>
+                <onback condition="$EXP[Exp_RixFlix_HasForegroundMedia]">SetProperty(FullscreenRefocus,SetFocus($PARAM[id]))</onback>
+                <onback condition="$EXP[Exp_RixFlix_HasForegroundMedia]">309</onback>
 
                 <include>Hub_Grouplist_OnLeftRight</include>
                 <ondown>ActivateWindow(1180)</ondown>
@@ -211,10 +211,10 @@
                     <onup condition="!Control.IsVisible(301) + Skin.HasSetting(HomeSwitcher.Vertical)">ActivateWindow(1180)</onup>
                     <onup condition="!Control.IsVisible(301) + !Skin.HasSetting(HomeSwitcher.Vertical)">$PARAM[onup]</onup>
                     <onup condition="Control.IsVisible(301)">301</onup>
-                    <onback condition="!Control.IsVisible(301) + !Player.HasMedia">$PARAM[onup]</onback>
-                    <onback condition="Control.IsVisible(301) + !Player.HasMedia">301</onback>
-                    <onback condition="Player.HasMedia">SetProperty(FullscreenRefocus,SetFocus(601))</onback>
-                    <onback condition="Player.HasMedia">309</onback>
+                    <onback condition="!Control.IsVisible(301) + $EXP[Exp_RixFlix_NoForegroundMedia]">$PARAM[onup]</onback>
+                    <onback condition="Control.IsVisible(301) + $EXP[Exp_RixFlix_NoForegroundMedia]">301</onback>
+                    <onback condition="$EXP[Exp_RixFlix_HasForegroundMedia]">SetProperty(FullscreenRefocus,SetFocus(601))</onback>
+                    <onback condition="$EXP[Exp_RixFlix_HasForegroundMedia]">309</onback>
                     <ondown>SetFocus($INFO[Container(601).ListItem.Property(widget_id)])</ondown>
                     <onfocus condition="$PARAM[wall]">SetProperty(InfoPanel.FullSwitch,Wall,Home)</onfocus>
                     <onfocus condition="![$PARAM[wall]]">ClearProperty(InfoPanel.FullSwitch,Home)</onfocus>
@@ -357,9 +357,9 @@
         <oninfo>Action(Info)</oninfo>
         <oninfo>SetFocus($PARAM[id])</oninfo>
 
-        <onback condition="!Player.HasMedia">300</onback>
-        <onback condition="Player.HasMedia">SetProperty(FullscreenRefocus,SetFocus($PARAM[id]))</onback>
-        <onback condition="Player.HasMedia">309</onback>
+        <onback condition="$EXP[Exp_RixFlix_NoForegroundMedia]">300</onback>
+        <onback condition="$EXP[Exp_RixFlix_HasForegroundMedia]">SetProperty(FullscreenRefocus,SetFocus($PARAM[id]))</onback>
+        <onback condition="$EXP[Exp_RixFlix_HasForegroundMedia]">309</onback>
     </include>
 
     <include name="Hub_Spotlight_Button_Circle">

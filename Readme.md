@@ -10,6 +10,11 @@ can remain installed for measured A/B tests and immediate rollback. RixFlix's
 AM9 deployment policy, live probes, and recovery tooling live in the
 [`Rixflix`](https://github.com/RickRyan26/Rixflix) repository.
 
+Version 1.5 automatically plays each Home spotlight movie's existing Kodi/YouTube
+trailer behind the menu after three idle seconds; it does not use the YouTube Data API.
+Poster surfaces use a six-across grid, making covers 20% larger than upstream's
+seven-across layout.
+
 Version 1.1 makes the RixFlix wordmark and textures native skin assets, uses the
 bounded AM9 Kodi restart controller in the default power menu, and disables the
 measured adaptive blur/crop transition cost while retaining TMDb Helper metadata.

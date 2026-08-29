@@ -23,7 +23,7 @@ jobs:
           addon = ET.parse('addon.xml').getroot()
           assert addon.get('id') == 'skin.rixflix'
           assert addon.get('name') == 'RixFlix'
-          assert addon.get('version') == '1.4.0'
+          assert addon.get('version') == '1.5.0'
           assets = {
               'media/rixflix/rix-badge.png',
               'media/rixflix/rixflix-splash.png',
@@ -72,6 +72,21 @@ jobs:
           assert '<include>Search_Bar_Keys</include>' not in active_search
           assert '<hinttext>Press OK to enter a title</hinttext>' in active_search
           assert '<ondown>601</ondown>' in active_search
+
+          timers = ET.parse('1080i/Timers.xml').getroot()
+          trailer = next(timer for timer in timers.findall('timer')
+                         if timer.findtext('name') == 'rixflix_spotlight_trailer')
+          assert 'Container(301).ListItem.Trailer' in trailer.findtext('start')
+          assert any('PlayMedia(' in (action.text or '') and ',1,noresume)' in (action.text or '')
+                     for action in trailer.findall('onstart'))
+          assert any('PlayerControl(Stop)' in (action.text or '')
+                     for action in trailer.findall('onstop'))
+          constants = ET.parse('1080i/Includes_Constants.xml').getroot()
+          values = {node.get('name'): (node.text or '').strip()
+                    for node in constants.findall('constant')}
+          assert values['view_poster_itemlayout_w'] == '300'
+          assert values['view_poster_item_w'] == '260'
+          assert values['view_poster_movement'] == '5'
           stale = [str(path) for path in Path('.').rglob('*')
                    if path.is_file() and '.git' not in path.parts
                    and 'skin.arctic.fuse.3' in path.read_text(errors='ignore')]
