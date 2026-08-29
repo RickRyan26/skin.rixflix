@@ -113,50 +113,107 @@
 
     <include name="Categories_Selector_FakeList_Items">
         <param name="extended">false</param>
+        <param name="wide">false</param>
         <definition>
-            <include content="$PARAM[include]" condition="$PARAM[extended]">
+            <include content="$PARAM[include]" condition="$PARAM[wide]">
+                <param name="visible">String.IsEmpty(Container($PARAM[id]).ListItemNoWrap(1).CurrentItem)</param>
+                <param name="color_nf">$PARAM[color_nf]</param>
+                <param name="id">$PARAM[id]</param>
+                <param name="altfocusid">$PARAM[altfocusid]</param>
+                <param name="pos">-8</param>
+            </include>
+            <include content="$PARAM[include]" condition="$PARAM[wide]">
+                <param name="visible">String.IsEmpty(Container($PARAM[id]).ListItemNoWrap(2).CurrentItem)</param>
+                <param name="color_nf">$PARAM[color_nf]</param>
+                <param name="id">$PARAM[id]</param>
+                <param name="altfocusid">$PARAM[altfocusid]</param>
+                <param name="pos">-7</param>
+            </include>
+            <include content="$PARAM[include]" condition="$PARAM[wide]">
+                <param name="visible">String.IsEmpty(Container($PARAM[id]).ListItemNoWrap(3).CurrentItem)</param>
+                <param name="color_nf">$PARAM[color_nf]</param>
+                <param name="id">$PARAM[id]</param>
+                <param name="altfocusid">$PARAM[altfocusid]</param>
+                <param name="pos">-6</param>
+            </include>
+            <include content="$PARAM[include]" condition="$PARAM[wide]">
+                <param name="visible">String.IsEmpty(Container($PARAM[id]).ListItemNoWrap(4).CurrentItem)</param>
+                <param name="color_nf">$PARAM[color_nf]</param>
+                <param name="id">$PARAM[id]</param>
+                <param name="altfocusid">$PARAM[altfocusid]</param>
+                <param name="pos">-5</param>
+            </include>
+            <include content="$PARAM[include]" condition="$PARAM[wide]">
+                <param name="visible">String.IsEmpty(Container($PARAM[id]).ListItemNoWrap(5).CurrentItem)</param>
+                <param name="color_nf">$PARAM[color_nf]</param>
+                <param name="id">$PARAM[id]</param>
+                <param name="altfocusid">$PARAM[altfocusid]</param>
+                <param name="pos">-4</param>
+            </include>
+            <include content="$PARAM[include]" condition="$PARAM[wide]">
+                <param name="visible">String.IsEmpty(Container($PARAM[id]).ListItemNoWrap(6).CurrentItem)</param>
+                <param name="color_nf">$PARAM[color_nf]</param>
+                <param name="id">$PARAM[id]</param>
+                <param name="altfocusid">$PARAM[altfocusid]</param>
+                <param name="pos">-3</param>
+            </include>
+            <include content="$PARAM[include]" condition="$PARAM[wide]">
+                <param name="visible">String.IsEmpty(Container($PARAM[id]).ListItemNoWrap(7).CurrentItem)</param>
+                <param name="color_nf">$PARAM[color_nf]</param>
+                <param name="id">$PARAM[id]</param>
+                <param name="altfocusid">$PARAM[altfocusid]</param>
+                <param name="pos">-2</param>
+            </include>
+            <include content="$PARAM[include]" condition="$PARAM[wide]">
+                <param name="visible">String.IsEmpty(Container($PARAM[id]).ListItemNoWrap(8).CurrentItem)</param>
+                <param name="color_nf">$PARAM[color_nf]</param>
+                <param name="id">$PARAM[id]</param>
+                <param name="altfocusid">$PARAM[altfocusid]</param>
+                <param name="pos">-1</param>
+            </include>
+            <include content="$PARAM[include]" condition="$PARAM[extended] + ![$PARAM[wide]]">
                 <param name="visible">String.IsEmpty(Container($PARAM[id]).ListItemNoWrap(1).CurrentItem)</param>
                 <param name="color_nf">$PARAM[color_nf]</param>
                 <param name="id">$PARAM[id]</param>
                 <param name="altfocusid">$PARAM[altfocusid]</param>
                 <param name="pos">-4</param>
             </include>
-            <include content="$PARAM[include]" condition="$PARAM[extended]">
+            <include content="$PARAM[include]" condition="$PARAM[extended] + ![$PARAM[wide]]">
                 <param name="visible">String.IsEmpty(Container($PARAM[id]).ListItemNoWrap(2).CurrentItem)</param>
                 <param name="color_nf">$PARAM[color_nf]</param>
                 <param name="id">$PARAM[id]</param>
                 <param name="altfocusid">$PARAM[altfocusid]</param>
                 <param name="pos">-3</param>
             </include>
-            <include content="$PARAM[include]" condition="$PARAM[extended]">
+            <include content="$PARAM[include]" condition="$PARAM[extended] + ![$PARAM[wide]]">
                 <param name="visible">String.IsEmpty(Container($PARAM[id]).ListItemNoWrap(3).CurrentItem)</param>
                 <param name="color_nf">$PARAM[color_nf]</param>
                 <param name="id">$PARAM[id]</param>
                 <param name="altfocusid">$PARAM[altfocusid]</param>
                 <param name="pos">-2</param>
             </include>
-            <include content="$PARAM[include]" condition="$PARAM[extended]">
+            <include content="$PARAM[include]" condition="$PARAM[extended] + ![$PARAM[wide]]">
                 <param name="visible">String.IsEmpty(Container($PARAM[id]).ListItemNoWrap(4).CurrentItem)</param>
                 <param name="color_nf">$PARAM[color_nf]</param>
                 <param name="id">$PARAM[id]</param>
                 <param name="altfocusid">$PARAM[altfocusid]</param>
                 <param name="pos">-1</param>
             </include>
-            <include content="$PARAM[include]" condition="![$PARAM[extended]]">
+            <include content="$PARAM[include]" condition="![$PARAM[extended]] + ![$PARAM[wide]]">
                 <param name="visible">String.IsEmpty(Container($PARAM[id]).ListItemNoWrap(1).CurrentItem)</param>
                 <param name="color_nf">$PARAM[color_nf]</param>
                 <param name="id">$PARAM[id]</param>
                 <param name="altfocusid">$PARAM[altfocusid]</param>
                 <param name="pos">-3</param>
             </include>
-            <include content="$PARAM[include]" condition="![$PARAM[extended]]">
+            <include content="$PARAM[include]" condition="![$PARAM[extended]] + ![$PARAM[wide]]">
                 <param name="visible">String.IsEmpty(Container($PARAM[id]).ListItemNoWrap(2).CurrentItem)</param>
                 <param name="color_nf">$PARAM[color_nf]</param>
                 <param name="id">$PARAM[id]</param>
                 <param name="altfocusid">$PARAM[altfocusid]</param>
                 <param name="pos">-2</param>
             </include>
-            <include content="$PARAM[include]" condition="![$PARAM[extended]]">
+            <include content="$PARAM[include]" condition="![$PARAM[extended]] + ![$PARAM[wide]]">
                 <param name="visible">String.IsEmpty(Container($PARAM[id]).ListItemNoWrap(3).CurrentItem)</param>
                 <param name="color_nf">$PARAM[color_nf]</param>
                 <param name="id">$PARAM[id]</param>
@@ -191,12 +248,47 @@
                 <param name="altfocusid">$PARAM[altfocusid]</param>
                 <param name="pos">3</param>
             </include>
-            <include content="$PARAM[include]" condition="$PARAM[extended]">
+            <include content="$PARAM[include]" condition="$PARAM[extended] + ![$PARAM[wide]]">
                 <param name="visible">true</param>
                 <param name="color_nf">$PARAM[color_nf]</param>
                 <param name="id">$PARAM[id]</param>
                 <param name="altfocusid">$PARAM[altfocusid]</param>
                 <param name="pos">4</param>
+            </include>
+            <include content="$PARAM[include]" condition="$PARAM[wide]">
+                <param name="visible">true</param>
+                <param name="color_nf">$PARAM[color_nf]</param>
+                <param name="id">$PARAM[id]</param>
+                <param name="altfocusid">$PARAM[altfocusid]</param>
+                <param name="pos">4</param>
+            </include>
+            <include content="$PARAM[include]" condition="$PARAM[wide]">
+                <param name="visible">true</param>
+                <param name="color_nf">$PARAM[color_nf]</param>
+                <param name="id">$PARAM[id]</param>
+                <param name="altfocusid">$PARAM[altfocusid]</param>
+                <param name="pos">5</param>
+            </include>
+            <include content="$PARAM[include]" condition="$PARAM[wide]">
+                <param name="visible">true</param>
+                <param name="color_nf">$PARAM[color_nf]</param>
+                <param name="id">$PARAM[id]</param>
+                <param name="altfocusid">$PARAM[altfocusid]</param>
+                <param name="pos">6</param>
+            </include>
+            <include content="$PARAM[include]" condition="$PARAM[wide]">
+                <param name="visible">true</param>
+                <param name="color_nf">$PARAM[color_nf]</param>
+                <param name="id">$PARAM[id]</param>
+                <param name="altfocusid">$PARAM[altfocusid]</param>
+                <param name="pos">7</param>
+            </include>
+            <include content="$PARAM[include]" condition="$PARAM[wide]">
+                <param name="visible">true</param>
+                <param name="color_nf">$PARAM[color_nf]</param>
+                <param name="id">$PARAM[id]</param>
+                <param name="altfocusid">$PARAM[altfocusid]</param>
+                <param name="pos">8</param>
             </include>
         </definition>
     </include>
@@ -205,6 +297,7 @@
         <param name="id">302</param>
         <param name="color_fo">main_fg_30</param>
         <param name="color_nf">main_fg_30</param>
+        <param name="wide">false</param>
         <definition>
             <control type="group">
 
@@ -233,6 +326,7 @@
                                 <param name="id">$PARAM[id]</param>
                                 <param name="altfocusid">$PARAM[altfocusid]</param>
                                 <param name="extended">$PARAM[extended]</param>
+                                <param name="wide">$PARAM[wide]</param>
                             </include>
                         </control>
 
@@ -248,6 +342,7 @@
                                 <param name="id">$PARAM[id]</param>
                                 <param name="altfocusid">$PARAM[altfocusid]</param>
                                 <param name="extended">$PARAM[extended]</param>
+                                <param name="wide">$PARAM[wide]</param>
                             </include>
                         </control>
                     </control>
@@ -320,6 +415,7 @@
                 <param name="color_fo">$PARAM[color_fo]</param>
                 <param name="color_nf">$PARAM[color_nf]</param>
                 <param name="extended">$PARAM[extended]</param>
+                <param name="wide">$PARAM[wide]</param>
                 <nested />
             </include>
 
