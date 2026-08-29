@@ -65,6 +65,16 @@ def hls_manifest(document):
     return manifest
 
 
+def hls_listitem(manifest):
+    """Make Kodi use InputStream Adaptive for YouTube's demuxed HLS master."""
+    item = xbmcgui.ListItem(path=manifest)
+    item.setContentLookup(False)
+    item.setMimeType("application/vnd.apple.mpegurl")
+    item.setProperty("inputstream", "inputstream.adaptive")
+    item.setProperty("inputstream.adaptive.manifest_type", "hls")
+    return item
+
+
 def main():
     requested = sys.argv[1] if len(sys.argv) >= 2 else ""
     mode = sys.argv[2] if len(sys.argv) == 3 else "background"
@@ -106,7 +116,10 @@ def main():
                 home.clearProperty(UNAVAILABLE_PROPERTY)
             home.setProperty(ON_DEMAND_PROPERTY, manifest)
             player = xbmc.Player()
-            player.play(manifest, windowed=False)
+            # Kodi's native demuxer can sit on YouTube's separate audio/video HLS
+            # variants until this deadline expires. InputStream Adaptive joins them
+            # directly and gives an on-demand button a materially faster handoff.
+            player.play(manifest, hls_listitem(manifest), windowed=False)
             monitor = xbmc.Monitor()
             deadline = time.monotonic() + 20
             started = False
