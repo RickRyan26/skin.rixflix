@@ -23,7 +23,7 @@ jobs:
           addon = ET.parse('addon.xml').getroot()
           assert addon.get('id') == 'skin.rixflix'
           assert addon.get('name') == 'RixFlix'
-          assert addon.get('version') == '1.5.1'
+          assert addon.get('version') == '1.5.2'
           assets = {
               'media/rixflix/rix-badge.png',
               'media/rixflix/rixflix-splash.png',
@@ -84,6 +84,14 @@ jobs:
                      for action in trailer.findall('onstart'))
           assert any('PlayerControl(Stop)' in (action.text or '')
                      for action in trailer.findall('onstop'))
+          assert all('Player.FileNameAndPath' not in (timer.findtext(tag) or '')
+                     for timer in timers.findall('timer')
+                     for tag in ('start', 'reset', 'stop'))
+          hubs = Path('1080i/Includes_Hubs.xml').read_text()
+          hero_play = hubs[hubs.index('<param name="id">311</param>'):]
+          hero_play = hero_play[:hero_play.index('<param name="id">312</param>')]
+          assert 'PlayerControl(Stop)' in hero_play
+          assert 'ClearProperty(RixFlix.AutoplayTrailer,Home)' in hero_play
           constants = ET.parse('1080i/Includes_Constants.xml').getroot()
           values = {node.get('name'): (node.text or '').strip()
                     for node in constants.findall('constant')}

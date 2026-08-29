@@ -17,6 +17,7 @@
     <onload condition="!Skin.HasSetting(Home.FirstRun)">AlarmClock(reloadskin,ReloadSkin(),00:00,silent)</onload>
 
     <onload>$VAR[Action_RatingsMonitor]</onload>
+    <onload condition="!String.IsEmpty(Window(Home).Property(RixFlix.AutoplayTrailer)) + Player.HasMedia">PlayerControl(Stop)</onload>
     <onload>ClearProperty(RixFlix.AutoplayTrailer,Home)</onload>
     <onload>ClearProperty(RixFlix.AutoplayTrailerPlayed,Home)</onload>
 
