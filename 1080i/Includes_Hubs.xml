@@ -493,6 +493,7 @@
                             <param name="image">$VAR[Image_FullscreenWidget_PlayButton]</param>
                             <param name="max">160</param>
                             <onclick condition="$EXP[Exp_RixFlix_AutoplayTrailer]">PlayerControl(Stop)</onclick>
+                            <onclick condition="$EXP[Exp_RixFlix_AutoplayTrailer]">ClearProperty(RixFlix.AutoplayTrailerResolved,Home)</onclick>
                             <onclick condition="$EXP[Exp_RixFlix_AutoplayTrailer]">ClearProperty(RixFlix.AutoplayTrailer,Home)</onclick>
                             <onclick>SetFocus(301)</onclick>
                             <onclick condition="!String.StartsWith(Container(301).ListItem.FolderPath,videodb://)">Action(select)</onclick>
