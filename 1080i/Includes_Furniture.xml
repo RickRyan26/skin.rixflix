@@ -153,6 +153,7 @@
     <include name="Furniture_Codecs">
         <param name="colordiffuse">white</param>
         <param name="infolabel_videoresolution">ListItem.VideoResolution</param>
+        <param name="infolabel_hdrtype">ListItem.HdrType</param>
         <param name="infolabel_videoaspect">ListItem.VideoAspect</param>
         <param name="infolabel_videocodec">ListItem.VideoCodec</param>
         <param name="infolabel_audiocodec">ListItem.AudioCodec</param>
@@ -172,6 +173,23 @@
                     <width>66</width>
                     <centertop>50%</centertop>
                     <visible>!String.IsEmpty($PARAM[infolabel_videoresolution])</visible>
+                </control>
+                <!-- RIXFLIX: Dolby Vision / HDR chip. AF3 already ships
+                     flags/color/hdr/{dolbyvision,hdr10,hlg}.png and NOTHING referenced
+                     them, so the one attribute Rick acquires on ("DV Profile 7 FEL is
+                     the acquisition priority") was the one flag the UI never showed.
+                     Enumerated rather than driven straight off the infolabel because
+                     Kodi also returns `hdr10plus` (StreamDetails.cpp:840) and there is
+                     no texture for it — an unenumerated value would reserve a slot in
+                     this grouplist and draw nothing. Costs no media read: HdrType comes
+                     from stream details Kodi already holds. -->
+                <control type="image">
+                    <texture background="true" colordiffuse="$PARAM[colordiffuse]">$INFO[$PARAM[infolabel_hdrtype],flags/color/hdr/,.png]</texture>
+                    <aspectratio>keep</aspectratio>
+                    <height>48</height>
+                    <width>71</width>
+                    <centertop>50%</centertop>
+                    <visible>String.IsEqual($PARAM[infolabel_hdrtype],dolbyvision) | String.IsEqual($PARAM[infolabel_hdrtype],hdr10) | String.IsEqual($PARAM[infolabel_hdrtype],hlg)</visible>
                 </control>
                 <control type="image">
                     <texture background="true" colordiffuse="$PARAM[colordiffuse]">$INFO[$PARAM[infolabel_videoaspect],flags/color/aspectratio/,.png]</texture>

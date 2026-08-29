@@ -23,7 +23,7 @@ jobs:
           addon = ET.parse('addon.xml').getroot()
           assert addon.get('id') == 'skin.rixflix'
           assert addon.get('name') == 'RixFlix'
-          assert addon.get('version') == '1.3.0'
+          assert addon.get('version') == '1.4.0'
           assets = {
               'media/rixflix/rix-badge.png',
               'media/rixflix/rixflix-splash.png',
@@ -51,6 +51,21 @@ jobs:
           assert 'Skin.Reset(tmdbhelper.enablecrop)' in startup_actions
           assert 'Skin.Reset(TMDbHelper.EnableBlur)' not in startup_actions
           assert 'Skin.Reset(TMDbHelper.EnableCrop)' not in startup_actions
+          # The DV/HDR chip. Both halves are asserted because either one alone is a
+          # silent no-op: the control without the OSD param shows the flag only in
+          # browse, and the param without the control shows it nowhere at all.
+          furniture = Path('1080i/Includes_Furniture.xml').read_text()
+          assert 'flags/color/hdr/' in furniture
+          assert '<param name="infolabel_hdrtype">ListItem.HdrType</param>' in furniture
+          osd = Path('1080i/Includes_OSD.xml').read_text()
+          assert '<param name="infolabel_hdrtype">VideoPlayer.HdrType</param>' in osd
+          # Enumerated visibility, not a bare infolabel: Kodi also emits `hdr10plus` and
+          # this skin has no texture for it, so an unguarded control would reserve a slot
+          # in the codec grouplist and draw nothing.
+          assert 'String.IsEqual($PARAM[infolabel_hdrtype],dolbyvision)' in furniture
+          for flag in ('dolbyvision', 'hdr10', 'hlg'):
+              assert Path('media/flags/color/hdr/%s.png' % flag).is_file(), flag
+
           search = Path('1080i/Includes_Search.xml').read_text()
           active_search = search[:search.index('<include name="Search_Bar_Keys">')]
           assert '<include>Search_Bar_Help</include>' in active_search

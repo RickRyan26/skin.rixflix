@@ -796,6 +796,7 @@
                 <include content="Furniture_Codecs">
                     <param name="colordiffuse">$PARAM[textcolor_top]</param>
                     <param name="infolabel_videoresolution">VideoPlayer.VideoResolution</param>
+                    <param name="infolabel_hdrtype">VideoPlayer.HdrType</param>
                     <param name="infolabel_videoaspect">VideoPlayer.VideoAspect</param>
                     <param name="infolabel_videocodec">VideoPlayer.VideoCodec</param>
                     <param name="infolabel_audiocodec">VideoPlayer.AudioCodec</param>
