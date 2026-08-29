@@ -33,6 +33,8 @@
                 <param name="home_switcher">true</param>
                 <param name="include_content">Hub_Settings_Items</param>
                 <param name="extended">true</param>
+                <param name="selector_movement">4</param>
+                <param name="selector_width">1000</param>
             </include>
 
             <!-- Widgets Groups -->

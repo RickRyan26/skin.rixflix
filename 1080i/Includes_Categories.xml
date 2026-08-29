@@ -114,6 +114,8 @@
     <include name="Categories_Selector_FakeList_Items">
         <param name="extended">false</param>
         <param name="wide">false</param>
+        <param name="selector_movement">3</param>
+        <param name="selector_width">800</param>
         <definition>
             <include content="$PARAM[include]" condition="$PARAM[wide]">
                 <param name="visible">String.IsEmpty(Container($PARAM[id]).ListItemNoWrap(1).CurrentItem)</param>
@@ -392,21 +394,8 @@
                 </include>
 
                 <focusposition>0</focusposition>
-                <include content="Object_Movement" condition="$PARAM[extended]">
-                    <param name="movement">4</param>
-                </include>
-                <include content="Object_Movement" condition="$PARAM[wide]">
-                    <param name="movement">8</param>
-                </include>
-                <movement>3</movement>
-
-                <include content="Object_Width" condition="$PARAM[extended]">
-                    <param name="width">1000</param>
-                </include>
-                <include content="Object_Width" condition="$PARAM[wide]">
-                    <param name="width">view_banner_item_w</param>
-                </include>
-                <width>800</width>
+                <movement>$PARAM[selector_movement]</movement>
+                <width>$PARAM[selector_width]</width>
             </include>
 
             <include content="Categories_Selector_FakeList">

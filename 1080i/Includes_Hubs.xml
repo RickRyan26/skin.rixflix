@@ -192,6 +192,8 @@
         <param name="top">260</param>
         <param name="onup">300</param>
         <param name="home_switcher">false</param>
+        <param name="selector_movement">3</param>
+        <param name="selector_width">800</param>
         <definition>
             <control type="group">
                 <top>$PARAM[top]</top>
@@ -207,6 +209,8 @@
                     <param name="hidden_button">List_ButtonMenu_Row_HiddenButton_ERow</param>
                     <param name="hidden_button_enabled">true</param>
                     <param name="extended">$PARAM[extended]</param>
+                    <param name="selector_movement">$PARAM[selector_movement]</param>
+                    <param name="selector_width">$PARAM[selector_width]</param>
                     <onup condition="!Control.IsVisible(301) + Skin.HasSetting(HomeSwitcher.Vertical)">SetProperty(Bumper.Direction,Up,Home)</onup>
                     <onup condition="!Control.IsVisible(301) + Skin.HasSetting(HomeSwitcher.Vertical)">ActivateWindow(1180)</onup>
                     <onup condition="!Control.IsVisible(301) + !Skin.HasSetting(HomeSwitcher.Vertical)">$PARAM[onup]</onup>

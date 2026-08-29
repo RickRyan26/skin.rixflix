@@ -186,6 +186,8 @@
                 <param name="hitrect_h">120</param>
                 <param name="detailed">true</param>
                 <param name="wide">true</param>
+                <param name="selector_movement">8</param>
+                <param name="selector_width">view_banner_item_w</param>
                 <include content="View_Combined_List_Horz_Selector_Content">
                     <param name="id">$PARAM[id]</param>
                     <param name="visible">$PARAM[visible]</param>
