@@ -1076,20 +1076,6 @@
             <selected>System.AddonIsEnabled(resource.images.studios.white) + System.HasAddon(resource.images.studios.white)</selected>
         </include>
 
-        <include content="Settings_Button">
-            <param name="dialog">false</param>
-            <param name="window">skinsettings</param>
-            <param name="baseid">$PARAM[baseid]</param>
-            <param name="id">017</param>
-            <param name="control">radiobutton</param>
-            <label>service.upnext</label>
-            <label2>$INFO[System.AddonVersion(service.upnext),v,       ]</label2>
-            <onclick condition="!System.HasAddon(service.upnext)">InstallAddon(service.upnext)</onclick>
-            <onclick condition="!System.AddonIsEnabled(service.upnext) + System.HasAddon(service.upnext)">EnableAddon(service.upnext)</onclick>
-            <onclick condition="System.AddonIsEnabled(service.upnext) + System.HasAddon(service.upnext)">Addon.OpenSettings(service.upnext)</onclick>
-            <selected>System.AddonIsEnabled(service.upnext) + System.HasAddon(service.upnext)</selected>
-        </include>
-
         <include content="Settings_Label" description="Debug">
             <param name="window">skinsettings</param>
             <param name="slevel">3</param>

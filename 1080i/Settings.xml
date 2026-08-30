@@ -211,14 +211,7 @@
                                         <onclick>Addon.OpenSettings(script.artistslideshow)</onclick>
                                         <visible>System.AddonIsEnabled(script.artistslideshow)</visible>
                                     </item>
-                                    <item>
-                                        <label>Up Next</label>
-                                        <label2>service.upnext</label2>
-                                        <icon>special://skin/extras/icons/arrows-turn-right.png</icon>
-                                        <onclick>Addon.OpenSettings(service.upnext)</onclick>
-                                        <visible>System.AddonIsEnabled(service.upnext)</visible>
-                                    </item>
-                                    <item>
+<item>
                                         <label>Arctic Mirage</label>
                                         <label2>screensaver.arctic.mirage</label2>
                                         <icon>special://skin/extras/icons/sun2.png</icon>

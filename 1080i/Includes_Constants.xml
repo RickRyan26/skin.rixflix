@@ -209,8 +209,6 @@
     <constant name="widget_items_h_gallery">1450</constant>
 
     <!-- Up Next -->
-    <constant name="upnext_image_w">356</constant>
-    <constant name="upnext_image_h">200</constant>
 
     <!-- Weather -->
     <constant name="weather_forecast_h">260</constant>

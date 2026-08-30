@@ -14,6 +14,7 @@ jobs:
           python3 - <<'PY'
           from pathlib import Path
           import json
+          import re
           import xml.etree.ElementTree as ET
 
           for path in Path('.').rglob('*.xml'):
@@ -23,7 +24,11 @@ jobs:
           addon = ET.parse('addon.xml').getroot()
           assert addon.get('id') == 'skin.rixflix'
           assert addon.get('name') == 'RixFlix'
-          assert addon.get('version') == '1.5.4'
+          # NOT a frozen literal. This was pinned to 1.5.4 and every push since has
+          # failed on it alone, which made the whole file below decoration — a guard
+          # that dies before it evaluates anything still "runs". Assert the SHAPE, and
+          # let the real invariants underneath be the thing that can fail.
+          assert re.fullmatch(r'\d+\.\d+\.\d+', addon.get('version')), addon.get('version')
           assets = {
               'media/rixflix/rix-badge.png',
               'media/rixflix/rixflix-splash.png',
@@ -104,10 +109,21 @@ jobs:
           assert values['view_poster_itemlayout_w'] == '300'
           assert values['view_poster_item_w'] == '260'
           assert values['view_poster_movement'] == '5'
+          # UP NEXT IS RETIRED AND STAYS RETIRED (2026-08-30). Rick: the popup is
+          # "unnecessary and just in the way" — it took the screen and Select over the
+          # last 40-150 s of every episode. The add-on is deleted from the AM9 on every
+          # deploy (Rixflix am9/deploy.sh), so a skin that references service.upnext can
+          # only produce a dead button or a dialog with nothing behind it. The reference
+          # is what has to be impossible, not just the add-on: an "add Up Next back"
+          # change fails HERE, in CI, instead of on the television.
+          upnext = [str(path) for path in Path('.').rglob('*')
+                    if path.is_file() and '.git' not in path.parts
+                    and 'service.upnext' in path.read_text(errors='ignore')]
+          assert upnext == ['.github/workflows/validate.yml'], upnext
           stale = [str(path) for path in Path('.').rglob('*')
                    if path.is_file() and '.git' not in path.parts
                    and 'skin.arctic.fuse.3' in path.read_text(errors='ignore')]
           allowed = {'Readme.md', '.github/workflows/validate.yml'}
           assert set(stale) <= allowed, stale
-          print('PASS: source parsed; identity, branding, restart, and performance invariants hold')
+          print('PASS: source parsed; identity, branding, restart, performance and Up-Next-stays-gone invariants hold')
           PY
