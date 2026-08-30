@@ -82,27 +82,48 @@ jobs:
           trailer = next(timer for timer in timers.findall('timer')
                          if timer.findtext('name') == 'rixflix_spotlight_trailer')
           assert 'Container(301).ListItem.Trailer' in trailer.findtext('start')
-          assert 'Window.IsVisible(home)' in trailer.findtext('start')
-          assert '!Window.IsVisible(home)' in trailer.findtext('stop')
+          assert 'Skin.HasSetting(RixFlix.EnableAutoplayTrailers)' in trailer.findtext('start')
+          assert trailer.find('start').get('reset') == 'false'
+          assert 'String.IsEqual(System.CurrentWindow,Home)' in trailer.findtext('start')
+          assert 'System.CurrentWindow' not in trailer.findtext('stop')
+          assert 'Player.Filenameandpath' in trailer.findtext('stop')
+          assert 'Window.IsVisible(home)' not in trailer.findtext('start')
+          assert 'Window.IsVisible(home)' not in trailer.findtext('stop')
           assert 'Window.IsActive(home)' not in trailer.findtext('start')
           assert 'Window.IsActive(home)' not in trailer.findtext('stop')
-          assert 'Skin.TimerElapsedSecs(rixflix_spotlight_trailer),15' in trailer.findtext('stop')
-          assert 'Window(Home).Property(TMDBHelper.WidgetContainer)' in trailer.findtext('stop')
+          assert 'Skin.TimerElapsedSecs(rixflix_spotlight_trailer),20' in trailer.findtext('stop')
+          assert trailer.findtext('stop').count('Skin.TimerElapsedSecs') == 1
+          assert 'Container(301).ListItem.Trailer' in trailer.findtext('stop')
+          assert 'Hub_Spotlight_Visible_Expression' not in trailer.findtext('start')
+          assert 'Hub_Spotlight_Visible_Expression' not in trailer.findtext('stop')
           assert all('$EXP[' not in (timer.findtext(tag) or '')
                      for timer in timers.findall('timer')
                      for tag in ('start', 'reset', 'stop'))
-          assert any('PlayMedia(' in (action.text or '') and ',1,noresume)' in (action.text or '')
+          assert any('RunScript(special://skin/scripts/rixflix_trailer.py,' in (action.text or '')
                      for action in trailer.findall('onstart'))
-          assert any('PlayerControl(Stop)' in (action.text or '')
-                     for action in trailer.findall('onstop'))
-          assert all('Player.FileNameAndPath' not in (timer.findtext(tag) or '')
-                     for timer in timers.findall('timer')
-                     for tag in ('start', 'reset', 'stop'))
-          hubs = Path('1080i/Includes_Hubs.xml').read_text()
-          hero_play = hubs[hubs.index('<param name="id">311</param>'):]
-          hero_play = hero_play[:hero_play.index('<param name="id">312</param>')]
-          assert 'PlayerControl(Stop)' in hero_play
+          stop_actions = [action for action in trailer.findall('onstop')
+                          if 'PlayerControl(Stop)' in (action.text or '')]
+          assert len(stop_actions) == 1
+          assert 'RixFlix.AutoplayTrailerResolved' in stop_actions[0].get('condition')
+          assert 'Player.FileNameAndPath' not in trailer.findtext('start')
+          home = Path('1080i/Home.xml').read_text()
+          assert 'RixFlix.AutoplayTrailer' not in home
+          spotlight = hubs[hubs.index('<include name="Hub_Spotlight_List">'):]
+          spotlight = spotlight[:spotlight.index('</definition>')]
+          assert 'String.IsEmpty(Window(Home).Property(RixFlix.AutoplayTrailer))' in spotlight
+          assert '<param name="label">$VAR[Label_RixFlix_TrailerButton]</param>' in hubs
+          assert 'rixflix_trailer.py,$ESCINFO[Container(301).ListItem.Trailer],foreground' in hubs
+          assert 'RixFlix.UnavailableTrailer' in hubs
+          labels = Path('1080i/Includes_Labels.xml').read_text()
+          assert 'Loading Trailer' in labels
+          hero_play = hubs[hubs.index('PlayerControl(Stop)'):]
           assert 'ClearProperty(RixFlix.AutoplayTrailer,Home)' in hero_play
+          assert 'ClearProperty(RixFlix.AutoplayTrailerResolved,Home)' in hero_play
+          resolver = Path('scripts/rixflix_trailer.py')
+          assert resolver.is_file()
+          compile(resolver.read_text(), 'rixflix_trailer.py', 'exec')
+          assert 'RixFlix.OnDemandTrailerResolved' in resolver.read_text()
+          assert 'inputstream.adaptive' in resolver.read_text()
           constants = ET.parse('1080i/Includes_Constants.xml').getroot()
           values = {node.get('name'): (node.text or '').strip()
                     for node in constants.findall('constant')}
