@@ -551,7 +551,7 @@
     </variable>
 
     <variable name="Label_RixFlix_PauseSubTitle">
-        <value condition="!String.IsEmpty(VideoPlayer.TvShowTitle) + !String.IsEmpty(VideoPlayer.Season) + !String.IsEmpty(VideoPlayer.Episode)">$VAR[Label_OSD_Plot_Episode_Number]  •  $INFO[VideoPlayer.Title]</value>
+        <value condition="!String.IsEmpty(VideoPlayer.TvShowTitle) + !String.IsEmpty(VideoPlayer.Season) + !String.IsEmpty(VideoPlayer.Episode)">$INFO[VideoPlayer.Season,S]$INFO[VideoPlayer.Episode,E]  •  $INFO[VideoPlayer.Title]</value>
         <value condition="!String.IsEmpty(VideoPlayer.TvShowTitle)">$INFO[VideoPlayer.Title]</value>
         <value condition="!String.IsEmpty(VideoPlayer.Year)">$INFO[VideoPlayer.Year]</value>
     </variable>

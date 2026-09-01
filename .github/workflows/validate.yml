@@ -77,7 +77,8 @@ jobs:
           assert 'Player.Paused + [!String.IsEmpty(VideoPlayer.Title) | !String.IsEmpty(Player.Title)]' in seekbar
           labels = Path('1080i/Includes_Labels.xml').read_text()
           assert 'VideoPlayer.TvShowTitle' in labels[labels.index('Label_RixFlix_PauseTitle'):]
-          assert 'Label_OSD_Plot_Episode_Number' in labels[labels.index('Label_RixFlix_PauseSubTitle'):]
+          pause_subtitle = labels[labels.index('Label_RixFlix_PauseSubTitle'):]
+          assert '$INFO[VideoPlayer.Season,S]$INFO[VideoPlayer.Episode,E]' in pause_subtitle
           # Enumerated visibility, not a bare infolabel: Kodi also emits `hdr10plus` and
           # this skin has no texture for it, so an unguarded control would reserve a slot
           # in the codec grouplist and draw nothing.
