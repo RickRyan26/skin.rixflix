@@ -49,8 +49,15 @@ jobs:
           assert 'special://skin/media/rixflix/rix-badge.png' in splash
           power = json.loads(Path('shortcuts/skinvariables-shortcut-powermenu.json').read_text())
           assert any(item.get('label') == 'Restart Kodi' and
-                     item.get('path') == 'System.Exec(/storage/.config/rixflix-kodi-safe-quit.sh)'
+                     item.get('path') == 'ActivateWindow(1199)'
                      for item in power)
+          shutdown = ET.parse('1080i/Custom_1199_RixFlix_Shutdown.xml').getroot()
+          assert shutdown.get('id') == '1199' and shutdown.get('type') == 'dialog'
+          shutdown_text = Path('1080i/Custom_1199_RixFlix_Shutdown.xml').read_text()
+          assert 'Hub_Widget_Splash' in shutdown_text
+          assert 'Restarting RIXFLIX' in shutdown_text
+          assert 'rixflix-kodi-safe-quit.sh' in shutdown_text
+          assert '00:01,silent' in shutdown_text
           startup_actions = Path('shortcuts/skinvariables-startup.json').read_text()
           assert 'Skin.Reset(tmdbhelper.enableblur)' in startup_actions
           assert 'Skin.Reset(tmdbhelper.enablecrop)' in startup_actions
@@ -64,6 +71,13 @@ jobs:
           assert '<param name="infolabel_hdrtype">ListItem.HdrType</param>' in furniture
           osd = Path('1080i/Includes_OSD.xml').read_text()
           assert '<param name="infolabel_hdrtype">VideoPlayer.HdrType</param>' in osd
+          seekbar = Path('1080i/DialogSeekBar.xml').read_text()
+          assert 'Label_RixFlix_PauseTitle' in seekbar
+          assert 'Label_RixFlix_PauseSubTitle' in seekbar
+          assert 'Player.Paused + [!String.IsEmpty(VideoPlayer.Title) | !String.IsEmpty(Player.Title)]' in seekbar
+          labels = Path('1080i/Includes_Labels.xml').read_text()
+          assert 'VideoPlayer.TvShowTitle' in labels[labels.index('Label_RixFlix_PauseTitle'):]
+          assert 'Label_OSD_Plot_Episode_Number' in labels[labels.index('Label_RixFlix_PauseSubTitle'):]
           # Enumerated visibility, not a bare infolabel: Kodi also emits `hdr10plus` and
           # this skin has no texture for it, so an unguarded control would reserve a slot
           # in the codec grouplist and draw nothing.

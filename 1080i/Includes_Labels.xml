@@ -544,6 +544,18 @@
         <value>$LOCALIZE[31134]</value>
     </variable>
 
+    <variable name="Label_RixFlix_PauseTitle">
+        <value condition="!String.IsEmpty(VideoPlayer.TvShowTitle)">$INFO[VideoPlayer.TvShowTitle]</value>
+        <value condition="!String.IsEmpty(VideoPlayer.Title)">$INFO[VideoPlayer.Title]</value>
+        <value>$INFO[Player.Title]</value>
+    </variable>
+
+    <variable name="Label_RixFlix_PauseSubTitle">
+        <value condition="!String.IsEmpty(VideoPlayer.TvShowTitle) + !String.IsEmpty(VideoPlayer.Season) + !String.IsEmpty(VideoPlayer.Episode)">$VAR[Label_OSD_Plot_Episode_Number]  •  $INFO[VideoPlayer.Title]</value>
+        <value condition="!String.IsEmpty(VideoPlayer.TvShowTitle)">$INFO[VideoPlayer.Title]</value>
+        <value condition="!String.IsEmpty(VideoPlayer.Year)">$INFO[VideoPlayer.Year]</value>
+    </variable>
+
     <variable name="Label_VideoHDRCodec">
         <value condition="String.IsEqual(VideoPlayer.HdrType,dolbyvision)">Dolby Vision</value>
         <value condition="String.IsEqual(VideoPlayer.HdrType,hdr10)">HDR</value>

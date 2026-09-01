@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<window type="dialog" id="1199">
+    <!-- Give Kodi one rendered frame before the external, bounded quit controller starts. -->
+    <onload>AlarmClock(RixFlixSafeQuit,System.Exec(/storage/.config/rixflix-kodi-safe-quit.sh),00:01,silent)</onload>
+    <controls>
+        <include content="Hub_Widget_Splash">
+            <param name="condition">true</param>
+            <param name="label">Restarting RIXFLIX</param>
+        </include>
+    </controls>
+</window>

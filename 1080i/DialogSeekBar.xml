@@ -31,12 +31,53 @@
 
                         <control type="group">
                             <include>OSD_HideControls</include>
+                            <visible>!Player.Paused</visible>
                             <include content="Furniture_Header">
                                 <param name="label">$VAR[Label_OSD_Header]</param>
                                 <param name="include_right">false</param>
                                 <param name="textcolor">panel_fg_90</param>
                                 <param name="top">780</param>
                             </include>
+                        </control>
+
+                        <!-- RIXFLIX: compact pause title in the existing lower-third.
+                             It adds no card or full-width panel over the picture. -->
+                        <control type="group">
+                            <visible>Player.Paused + [!String.IsEmpty(VideoPlayer.Title) | !String.IsEmpty(Player.Title)]</visible>
+                            <include>OSD_HideControls</include>
+                            <left>view_pad</left>
+                            <right>view_pad</right>
+                            <top>770</top>
+                            <height>100</height>
+                            <control type="image">
+                                <left>0</left>
+                                <top>7</top>
+                                <width>5</width>
+                                <height>70</height>
+                                <texture colordiffuse="$VAR[ColorHighlight]">common/white.png</texture>
+                            </control>
+                            <control type="label">
+                                <left>24</left>
+                                <right>0</right>
+                                <top>0</top>
+                                <height>48</height>
+                                <align>left</align>
+                                <aligny>center</aligny>
+                                <font>font_midi_bold</font>
+                                <textcolor>panel_fg_100</textcolor>
+                                <label>$VAR[Label_RixFlix_PauseTitle]</label>
+                            </control>
+                            <control type="label">
+                                <left>24</left>
+                                <right>0</right>
+                                <top>46</top>
+                                <height>36</height>
+                                <align>left</align>
+                                <aligny>center</aligny>
+                                <font>font_tiny</font>
+                                <textcolor>panel_fg_70</textcolor>
+                                <label>$VAR[Label_RixFlix_PauseSubTitle]</label>
+                            </control>
                         </control>
                     </control>
 

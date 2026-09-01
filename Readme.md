@@ -15,6 +15,11 @@ trailer behind the menu after three idle seconds; it does not use the YouTube Da
 Poster surfaces use a six-across grid, making covers 20% larger than upstream's
 seven-across layout.
 
+Version 1.6 replaces the frozen-looking Restart Kodi handoff with the full-screen
+RixFlix splash, live busy badge, and status text before bounded teardown begins. Its
+pause surface uses the existing bottom gradient for a compact title lower-third: show
+or movie name first, episode detail second, with no card covering the picture.
+
 Version 1.1 makes the RixFlix wordmark and textures native skin assets, uses the
 bounded AM9 Kodi restart controller in the default power menu, and disables the
 measured adaptive blur/crop transition cost while retaining TMDb Helper metadata.

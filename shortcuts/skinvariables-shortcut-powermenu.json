@@ -20,7 +20,7 @@
     {
         "icon": "special://skin/extras/icons/power.png",
         "label": "Restart Kodi",
-        "path": "System.Exec(/storage/.config/rixflix-kodi-safe-quit.sh)",
+        "path": "ActivateWindow(1199)",
         "target": ""
     }
 ]
