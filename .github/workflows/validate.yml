@@ -48,16 +48,23 @@ jobs:
           assert '<include>Object_StartUp_Logo</include>' not in splash
           assert 'special://skin/media/rixflix/rix-badge.png' in splash
           power = json.loads(Path('shortcuts/skinvariables-shortcut-powermenu.json').read_text())
-          assert any(item.get('label') == 'Restart Kodi' and
-                     item.get('path') == 'ActivateWindow(1199)'
-                     for item in power)
+          restart = [item for item in power if item.get('label') == 'Restart Kodi']
+          assert len(restart) == 1 and restart[0].get('path') == 'ActivateWindow(1199)'
+          assert not any('Quit(' in item.get('path', '') or
+                         'rixflix-kodi-safe-quit.sh' in item.get('path', '')
+                         for item in power)
           shutdown = ET.parse('1080i/Custom_1199_RixFlix_Shutdown.xml').getroot()
           assert shutdown.get('id') == '1199' and shutdown.get('type') == 'dialog'
-          shutdown_text = Path('1080i/Custom_1199_RixFlix_Shutdown.xml').read_text()
-          assert 'Hub_Widget_Splash' in shutdown_text
-          assert 'Restarting RIXFLIX' in shutdown_text
-          assert 'rixflix-kodi-safe-quit.sh' in shutdown_text
-          assert '00:01,silent' in shutdown_text
+          assert [node.text for node in shutdown.findall('onload')] == [
+              'AlarmClock(RixFlixSafeQuit,System.Exec(/storage/.config/'
+              'rixflix-kodi-safe-quit.sh),00:01,silent)']
+          shutdown_controls = shutdown.find('controls')
+          assert shutdown_controls is not None and len(shutdown_controls) == 1
+          shutdown_splash = shutdown_controls.find('include')
+          assert shutdown_splash is not None and shutdown_splash.get('content') == 'Hub_Widget_Splash'
+          shutdown_params = {node.get('name'): (node.text or '').strip()
+                             for node in shutdown_splash.findall('param')}
+          assert shutdown_params == {'condition': 'true', 'label': 'Restarting RIXFLIX'}
           startup_actions = Path('shortcuts/skinvariables-startup.json').read_text()
           assert 'Skin.Reset(tmdbhelper.enableblur)' in startup_actions
           assert 'Skin.Reset(tmdbhelper.enablecrop)' in startup_actions
@@ -71,10 +78,27 @@ jobs:
           assert '<param name="infolabel_hdrtype">ListItem.HdrType</param>' in furniture
           osd = Path('1080i/Includes_OSD.xml').read_text()
           assert '<param name="infolabel_hdrtype">VideoPlayer.HdrType</param>' in osd
-          seekbar = Path('1080i/DialogSeekBar.xml').read_text()
-          assert 'Label_RixFlix_PauseTitle' in seekbar
-          assert 'Label_RixFlix_PauseSubTitle' in seekbar
-          assert 'Player.Paused + [!String.IsEmpty(VideoPlayer.Title) | !String.IsEmpty(Player.Title)]' in seekbar
+          seekbar = ET.parse('1080i/DialogSeekBar.xml').getroot()
+          pause_condition = ('Player.Paused + [!String.IsEmpty(VideoPlayer.Title) | '
+                             '!String.IsEmpty(Player.Title)]')
+          pause_groups = [node for node in seekbar.iter('control')
+                          if node.get('type') == 'group' and
+                          node.findtext('visible') == pause_condition]
+          assert len(pause_groups) == 1
+          pause_group = pause_groups[0]
+          assert pause_group.findtext('top') == '756'
+          pause_controls = pause_group.findall('control')
+          assert [node.get('type') for node in pause_controls] == [
+              'image', 'label', 'label', 'label']
+          accent, state, title, subtitle = pause_controls
+          assert (accent.findtext('width'), accent.findtext('height')) == ('5', '88')
+          assert accent.find('texture').get('colordiffuse') == '$VAR[ColorHighlight]'
+          assert [node.findtext('label') for node in (state, title, subtitle)] == [
+              '$LOCALIZE[112]', '$VAR[Label_RixFlix_PauseTitle]',
+              '$VAR[Label_RixFlix_PauseSubTitle]']
+          assert [node.findtext('font') for node in (state, title, subtitle)] == [
+              'font_hint_bold', 'font_midi_bold', 'font_tiny']
+          assert state.findtext('textcolor') == '$VAR[ColorHighlight]'
           labels = Path('1080i/Includes_Labels.xml').read_text()
           assert 'VideoPlayer.TvShowTitle' in labels[labels.index('Label_RixFlix_PauseTitle'):]
           pause_subtitle = labels[labels.index('Label_RixFlix_PauseSubTitle'):]

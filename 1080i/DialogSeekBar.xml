@@ -40,27 +40,38 @@
                             </include>
                         </control>
 
-                        <!-- RIXFLIX: compact pause title in the existing lower-third.
+                        <!-- RIXFLIX: compact pause identity in the existing lower-third.
                              It adds no card or full-width panel over the picture. -->
                         <control type="group">
                             <visible>Player.Paused + [!String.IsEmpty(VideoPlayer.Title) | !String.IsEmpty(Player.Title)]</visible>
                             <include>OSD_HideControls</include>
                             <left>view_pad</left>
                             <right>view_pad</right>
-                            <top>770</top>
+                            <top>756</top>
                             <height>100</height>
                             <control type="image">
                                 <left>0</left>
-                                <top>7</top>
+                                <top>5</top>
                                 <width>5</width>
-                                <height>70</height>
+                                <height>88</height>
                                 <texture colordiffuse="$VAR[ColorHighlight]">common/white.png</texture>
                             </control>
                             <control type="label">
                                 <left>24</left>
                                 <right>0</right>
                                 <top>0</top>
-                                <height>48</height>
+                                <height>24</height>
+                                <align>left</align>
+                                <aligny>center</aligny>
+                                <font>font_hint_bold</font>
+                                <textcolor>$VAR[ColorHighlight]</textcolor>
+                                <label>$LOCALIZE[112]</label>
+                            </control>
+                            <control type="label">
+                                <left>24</left>
+                                <right>0</right>
+                                <top>20</top>
+                                <height>44</height>
                                 <align>left</align>
                                 <aligny>center</aligny>
                                 <font>font_midi_bold</font>
@@ -70,8 +81,8 @@
                             <control type="label">
                                 <left>24</left>
                                 <right>0</right>
-                                <top>46</top>
-                                <height>36</height>
+                                <top>60</top>
+                                <height>32</height>
                                 <align>left</align>
                                 <aligny>center</aligny>
                                 <font>font_tiny</font>
