@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 1196, not 1199: the RixFlix shutdown banner owns 1199 (Custom_1199_RixFlix_Shutdown.xml).
+     Two custom windows on one id load in directory order and Kodi REJECTS the second
+     ("No id specified or id already in use"); on the AM9 that was the shutdown window, so
+     the power menu's Restart Kodi opened this debug overlay instead (kodi.log 2026-09-12). -->
+<window type="dialog" id="1196">
+    <zorder>20</zorder>
+    <visible>Skin.HasSetting(DebugInfo)</visible>
+    <controls>
+        <include condition="Skin.HasSetting(DebugInfo)">Overlay_DebugInfo</include>
+    </controls>
+</window>
