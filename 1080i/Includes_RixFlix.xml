@@ -88,8 +88,10 @@
         <onup condition="!$EXP[Exp_RixFlix_NavBar]">ActivateWindow(1171)</onup>
                     <onback>500</onback>
 
-                    <!-- Search box -->
-                    <control type="group">
+                    <!-- Search box. The wrapper groups carry ids ON PURPOSE: a grouplist
+                         wires Left/Right between its direct children by id, and an id-less
+                         child gets navigation target 0 - Right did nothing until 1.9.6. -->
+                    <control type="group" id="9210">
                         <width>480</width>
                         <height>80</height>
                         <control type="button" id="9201">
@@ -117,7 +119,7 @@
                     </control>
 
                     <!-- Home -->
-                    <control type="group">
+                    <control type="group" id="9220">
                         <width>80</width>
                         <height>80</height>
                         <control type="button" id="9202">
