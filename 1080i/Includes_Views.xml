@@ -174,6 +174,7 @@
                 <visible>$EXP[View_Row_Info_Details_Expression]</visible>
                 <visible>!$EXP[View_Mode_Comb_Flix_Expression]</visible>
                 <visible>!$EXP[View_Mode_Comb_Tall_Expression]</visible>
+                <visible>!$EXP[Exp_RixFlix_SeasonStrip]</visible>
                 <include content="View_Line">
                     <param name="use_spinner">true</param>
                     <param name="run_spinner">[Container.IsUpdating]</param>
@@ -183,6 +184,7 @@
                 <visible>!$EXP[View_Row_Info_Details_Expression]</visible>
                 <visible>!$EXP[View_Mode_Comb_Flix_Expression]</visible>
                 <visible>!$EXP[View_Mode_Comb_Tall_Expression]</visible>
+                <visible>!$EXP[Exp_RixFlix_SeasonStrip]</visible>
                 <include content="View_Line">
                     <param name="use_spinner">true</param>
                     <param name="run_spinner">[Container.IsUpdating]</param>
@@ -193,6 +195,8 @@
                 <visible allowhiddenfocus="true">$EXP[View_Mode_Comb_Tall_Expression]</visible>
                 <include>View_Combined_List_Horz_Selector</include>
             </control>
+            <!-- RixFlix: every season page carries the show's seasons -->
+            <include>RixFlix_Season_Strip</include>
             <control type="group">
                 <visible allowhiddenfocus="true">$EXP[View_Mode_Comb_Flix_Expression]</visible>
                 <include>View_Combined_Row_Horz_Selector</include>
@@ -480,6 +484,12 @@
                 <include>Furniture_Reposition</include>
                 <visible>!$EXP[Exp_InfoDialogs]</visible>
                 <include>Furniture_Footer_Right</include>
+            </control>
+
+            <!-- RixFlix: Up from any list reaches Search + Home, as on the Home hub -->
+            <control type="group">
+                <visible>!$EXP[Exp_InfoDialogs]</visible>
+                <include>RixFlix_NavBar</include>
             </control>
         </definition>
     </include>

@@ -21,6 +21,7 @@
     <include file="Includes_Categories.xml" />
     <include file="Includes_Background.xml" />
     <include file="Includes_Expressions.xml" />
+    <include file="Includes_RixFlix.xml" />
     <include file="Includes_Colors.xml" />
     <include file="Includes_Defaults.xml" />
     <include file="Includes_Dimensions.xml" />

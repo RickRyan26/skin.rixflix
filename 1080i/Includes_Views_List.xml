@@ -251,6 +251,7 @@
                         <onleft>600</onleft>
                         <onright>611</onright>
                         <onleft>ActivateWindow(1171)</onleft>
+                        <include>RixFlix_List_OnUp</include>
                         <include content="Action_View_Movement_OnBack">
                             <param name="id">$PARAM[id]</param>
                             <param name="onback">True</param>

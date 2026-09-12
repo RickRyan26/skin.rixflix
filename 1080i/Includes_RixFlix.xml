@@ -1,0 +1,253 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<includes>
+
+    <!-- ================================================================== -->
+    <!-- RixFlix navigation surfaces (2026-09-11)                             -->
+    <!--                                                                     -->
+    <!-- Three household complaints, one file:                               -->
+    <!--  1. A series page "locked into a single season". A season page is  -->
+    <!--     Kodi's native episode list of ONE season                       -->
+    <!--     (videodb://tvshows/titles/<show>/<season>/). Recently Watched   -->
+    <!--     lands there on purpose (Kodi focuses the first unwatched        -->
+    <!--     episode only in the window's own container), and so does       -->
+    <!--     selecting a tab on the series root. The strip below puts the    -->
+    <!--     show's seasons on EVERY such page, so no route can strand a     -->
+    <!--     viewer in one season.                                           -->
+    <!--  2. The Home hub's Up-bar (Search + Home) exists only on hubs. The  -->
+    <!--     nav bar below gives every media window the same Up gesture.     -->
+    <!--  3. "No Results" while the search is still running - see            -->
+    <!--     Exp_RixFlix_Search_Loading and Includes_Labels.xml.             -->
+    <!-- ================================================================== -->
+
+    <!-- The episode list of one season of one show, in the Videos window. `Container.*`
+         and `Container.ListItem` resolve against the media window's own view, whatever
+         control has focus (CGUIMediaWindow::GetCurrentListItem), so this stays true
+         while the strip itself is focused. -->
+    <expression name="Exp_RixFlix_SeasonPage">[Window.IsVisible(videos) + Container.Content(episodes) + String.StartsWith(Container.FolderPath,videodb://tvshows/titles/) + !String.IsEmpty(Container.ListItem.TvShowDBID)]</expression>
+
+    <!-- The strip replaces the row views' section line at the same spot; list and wall
+         views keep their own geometry and reach the nav bar instead. -->
+    <expression name="Exp_RixFlix_SeasonStrip">[$EXP[Exp_RixFlix_SeasonPage] + $EXP[View_Mode_Rows_Expression]]</expression>
+
+    <!-- Windows built on View_Main that carry the nav bar. -->
+    <expression name="Exp_RixFlix_NavBar">[Window.IsVisible(videos) | Window.IsVisible(music) | Window.IsVisible(pictures) | Window.IsVisible(programs) | Window.IsVisible(games)]</expression>
+
+    <!-- The search is still running: the term encoder (310/320) or any result provider
+         (501 discover, 502+ the searchwidgets rows) has a directory job in flight. While
+         this is true an empty selector (601) means "not answered yet", never "nothing". -->
+    <expression name="Exp_RixFlix_Search_Loading">[Container(310).IsUpdating | Container(320).IsUpdating | Container(501).IsUpdating | Container(502).IsUpdating | Container(503).IsUpdating | Container(504).IsUpdating | Container(505).IsUpdating | Container(506).IsUpdating | Container(507).IsUpdating | Container(508).IsUpdating | Container(509).IsUpdating]</expression>
+
+    <!-- Up out of a row view: seasons strip on a season page, else the nav bar, else the
+         stock views dialog (windows without the bar keep the AF3 behaviour). -->
+    <include name="RixFlix_Row_OnUp">
+        <onup condition="$EXP[Exp_RixFlix_SeasonStrip]">5700</onup>
+        <onup condition="!$EXP[Exp_RixFlix_SeasonStrip] + $EXP[Exp_RixFlix_NavBar]">9200</onup>
+        <onup condition="!$EXP[Exp_RixFlix_SeasonStrip] + !$EXP[Exp_RixFlix_NavBar]">ActivateWindow(1171)</onup>
+    </include>
+
+    <!-- Up off the top of a vertical list/wall: the nav bar. With no condition met the
+         list keeps Kodi's wrap-around, exactly as before. -->
+    <include name="RixFlix_List_OnUp">
+        <onup condition="$EXP[Exp_RixFlix_NavBar]">9200</onup>
+    </include>
+
+    <!-- ============ -->
+    <!-- Season strip -->
+    <!-- ============ -->
+
+    <!-- The season the page is showing: a numbered/Specials tab matches the view's
+         episodes; the synthetic All Seasons tab (empty ListItem.Season) matches the
+         /-1/ path, which Kodi may suffix with ?tvshowid=. String.IsEqual, not
+         Integer.IsEqual: only the string comparison honours the Container qualifier
+         inside an item layout (GUIInfoManager::GetMultiInfoBool resolves the second
+         operand through the view container; the integer path uses the layout's own
+         item for both sides). -->
+    <expression name="Exp_RixFlix_Season_IsCurrent">[[!String.IsEmpty(ListItem.Season) + String.IsEqual(ListItem.Season,Container.ListItem.Season)] | [String.IsEmpty(ListItem.Season) + String.Contains(Container.FolderPath,/-1/)]]</expression>
+
+    <include name="RixFlix_Season_Strip_Layout">
+        <param name="focused">false</param>
+        <definition>
+            <control type="group">
+                <width>230</width>
+                <height>80</height>
+                <control type="image">
+                    <left>10</left>
+                    <width>210</width>
+                    <centertop>50%</centertop>
+                    <height>60</height>
+                    <include>Texture_Menu_Highlight_H</include>
+                    <visible>$PARAM[focused]</visible>
+                </control>
+                <control type="label">
+                    <left>10</left>
+                    <width>210</width>
+                    <height>80</height>
+                    <align>center</align>
+                    <aligny>center</aligny>
+                    <font>font_main_bold</font>
+                    <label>$INFO[ListItem.Label]</label>
+                    <textcolor>main_fg_30</textcolor>
+                    <visible>![$PARAM[focused]] + !$EXP[Exp_RixFlix_Season_IsCurrent]</visible>
+                </control>
+                <control type="label">
+                    <left>10</left>
+                    <width>210</width>
+                    <height>80</height>
+                    <align>center</align>
+                    <aligny>center</aligny>
+                    <font>font_main_bold</font>
+                    <label>$INFO[ListItem.Label]</label>
+                    <textcolor>main_fg_100</textcolor>
+                    <visible>![$PARAM[focused]] + $EXP[Exp_RixFlix_Season_IsCurrent]</visible>
+                </control>
+                <control type="label">
+                    <left>10</left>
+                    <width>210</width>
+                    <height>80</height>
+                    <align>center</align>
+                    <aligny>center</aligny>
+                    <font>font_main_bold</font>
+                    <label>$INFO[ListItem.Label]</label>
+                    <textcolor>$VAR[ColorSelected]</textcolor>
+                    <visible>$PARAM[focused]</visible>
+                </control>
+            </control>
+        </definition>
+    </include>
+
+    <include name="RixFlix_Season_Strip">
+        <control type="group">
+            <top>480</top>
+            <height>80</height>
+            <left>view_pad</left>
+            <right>view_pad</right>
+            <visible>$EXP[Exp_RixFlix_SeasonStrip]</visible>
+            <include content="Animation_ConditionalFade">
+                <param name="condition">true</param>
+            </include>
+            <!-- No allowhiddenfocus ON PURPOSE: a hidden list is not processed, so its
+                 content URL is never re-read during the moment a season switch leaves
+                 the view without a selected episode (empty TvShowDBID). The strip only
+                 needs focus while it is visible. -->
+            <control type="list" id="5700">
+                <orientation>horizontal</orientation>
+                <height>80</height>
+                <scrolltime tween="cubic" easing="out">200</scrolltime>
+                <content>videodb://tvshows/titles/$INFO[Container.ListItem.TvShowDBID]/</content>
+                <onup>9200</onup>
+                <ondown>500</ondown>
+                <onback>500</onback>
+                <!-- replace: switching seasons must not stack a history entry per tab,
+                     so Back still leaves the series the way the viewer came in. -->
+                <onclick>Container.Update($INFO[Container(5700).ListItem.FolderPath],replace)</onclick>
+                <onclick>SetFocus(500)</onclick>
+                <onfocus>ClearProperty(TMDbHelper.WidgetContainer)</onfocus>
+                <itemlayout width="230" height="80">
+                    <include>RixFlix_Season_Strip_Layout</include>
+                </itemlayout>
+                <focusedlayout width="230" height="80">
+                    <include content="RixFlix_Season_Strip_Layout">
+                        <param name="focused">true</param>
+                    </include>
+                </focusedlayout>
+            </control>
+        </control>
+    </include>
+
+    <!-- ======= -->
+    <!-- Nav bar -->
+    <!-- ======= -->
+
+    <include name="RixFlix_NavBar_Icon">
+        <definition>
+            <control type="image">
+                <left>$PARAM[left]</left>
+                <centertop>50%</centertop>
+                <width>40</width>
+                <height>40</height>
+                <bordersize>icon_home_bordersize</bordersize>
+                <texture background="true" colordiffuse="main_fg_30">$PARAM[icon]</texture>
+                <visible>!Control.HasFocus($PARAM[id])</visible>
+            </control>
+            <control type="image">
+                <left>$PARAM[left]</left>
+                <centertop>50%</centertop>
+                <width>40</width>
+                <height>40</height>
+                <bordersize>icon_home_bordersize</bordersize>
+                <texture background="true" colordiffuse="$VAR[ColorSelected]">$PARAM[icon]</texture>
+                <visible>Control.HasFocus($PARAM[id])</visible>
+            </control>
+        </definition>
+    </include>
+
+    <include name="RixFlix_NavBar">
+        <control type="group">
+            <control type="image">
+                <include>Home_Fade_Animation</include>
+                <visible>ControlGroup(9200).HasFocus()</visible>
+                <texture colordiffuse="main_bg_70">special://skin/extras/backgrounds/overlay/combined_topmenu.png</texture>
+                <bottom>0</bottom>
+            </control>
+            <control type="group">
+                <include>Home_Group_Definition</include>
+                <control type="grouplist" id="9200">
+                    <visible allowhiddenfocus="true">ControlGroup(9200).HasFocus()</visible>
+                    <include>Home_Fade_Animation</include>
+                    <left>-20</left>
+                    <height>80</height>
+                    <orientation>horizontal</orientation>
+                    <itemgap>20</itemgap>
+                    <onup>ActivateWindow(1171)</onup>
+                    <ondown condition="$EXP[Exp_RixFlix_SeasonStrip]">5700</ondown>
+                    <ondown condition="!$EXP[Exp_RixFlix_SeasonStrip]">500</ondown>
+                    <onback>500</onback>
+
+                    <!-- Search box -->
+                    <control type="group">
+                        <width>480</width>
+                        <height>80</height>
+                        <control type="button" id="9201">
+                            <width>480</width>
+                            <height>80</height>
+                            <font>font_main</font>
+                            <label>Search</label>
+                            <textcolor>main_fg_30</textcolor>
+                            <focusedcolor>$VAR[ColorSelected]</focusedcolor>
+                            <textoffsetx>80</textoffsetx>
+                            <align>left</align>
+                            <aligny>center</aligny>
+                            <texturenofocus colordiffuse="main_fg_12" border="40">common/menu-outlined.png</texturenofocus>
+                            <texturefocus colordiffuse="$VAR[ColorHighlight]" border="40">common/menu.png</texturefocus>
+                            <onclick>ActivateWindow(1105)</onclick>
+                        </control>
+                        <include content="RixFlix_NavBar_Icon">
+                            <param name="id">9201</param>
+                            <param name="icon">special://skin/extras/icons/search.png</param>
+                            <param name="left">20</param>
+                        </include>
+                    </control>
+
+                    <!-- Home -->
+                    <control type="group">
+                        <width>80</width>
+                        <height>80</height>
+                        <control type="button" id="9202">
+                            <width>80</width>
+                            <height>80</height>
+                            <label />
+                            <texturenofocus colordiffuse="main_fg_12" border="40">common/menu-outlined.png</texturenofocus>
+                            <texturefocus colordiffuse="$VAR[ColorHighlight]" border="40">common/menu.png</texturefocus>
+                            <onclick>ActivateWindow(Home)</onclick>
+                        </control>
+                        <include content="RixFlix_NavBar_Icon">
+                            <param name="id">9202</param>
+                            <param name="icon">$VAR[Home_Icon_home]</param>
+                            <param name="left">20</param>
+                        </include>
+                    </control>
+                </control>
+            </control>
+        </control>
+    </include>
+</includes>

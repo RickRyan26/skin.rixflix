@@ -157,7 +157,9 @@
 
     <include name="Action_View_Movement_OnUp">
         <definition>
-            <onup>ActivateWindow(1171)</onup>
+            <!-- RixFlix: Up reaches the season strip / nav bar first; the stock views
+                 dialog (1171) stays one press further up. Includes_RixFlix.xml. -->
+            <include>RixFlix_Row_OnUp</include>
         </definition>
     </include>
 
