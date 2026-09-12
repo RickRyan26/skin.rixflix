@@ -423,6 +423,7 @@
                     <wrapmultiline>true</wrapmultiline>
                     <label>$INFO[$PARAM[container]$PARAM[listitem].TVShowTitle]</label>
                     <font>font_title_midi</font>
+                    <shadowcolor>shadow_full</shadowcolor>
                     <aligny>center</aligny>
                     <visible>![!String.IsEmpty($PARAM[croplogo]) + $EXP[Exp_TMDbHelper_IsCrop]]</visible>
                     <visible>String.IsEmpty($PARAM[container]$PARAM[listitem].Art(clearlogo))</visible>
@@ -434,6 +435,7 @@
                     <wrapmultiline>$PARAM[wrapmultiline]</wrapmultiline>
                     <label>$INFO[$PARAM[container]$PARAM[listitem].Artist]</label>
                     <font>font_title_midi</font>
+                    <shadowcolor>shadow_full</shadowcolor>
                     <aligny>center</aligny>
                     <visible>![!String.IsEmpty($PARAM[croplogo]) + $EXP[Exp_TMDbHelper_IsCrop]]</visible>
                     <visible>String.IsEmpty($PARAM[container]$PARAM[listitem].Art(clearlogo))</visible>
@@ -446,6 +448,7 @@
                     <wrapmultiline>$PARAM[wrapmultiline]</wrapmultiline>
                     <label>$INFO[$PARAM[container]$PARAM[listitem].Title]</label>
                     <font>font_title_midi</font>
+                    <shadowcolor>shadow_full</shadowcolor>
                     <aligny>center</aligny>
                     <visible>![!String.IsEmpty($PARAM[croplogo]) + $EXP[Exp_TMDbHelper_IsCrop]]</visible>
                     <visible>String.IsEmpty($PARAM[container]$PARAM[listitem].Art(clearlogo))</visible>
@@ -459,6 +462,7 @@
                     <wrapmultiline>$PARAM[wrapmultiline]</wrapmultiline>
                     <label>$INFO[$PARAM[container]$PARAM[listitem].Label]</label>
                     <font>font_title_midi</font>
+                    <shadowcolor>shadow_full</shadowcolor>
                     <aligny>center</aligny>
                     <visible>![!String.IsEmpty($PARAM[croplogo]) + $EXP[Exp_TMDbHelper_IsCrop]]</visible>
                     <visible>String.IsEmpty($PARAM[container]$PARAM[listitem].Art(clearlogo))</visible>
@@ -849,7 +853,7 @@
                 <param name="control">textbox</param>
                 <top>$PARAM[top]</top>
                 <width>$PARAM[width]</width>
-                <textcolor>$PARAM[colordiffuse]_70</textcolor>
+                <textcolor>$PARAM[colordiffuse]_90</textcolor>
                 <label>$PARAM[label]</label>
                 <height>$PARAM[height]</height>
                 <left>40</left>
@@ -861,7 +865,7 @@
                 <control type="label">
                     <wrapmultiline>true</wrapmultiline>
                     <width>$PARAM[width]</width>
-                    <textcolor>$PARAM[colordiffuse]_70</textcolor>
+                    <textcolor>$PARAM[colordiffuse]_90</textcolor>
                     <label>$PARAM[label]</label>
                     <left>40</left>
                     <font>font_main_plot</font>

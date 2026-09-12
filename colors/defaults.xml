@@ -1,13 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <colors>
+    <!-- RixFlix cinema surfaces: readable even over bright artwork. -->
+    <color name="rix_cinema_ink">ff101114</color>
+    <color name="rix_cinema_surface">ff24262b</color>
+    <color name="rix_cinema_paper">fff5f3ef</color>
+    <color name="rix_cinema_accent">ffb90928</color>
+    <color name="rix_cinema_muted">ffb8bac2</color>
+
     <!-- Main -->
-    <color name="main_fg_100">ffededed</color>
-    <color name="main_fg_90">e7ededed</color>
-    <color name="main_fg_70">b3ededed</color>
-    <color name="main_fg_50">80ededed</color>
-    <color name="main_fg_30">4dededed</color>
-    <color name="main_fg_12">1fededed</color>
-    <color name="main_fg_06">0fededed</color>
+    <color name="main_fg_100">fff5f3ef</color>
+    <color name="main_fg_90">e7f5f3ef</color>
+    <color name="main_fg_70">b3f5f3ef</color>
+    <color name="main_fg_50">80f5f3ef</color>
+    <color name="main_fg_30">4df5f3ef</color>
+    <color name="main_fg_12">1ff5f3ef</color>
+    <color name="main_fg_06">0ff5f3ef</color>
 
     <color name="main_bg_100">ff000000</color>
     <color name="main_bg_90">e7000000</color>
@@ -25,31 +32,31 @@
     <color name="dialog_nib">ff2a3643</color>
     <color name="dialog_overlay">b3000008</color>
 
-    <color name="dialog_fg_100">ffededed</color>
-    <color name="dialog_fg_90">e7ededed</color>
-    <color name="dialog_fg_70">b3ededed</color>
-    <color name="dialog_fg_50">80ededed</color>
-    <color name="dialog_fg_30">4dededed</color>
-    <color name="dialog_fg_12">1fededed</color>
-    <color name="dialog_fg_06">0fededed</color>
+    <color name="dialog_fg_100">fff5f3ef</color>
+    <color name="dialog_fg_90">e7f5f3ef</color>
+    <color name="dialog_fg_70">b3f5f3ef</color>
+    <color name="dialog_fg_50">80f5f3ef</color>
+    <color name="dialog_fg_30">4df5f3ef</color>
+    <color name="dialog_fg_12">1ff5f3ef</color>
+    <color name="dialog_fg_06">0ff5f3ef</color>
 
-    <color name="dialog_bg_100">ff000000</color>
-    <color name="dialog_bg_90">e7000000</color>
-    <color name="dialog_bg_70">b3000000</color>
-    <color name="dialog_bg_50">80000000</color>
-    <color name="dialog_bg_30">4d000000</color>
-    <color name="dialog_bg_12">1f000000</color>
+    <color name="dialog_bg_100">ff15161b</color>
+    <color name="dialog_bg_90">e715161b</color>
+    <color name="dialog_bg_70">b315161b</color>
+    <color name="dialog_bg_50">8015161b</color>
+    <color name="dialog_bg_30">4d15161b</color>
+    <color name="dialog_bg_12">1f15161b</color>
 
     <!-- Panels -->
     <color name="panel_bg_70">b3000000</color>
     <color name="panel_bg_50">80000000</color>
     <color name="panel_bg_12">1f000000</color>
-    <color name="panel_fg_100">ffededed</color>
-    <color name="panel_fg_90">e7ededed</color>
-    <color name="panel_fg_70">b3ededed</color>
-    <color name="panel_fg_50">80ededed</color>
-    <color name="panel_fg_30">4dededed</color>
-    <color name="panel_fg_12">1fededed</color>
+    <color name="panel_fg_100">fff5f3ef</color>
+    <color name="panel_fg_90">e7f5f3ef</color>
+    <color name="panel_fg_70">b3f5f3ef</color>
+    <color name="panel_fg_50">80f5f3ef</color>
+    <color name="panel_fg_30">4df5f3ef</color>
+    <color name="panel_fg_12">1ff5f3ef</color>
 
     <!-- Overlay -->
     <color name="overlay_soft">12ffffff</color>

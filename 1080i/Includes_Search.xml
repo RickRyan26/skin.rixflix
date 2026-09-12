@@ -112,7 +112,7 @@
                 <label>$VAR[Label_Search_NoResults]</label>
                 <align>left</align>
                 <height>80</height>
-                <textcolor>main_fg_30</textcolor>
+                <textcolor>rix_cinema_muted</textcolor>
                 <visible>[String.IsEmpty(Window.Property(TMDBHelper.WidgetContainer)) | [Integer.IsEqual(Container(601).NumItems,0) + !Skin.HasSetting(Search.DisableCombined)] | [Skin.HasSetting(Search.DisableCombined) + Integer.IsEqual(Container(602).NumItems,0)]]</visible>
                 <include>Home_Animation</include>
                 <left>view_pad</left>
@@ -268,7 +268,7 @@
             <left>40</left>
             <font>font_main</font>
             <hinttext>Press OK to enter a title</hinttext>
-            <textcolor>main_fg_30</textcolor>
+            <textcolor>rix_cinema_muted</textcolor>
             <focusedcolor>$VAR[ColorSelected]</focusedcolor>
             <align>left</align>
 
@@ -330,7 +330,7 @@
             <height>50</height>
             <font>font_tiny</font>
             <label>Enter the full title, then choose Movies or TV Shows</label>
-            <textcolor>main_fg_30</textcolor>
+            <textcolor>rix_cinema_muted</textcolor>
             <align>left</align>
             <visible>String.IsEmpty(Control.GetLabel(3000).index(1))</visible>
         </control>

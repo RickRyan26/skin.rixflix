@@ -51,7 +51,7 @@
                 <width>40</width>
                 <height>40</height>
                 <bordersize>icon_home_bordersize</bordersize>
-                <texture background="true" colordiffuse="main_fg_30">$PARAM[icon]</texture>
+                <texture background="true" colordiffuse="rix_cinema_muted">$PARAM[icon]</texture>
                 <visible>!Control.HasFocus($PARAM[id])</visible>
             </control>
             <control type="image">
@@ -60,7 +60,7 @@
                 <width>40</width>
                 <height>40</height>
                 <bordersize>icon_home_bordersize</bordersize>
-                <texture background="true" colordiffuse="$VAR[ColorSelected]">$PARAM[icon]</texture>
+                <texture background="true" colordiffuse="rix_cinema_ink">$PARAM[icon]</texture>
                 <visible>Control.HasFocus($PARAM[id])</visible>
             </control>
         </definition>
@@ -98,13 +98,13 @@
                         <height>80</height>
                         <font>font_main</font>
                         <label>Search</label>
-                        <textcolor>main_fg_30</textcolor>
-                        <focusedcolor>$VAR[ColorSelected]</focusedcolor>
+                        <textcolor>rix_cinema_muted</textcolor>
+                        <focusedcolor>rix_cinema_ink</focusedcolor>
                         <textoffsetx>80</textoffsetx>
                         <align>left</align>
                         <aligny>center</aligny>
-                        <texturenofocus colordiffuse="main_fg_12" border="40">common/menu-outlined.png</texturenofocus>
-                        <texturefocus colordiffuse="$VAR[ColorHighlight]" border="40">common/menu.png</texturefocus>
+                        <texturenofocus colordiffuse="rix_cinema_surface" border="20">common/box.png</texturenofocus>
+                        <texturefocus colordiffuse="rix_cinema_paper" border="20">common/box.png</texturefocus>
                         <!-- One press: the search page WITH its keyboard. The add-on
                              navigates step by step and proves each step (a built-in
                              sent blind during an animation is dropped silently). -->
@@ -116,8 +116,8 @@
                         <width>80</width>
                         <height>80</height>
                         <label />
-                        <texturenofocus colordiffuse="main_fg_12" border="40">common/menu-outlined.png</texturenofocus>
-                        <texturefocus colordiffuse="$VAR[ColorHighlight]" border="40">common/menu.png</texturefocus>
+                        <texturenofocus colordiffuse="rix_cinema_surface" border="20">common/box.png</texturenofocus>
+                        <texturefocus colordiffuse="rix_cinema_paper" border="20">common/box.png</texturefocus>
                         <onclick>ActivateWindow(Home)</onclick>
                     </control>
                 </control>

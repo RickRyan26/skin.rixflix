@@ -5,20 +5,33 @@
         <control type="group">
             <left>0</left>
             <width>720</width>
-            <include content="View_Line_Divider">
-                <param name="align">left</param>
-            </include>
+            <control type="image">
+                <width>152</width>
+                <height>40</height>
+                <centertop>50%</centertop>
+                <aspectratio align="left">keep</aspectratio>
+                <texture>special://skin/media/rixflix/rixflix-wordmark.png</texture>
+            </control>
+            <control type="image">
+                <left>180</left>
+                <width>1</width>
+                <height>24</height>
+                <centertop>50%</centertop>
+                <texture colordiffuse="main_fg_30">common/white.png</texture>
+            </control>
             <control type="label">
+                <left>208</left>
+                <width>512</width>
                 <label>$PARAM[label]</label>
                 <align>left</align>
                 <aligny>center</aligny>
                 <textcolor>$PARAM[textcolor]</textcolor>
-                <font>font_midi_bold</font>
+                <font>font_main</font>
                 <height>80</height>
+                <scroll>true</scroll>
             </control>
         </control>
     </include>
-
 
     <variable name="Furniture_Header_Right_Temperature">
         <value condition="!Skin.HasSetting(Header.DisableWeather)">$INFO[Weather.Temperature]</value>
@@ -28,15 +41,12 @@
             <right>0</right>
             <width>720</width>
             <visible>$PARAM[visible_right]</visible>
-            <include content="View_Line_Divider">
-                <param name="align">right</param>
-            </include>
             <control type="label">
                 <label>$INFO[System.Time]$VAR[Furniture_Header_Right_Temperature, • ,]</label>
                 <align>right</align>
                 <aligny>center</aligny>
                 <textcolor>$PARAM[textcolor]</textcolor>
-                <font>font_midi_bold</font>
+                <font>font_main</font>
                 <height>80</height>
             </control>
         </control>

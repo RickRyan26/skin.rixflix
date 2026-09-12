@@ -290,7 +290,6 @@
         </control>
     </include>
 
-
     <include name="Hub_Grouplist_OnLeft">
         <onleft condition="Skin.HasSetting(HomeSwitcher.Vertical)">SetFocus(300)</onleft>
     </include>
@@ -366,54 +365,28 @@
         <onback condition="$EXP[Exp_RixFlix_HasForegroundMedia]">309</onback>
     </include>
 
-    <include name="Hub_Spotlight_Button_Circle">
-        <param name="id">311</param>
-        <param name="groupid">321</param>
-        <param name="label">$VAR[Label_FullscreenWidget_PlayButton]</param>
-        <param name="image">$VAR[Image_FullscreenWidget_PlayButton]</param>
-        <param name="bordersize">20</param>
-        <param name="size">120</param>
-        <param name="left">0</param>
-        <param name="width">auto</param>
+    <!-- Every action owns its complete hit area and is a direct grouplist child. -->
+    <include name="Hub_Spotlight_Button_Cinema">
+        <param name="width">320</param>
+        <param name="surface">rix_cinema_surface</param>
+        <param name="ink">rix_cinema_paper</param>
+        <param name="focus_surface">rix_cinema_accent</param>
+        <param name="focus_ink">rix_cinema_paper</param>
         <definition>
-            <control type="group" id="$PARAM[groupid]">
-                <left>$PARAM[left]</left>
-                <width>$PARAM[size]</width>
-                <height>$PARAM[size]</height>
-                <centertop>50%</centertop>
-                <control type="group">
-                    <visible>!Control.HasFocus($PARAM[id])</visible>
-                    <control type="image">
-                        <texture colordiffuse="main_fg_100">diffuse/circle/circle_120.png</texture>
-                    </control>
-                    <control type="image">
-                        <bordersize>$PARAM[bordersize]</bordersize>
-                        <texture background="true" colordiffuse="main_bg_90">$PARAM[image]</texture>
-                    </control>
-                </control>
-                <control type="group">
-                    <visible>Control.HasFocus($PARAM[id])</visible>
-                    <control type="image">
-                        <texture colordiffuse="$VAR[ColorHighlight]">diffuse/circle/circle_120.png</texture>
-                    </control>
-                    <control type="image">
-                        <bordersize>$PARAM[bordersize]</bordersize>
-                        <texture background="true" colordiffuse="$VAR[ColorSelected]">$PARAM[image]</texture>
-                    </control>
-                </control>
-            </control>
             <control type="button" id="$PARAM[id]">
-                <width max="$PARAM[max]">$PARAM[width]</width>
+                <width>$PARAM[width]</width>
                 <height>80</height>
                 <centertop>50%</centertop>
-                <textoffsetx>0</textoffsetx>
-                <include>Texture_Highlight_Underline_H</include>
+                <align>center</align>
+                <aligny>center</aligny>
+                <textoffsetx>24</textoffsetx>
+                <texturefocus colordiffuse="$PARAM[focus_surface]" border="20">common/box.png</texturefocus>
+                <texturenofocus colordiffuse="$PARAM[surface]" border="20">common/box.png</texturenofocus>
                 <font>font_main_bold</font>
-                <textcolor>main_fg_90</textcolor>
-                <focusedcolor>main_fg_100</focusedcolor>
+                <textcolor>$PARAM[ink]</textcolor>
+                <focusedcolor>$PARAM[focus_ink]</focusedcolor>
                 <label>$PARAM[label]</label>
                 <nested />
-                <left>20</left>
             </control>
         </definition>
     </include>
@@ -456,6 +429,7 @@
                     </include>
 
                     <orientation>horizontal</orientation>
+                    <itemgap>16</itemgap>
                     <include>Hub_Spotlight_OnLeft</include>
                     <onright>noop</onright>
                     <onright condition="$EXP[Exp_Hubs_Spotlight_HasItems]">Control.Move(301,1)</onright>
@@ -482,50 +456,45 @@
                         </include>
                     </control>
 
-                    <control type="group" id="316">
-                        <width>240</width>
-                        <orientation>horizontal</orientation>
+                    <include content="Hub_Spotlight_Button_Cinema">
+                        <param name="id">311</param>
 
-                        <include content="Hub_Spotlight_Button_Circle">
+                        <param name="label">$VAR[Label_FullscreenWidget_PlayButton]</param>
+
+                        <param name="width">240</param>
+                        <param name="surface">rix_cinema_paper</param>
+                        <param name="ink">rix_cinema_ink</param>
+                        <param name="focus_surface">rix_cinema_accent</param>
+                        <param name="focus_ink">rix_cinema_paper</param>
+                        <onclick condition="$EXP[Exp_RixFlix_AutoplayTrailer]">PlayerControl(Stop)</onclick>
+                        <onclick condition="$EXP[Exp_RixFlix_AutoplayTrailer]">ClearProperty(RixFlix.AutoplayTrailerResolved,Home)</onclick>
+                        <onclick condition="$EXP[Exp_RixFlix_AutoplayTrailer]">ClearProperty(RixFlix.AutoplayTrailer,Home)</onclick>
+                        <onclick>SetFocus(301)</onclick>
+                        <onclick condition="!String.StartsWith(Container(301).ListItem.FolderPath,videodb://)">Action(select)</onclick>
+                        <onclick condition="String.StartsWith(Container(301).ListItem.FolderPath,videodb://)">Action(play)</onclick>
+                        <onclick>SetFocus(311)</onclick>
+                        <include content="Hub_Spotlight_Button">
                             <param name="id">311</param>
-                            <param name="groupid">321</param>
-                            <param name="label">$VAR[Label_FullscreenWidget_PlayButton]</param>
-                            <param name="image">$VAR[Image_FullscreenWidget_PlayButton]</param>
-                            <param name="max">160</param>
-                            <onclick condition="$EXP[Exp_RixFlix_AutoplayTrailer]">PlayerControl(Stop)</onclick>
-                            <onclick condition="$EXP[Exp_RixFlix_AutoplayTrailer]">ClearProperty(RixFlix.AutoplayTrailerResolved,Home)</onclick>
-                            <onclick condition="$EXP[Exp_RixFlix_AutoplayTrailer]">ClearProperty(RixFlix.AutoplayTrailer,Home)</onclick>
-                            <onclick>SetFocus(301)</onclick>
-                            <onclick condition="!String.StartsWith(Container(301).ListItem.FolderPath,videodb://)">Action(select)</onclick>
-                            <onclick condition="String.StartsWith(Container(301).ListItem.FolderPath,videodb://)">Action(play)</onclick>
-                            <onclick>SetFocus(311)</onclick>
-                            <include content="Hub_Spotlight_Button">
-                                <param name="id">311</param>
-                                <param name="window">$PARAM[window]</param>
-                            </include>
-                            <include>Hub_Spotlight_OnLeft</include>
-                            <onright>312</onright>
-                            <left>140</left>
-                            <onup condition="Skin.HasSetting(HomeSwitcher.Vertical)">SetProperty(Bumper.Direction,Up,Home)</onup>
-                            <onup condition="Skin.HasSetting(HomeSwitcher.Vertical)">ActivateWindow(1180)</onup>
-                            <onup condition="!Skin.HasSetting(HomeSwitcher.Vertical)">300</onup>
-                            <ondown>$VAR[Hub_Action_Widgets]</ondown>
+                            <param name="window">$PARAM[window]</param>
                         </include>
-                    </control>
+                        <include>Hub_Spotlight_OnLeft</include>
+                        <onright>312</onright>
+                        <onup condition="Skin.HasSetting(HomeSwitcher.Vertical)">SetProperty(Bumper.Direction,Up,Home)</onup>
+                        <onup condition="Skin.HasSetting(HomeSwitcher.Vertical)">ActivateWindow(1180)</onup>
+                        <onup condition="!Skin.HasSetting(HomeSwitcher.Vertical)">300</onup>
+                        <ondown>$VAR[Hub_Action_Widgets]</ondown>
+                    </include>
 
-                    <include content="Hub_Spotlight_Button_Circle">
+                    <include content="Hub_Spotlight_Button_Cinema">
                         <param name="id">312</param>
-                        <param name="groupid">322</param>
+
                         <param name="label">$VAR[Label_FullscreenWidget_InfoButton]</param>
-                        <param name="image">$VAR[Image_FullscreenWidget_InfoButton]</param>
-                        <param name="size">60</param>
-                        <param name="bordersize">0</param>
-                        <param name="left">80</param>
+
                         <onclick>SetFocus(301)</onclick>
                         <onclick>$VAR[Action_FullscreenWidget_InfoButton]</onclick>
                         <onclick>SetFocus(312)</onclick>
                         <include content="Hub_Spotlight_Button">
-                            <param name="id">311</param>
+                            <param name="id">312</param>
                             <param name="window">$PARAM[window]</param>
                         </include>
                         <onleft>311</onleft>
@@ -533,14 +502,11 @@
                     </include>
 
                     <!-- On-demand is intentionally separate from the parked idle-autoplay flag. -->
-                    <include content="Hub_Spotlight_Button_Circle">
+                    <include content="Hub_Spotlight_Button_Cinema">
                         <param name="id">313</param>
-                        <param name="groupid">323</param>
+
                         <param name="label">$VAR[Label_RixFlix_TrailerButton]</param>
-                        <param name="image">special://skin/extras/icons/trailer.png</param>
-                        <param name="size">60</param>
-                        <param name="bordersize">12</param>
-                        <param name="left">40</param>
+
                         <visible>String.StartsWith(Container(301).ListItem.Trailer,plugin://plugin.video.youtube/play/?video_id=) + !String.IsEqual(Window(Home).Property(RixFlix.UnavailableTrailer),Container(301).ListItem.Trailer)</visible>
                         <onclick condition="String.IsEmpty(Window(Home).Property(RixFlix.TrailerResolving))">RunScript(special://skin/scripts/rixflix_trailer.py,$ESCINFO[Container(301).ListItem.Trailer],foreground)</onclick>
                         <include content="Hub_Spotlight_Button">
@@ -778,7 +744,6 @@
 
                         <include condition="Skin.HasSetting(Spotlight.EnableSlide) + $PARAM[spotlight]">Hub_Window_Slide_OnSpotlight</include>
 
-
                         <!-- Content -->
                         <control type="group" id="400">
                             <include>Animation_View_WindowChange</include>
@@ -829,8 +794,6 @@
 
         </definition>
     </include>
-
-
 
     <include name="Hub_Prefab_Window">
         <param name="overlay">true</param>
@@ -886,7 +849,6 @@
                         <param name="window">$PARAM[window]</param>
                     </include>
                 </control>
-
 
                 <control type="group">
                     <include>Furniture_Reposition</include>
