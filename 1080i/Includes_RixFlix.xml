@@ -76,6 +76,11 @@
             </control>
             <control type="group">
                 <include>Home_Group_Definition</include>
+                <!-- The two buttons are DIRECT children of the grouplist, on purpose: a
+                     grouplist wires Left/Right only between its direct children, and a
+                     focused button inside a wrapper group has no route out
+                     (CGUIControl::GetAction has no parent fallback) - Right never reached
+                     Home until 1.9.7. The icons are sibling overlays at the buttons' x. -->
                 <control type="grouplist" id="9200">
                     <visible allowhiddenfocus="true">ControlGroup(9200).HasFocus()</visible>
                     <include>Home_Fade_Animation</include>
@@ -84,58 +89,53 @@
                     <orientation>horizontal</orientation>
                     <itemgap>20</itemgap>
                     <onup>ActivateWindow(1171)</onup>
-        <onup condition="$EXP[Exp_RixFlix_NavBar]">9200</onup>
-        <onup condition="!$EXP[Exp_RixFlix_NavBar]">ActivateWindow(1171)</onup>
+                    <ondown>500</ondown>
                     <onback>500</onback>
 
-                    <!-- Search box. The wrapper groups carry ids ON PURPOSE: a grouplist
-                         wires Left/Right between its direct children by id, and an id-less
-                         child gets navigation target 0 - Right did nothing until 1.9.6. -->
-                    <control type="group" id="9210">
+                    <!-- Search box -->
+                    <control type="button" id="9201">
                         <width>480</width>
                         <height>80</height>
-                        <control type="button" id="9201">
-                            <width>480</width>
-                            <height>80</height>
-                            <font>font_main</font>
-                            <label>Search</label>
-                            <textcolor>main_fg_30</textcolor>
-                            <focusedcolor>$VAR[ColorSelected]</focusedcolor>
-                            <textoffsetx>80</textoffsetx>
-                            <align>left</align>
-                            <aligny>center</aligny>
-                            <texturenofocus colordiffuse="main_fg_12" border="40">common/menu-outlined.png</texturenofocus>
-                            <texturefocus colordiffuse="$VAR[ColorHighlight]" border="40">common/menu.png</texturefocus>
-                            <!-- One press: the search page WITH its keyboard. The add-on
-                                 navigates step by step and proves each step (a built-in
-                                 sent blind during an animation is dropped silently). -->
-                            <onclick>RunScript(context.rixflix.gotoshow,opensearch)</onclick>
-                        </control>
-                        <include content="RixFlix_NavBar_Icon">
-                            <param name="id">9201</param>
-                            <param name="icon">special://skin/extras/icons/search.png</param>
-                            <param name="left">20</param>
-                        </include>
+                        <font>font_main</font>
+                        <label>Search</label>
+                        <textcolor>main_fg_30</textcolor>
+                        <focusedcolor>$VAR[ColorSelected]</focusedcolor>
+                        <textoffsetx>80</textoffsetx>
+                        <align>left</align>
+                        <aligny>center</aligny>
+                        <texturenofocus colordiffuse="main_fg_12" border="40">common/menu-outlined.png</texturenofocus>
+                        <texturefocus colordiffuse="$VAR[ColorHighlight]" border="40">common/menu.png</texturefocus>
+                        <!-- One press: the search page WITH its keyboard. The add-on
+                             navigates step by step and proves each step (a built-in
+                             sent blind during an animation is dropped silently). -->
+                        <onclick>RunScript(context.rixflix.gotoshow,opensearch)</onclick>
                     </control>
 
                     <!-- Home -->
-                    <control type="group" id="9220">
+                    <control type="button" id="9202">
                         <width>80</width>
                         <height>80</height>
-                        <control type="button" id="9202">
-                            <width>80</width>
-                            <height>80</height>
-                            <label />
-                            <texturenofocus colordiffuse="main_fg_12" border="40">common/menu-outlined.png</texturenofocus>
-                            <texturefocus colordiffuse="$VAR[ColorHighlight]" border="40">common/menu.png</texturefocus>
-                            <onclick>ActivateWindow(Home)</onclick>
-                        </control>
-                        <include content="RixFlix_NavBar_Icon">
-                            <param name="id">9202</param>
-                            <param name="icon">$VAR[Home_Icon_home]</param>
-                            <param name="left">20</param>
-                        </include>
+                        <label />
+                        <texturenofocus colordiffuse="main_fg_12" border="40">common/menu-outlined.png</texturenofocus>
+                        <texturefocus colordiffuse="$VAR[ColorHighlight]" border="40">common/menu.png</texturefocus>
+                        <onclick>ActivateWindow(Home)</onclick>
                     </control>
+                </control>
+
+                <!-- icons: search box spans x -20..460, Home 480..560 (grouplist left -20, gap 20) -->
+                <control type="group">
+                    <visible>ControlGroup(9200).HasFocus()</visible>
+                    <include>Home_Fade_Animation</include>
+                    <include content="RixFlix_NavBar_Icon">
+                        <param name="id">9201</param>
+                        <param name="icon">special://skin/extras/icons/search.png</param>
+                        <param name="left">0</param>
+                    </include>
+                    <include content="RixFlix_NavBar_Icon">
+                        <param name="id">9202</param>
+                        <param name="icon">$VAR[Home_Icon_home]</param>
+                        <param name="left">500</param>
+                    </include>
                 </control>
             </control>
         </control>
