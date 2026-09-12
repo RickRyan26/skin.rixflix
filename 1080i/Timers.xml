@@ -29,6 +29,6 @@
         <!-- Skin timers are parsed before include expressions and therefore cannot use $EXP. -->
         <start reset="true">Window.IsActive(videos) + Container.Content(episodes) + String.StartsWith(Container.FolderPath,videodb://tvshows/titles/) + !String.Contains(Container.FolderPath,/-1/-1/) + String.IsEqual(Container.ListItem.DBType,episode) + !Container.IsUpdating</start>
         <stop>!Container.Content(episodes) | !String.StartsWith(Container.FolderPath,videodb://tvshows/titles/)</stop>
-        <onstart>RunScript(special://home/addons/context.rixflix.gotoshow/toseries.py)</onstart>
+        <onstart>RunScript(context.rixflix.gotoshow,toseries)</onstart>
     </timer>
 </timers>

@@ -107,7 +107,7 @@
                             <!-- One press: the search page WITH its keyboard. The add-on
                                  navigates step by step and proves each step (a built-in
                                  sent blind during an animation is dropped silently). -->
-                            <onclick>RunScript(special://home/addons/context.rixflix.gotoshow/opensearch.py)</onclick>
+                            <onclick>RunScript(context.rixflix.gotoshow,opensearch)</onclick>
                         </control>
                         <include content="RixFlix_NavBar_Icon">
                             <param name="id">9201</param>

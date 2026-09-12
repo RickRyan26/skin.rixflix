@@ -116,7 +116,7 @@
                              container plays the item; a skin list's PlayMedia(<file>) is one
                              item and the family got the GUI at every episode end (2026-09-11).
                              The add-on script feeds the video playlist from this episode on. -->
-                        <onclick condition="!Container(53$PARAM[id]).ListItem.IsFolder + String.IsEqual(Container(53$PARAM[id]).ListItem.DBType,episode) + !String.IsEmpty(Container(53$PARAM[id]).ListItem.DBID)">RunScript(special://home/addons/context.rixflix.gotoshow/playfromhere.py,$INFO[Container(53$PARAM[id]).ListItem.DBID])</onclick>
+                        <onclick condition="!Container(53$PARAM[id]).ListItem.IsFolder + String.IsEqual(Container(53$PARAM[id]).ListItem.DBType,episode) + !String.IsEmpty(Container(53$PARAM[id]).ListItem.DBID)">RunScript(context.rixflix.gotoshow,playfromhere,$INFO[Container(53$PARAM[id]).ListItem.DBID])</onclick>
                         <onclick condition="!Container(53$PARAM[id]).ListItem.IsFolder + ![String.IsEqual(Container(53$PARAM[id]).ListItem.DBType,episode) + !String.IsEmpty(Container(53$PARAM[id]).ListItem.DBID)]">PlayMedia($ESCINFO[Container(53$PARAM[id]).ListItem.FileNameAndPath])</onclick>
                         <content target="$VAR[Path_CollectionNode_Target]" sortby="$VAR[View_Combined_SortBy]" sortorder="ascending">$VAR[View_53$PARAM[id]_Content]</content>
                         <onfocus>SetProperty(TMDbHelper.WidgetContainer,53$PARAM[id])</onfocus>
@@ -125,7 +125,7 @@
                         <!-- RixFlix: a skin row never gets Kodi's first-unwatched focus, so
                              the add-on lands it on the next unwatched episode (the one being
                              resumed when part-watched). No-op when already there. -->
-                        <onfocus condition="Container.Content(seasons)">RunScript(special://home/addons/context.rixflix.gotoshow/focusepisode.py,53$PARAM[id])</onfocus>
+                        <onfocus condition="Container.Content(seasons)">RunScript(context.rixflix.gotoshow,focusepisode,53$PARAM[id])</onfocus>
 
                     </include>
 
