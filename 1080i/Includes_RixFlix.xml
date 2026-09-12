@@ -142,6 +142,11 @@
                 <onclick>Container.Update($INFO[Container(5700).ListItem.FolderPath],replace)</onclick>
                 <onclick>SetFocus(500)</onclick>
                 <onfocus>ClearProperty(TMDbHelper.WidgetContainer)</onfocus>
+                <!-- Land on the season this page shows, not on item 0. A skin cannot
+                     compute that index (All Seasons / Specials tabs shift it), so the
+                     add-on reads the tabs and SetFocus(5700,i,absolute)s; it is a no-op
+                     when the focus is already there, so a re-fired onfocus cannot loop. -->
+                <onfocus>RunScript(special://home/addons/context.rixflix.gotoshow/focusseason.py)</onfocus>
                 <itemlayout width="230" height="80">
                     <include>RixFlix_Season_Strip_Layout</include>
                 </itemlayout>
@@ -219,7 +224,10 @@
                             <aligny>center</aligny>
                             <texturenofocus colordiffuse="main_fg_12" border="40">common/menu-outlined.png</texturenofocus>
                             <texturefocus colordiffuse="$VAR[ColorHighlight]" border="40">common/menu.png</texturefocus>
-                            <onclick>ActivateWindow(1105)</onclick>
+                            <!-- One press: the search page WITH its keyboard. The add-on
+                                 navigates step by step and proves each step (a built-in
+                                 sent blind during an animation is dropped silently). -->
+                            <onclick>RunScript(special://home/addons/context.rixflix.gotoshow/opensearch.py)</onclick>
                         </control>
                         <include content="RixFlix_NavBar_Icon">
                             <param name="id">9201</param>
