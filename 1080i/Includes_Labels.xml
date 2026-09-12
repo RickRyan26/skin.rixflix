@@ -72,7 +72,7 @@
              "searching", never "no results" - the message that sent viewers away
              before the local rows had materialised (Includes_RixFlix.xml). -->
         <value condition="!String.IsEmpty(Control.GetLabel(3000).index(1)) + Integer.IsEqual(Container(601).NumItems,0) + $EXP[Exp_RixFlix_Search_Loading]">Looking for "[CAPITALIZE]$INFO[Control.GetLabel(3000).index(1), , ][/CAPITALIZE]" in Movies and TV Shows...</value>
-        <value condition="!String.IsEmpty(Control.GetLabel(3000).index(1)) + Integer.IsEqual(Container(601).NumItems,0)">No titles match "$INFO[Control.GetLabel(3000).index(1)]".[CR]Press Up to search again. Try a shorter title.</value>
+        <value condition="!String.IsEmpty(Control.GetLabel(3000).index(1)) + Integer.IsEqual(Container(601).NumItems,0)">No titles match "$INFO[Control.GetLabel(3000).index(1)]".[CR]Try a shorter title or check the spelling.</value>
         <value>Search your Movies and TV Shows.[CR]Press OK, enter part of a title, then choose Done.</value>
     </variable>
 

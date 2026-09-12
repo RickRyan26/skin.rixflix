@@ -238,11 +238,11 @@
 
         <!-- Backing Panel -->
         <control type="image">
-            <texture colordiffuse="main_fg_12" border="40">common/menu-outlined.png</texture>
+            <texture colordiffuse="rix_cinema_surface" border="20">common/box.png</texture>
             <visible>!Control.HasFocus(3000)</visible>
         </control>
         <control type="image">
-            <texture colordiffuse="$VAR[ColorHighlight]" border="40">common/menu.png</texture>
+            <texture colordiffuse="rix_cinema_paper" border="20">common/box.png</texture>
             <visible>Control.HasFocus(3000)</visible>
         </control>
 
@@ -269,7 +269,7 @@
             <font>font_main</font>
             <hinttext>Press OK to enter a title</hinttext>
             <textcolor>rix_cinema_muted</textcolor>
-            <focusedcolor>$VAR[ColorSelected]</focusedcolor>
+            <focusedcolor>rix_cinema_ink</focusedcolor>
             <align>left</align>
 
             <onleft condition="Skin.HasSetting(HomeSwitcher.Vertical)">SetProperty(RefocusMenu,True)</onleft>
@@ -310,12 +310,12 @@
             <width>80</width>
             <control type="image">
                 <include>Home_Grouplist_Icon_Definition</include>
-                <texture background="true" colordiffuse="main_fg_30">special://skin/extras/icons/search.png</texture>
+                <texture background="true" colordiffuse="rix_cinema_muted">special://skin/extras/icons/search.png</texture>
                 <visible>!Control.HasFocus(3000)</visible>
             </control>
             <control type="image">
                 <include>Home_Grouplist_Icon_Definition</include>
-                <texture background="true" colordiffuse="$VAR[ColorSelected]">special://skin/extras/icons/search.png</texture>
+                <texture background="true" colordiffuse="rix_cinema_ink">special://skin/extras/icons/search.png</texture>
                 <visible>Control.HasFocus(3000)</visible>
             </control>
         </control>
@@ -329,7 +329,7 @@
             <width>760</width>
             <height>50</height>
             <font>font_tiny</font>
-            <label>Enter the full title, then choose Movies or TV Shows</label>
+            <label>Enter part of a title, choose Done, then browse the results</label>
             <textcolor>rix_cinema_muted</textcolor>
             <align>left</align>
             <visible>String.IsEmpty(Control.GetLabel(3000).index(1))</visible>
