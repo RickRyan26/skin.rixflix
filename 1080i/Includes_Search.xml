@@ -286,13 +286,17 @@
             <ondown>601</ondown>
             <!-- RixFlix: back to the list the nav bar's Search box was pressed on (see
                  Custom_1105_Search.xml). Without an origin Kodi's own Back applies.
-                 The control-id line is NOT decoration: CGUIWindow::OnMove executes a
-                 movement's built-ins and then returns false unless the movement also
-                 names a control, and a false lets the window's default Back run too -
-                 which popped the freshly opened list straight to Home (kodi.log
-                 2026-09-12 11:53:54, "PreviousWindow: Deactivate" 136 ms after the
-                 ReplaceWindow). 3001 is the search bar's hidden focus proxy. -->
-            <onback condition="!String.IsEmpty(Window(Home).Property(RixFlix.SearchReturn.Path))">ReplaceWindow($INFO[Window(Home).Property(RixFlix.SearchReturn.Window)],$INFO[Window(Home).Property(RixFlix.SearchReturn.Path)],return)</onback>
+                 The handler only ARMS the return; the rixflix_search_return timer
+                 (Timers.xml) performs the window switch on the next tick. Two Kodi
+                 facts force that split: CGUIWindow::OnMove executes a movement's
+                 built-ins and returns false unless the movement names a control - and
+                 a false lets the window's default Back (PreviousWindow) run too - while
+                 a ReplaceWindow inside the handler tears this window down before OnMove
+                 can look the named control up, so it returns false anyway (kodi.log
+                 2026-09-12 11:53 and 12:06: "PreviousWindow: Deactivate" 136 ms after
+                 the switch, popping the fresh list to Home). 3001 is the bar's hidden
+                 focus proxy, so the Back is consumed here with the window intact. -->
+            <onback condition="!String.IsEmpty(Window(Home).Property(RixFlix.SearchReturn.Path))">SetProperty(RixFlix.SearchReturn.Go,1,Home)</onback>
             <onback condition="!String.IsEmpty(Window(Home).Property(RixFlix.SearchReturn.Path))">3001</onback>
 
             <texturefocus />

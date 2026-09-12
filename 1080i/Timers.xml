@@ -31,4 +31,15 @@
         <stop>!Container.Content(episodes) | !String.StartsWith(Container.FolderPath,videodb://tvshows/titles/)</stop>
         <onstart>RunScript(context.rixflix.gotoshow,toseries)</onstart>
     </timer>
+    <timer>
+        <name>rixflix_search_return</name>
+        <description>Back on a nav-bar search returns to the list it was opened from (armed by the search field's onback)</description>
+        <!-- The window switch lives here, not in the onback, because a switch inside a movement handler cannot consume -->
+        <!-- the Back (CGUIWindow::OnMove) and Kodi's default Back then pops the fresh list to Home - see Includes_Search.xml. -->
+        <!-- Skin timers are parsed before include expressions and therefore cannot use $EXP. -->
+        <start reset="true">!String.IsEmpty(Window(Home).Property(RixFlix.SearchReturn.Go)) + !String.IsEmpty(Window(Home).Property(RixFlix.SearchReturn.Path)) + Window.IsActive(11105)</start>
+        <stop>String.IsEmpty(Window(Home).Property(RixFlix.SearchReturn.Go))</stop>
+        <onstart>ReplaceWindow($INFO[Window(Home).Property(RixFlix.SearchReturn.Window)],$INFO[Window(Home).Property(RixFlix.SearchReturn.Path)],return)</onstart>
+        <onstart>ClearProperty(RixFlix.SearchReturn.Go,Home)</onstart>
+    </timer>
 </timers>

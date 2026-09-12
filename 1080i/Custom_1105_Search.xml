@@ -10,6 +10,7 @@
          session a plain Back would land on Home. opensearch.py records the origin in
          these two Home properties; the edit control's onback consumes them; every exit
          from this window clears them so a stale origin can never hijack a later Back. -->
+    <onunload>ClearProperty(RixFlix.SearchReturn.Go,Home)</onunload>
     <onunload>ClearProperty(RixFlix.SearchReturn.Window,Home)</onunload>
     <onunload>ClearProperty(RixFlix.SearchReturn.Path,Home)</onunload>
 
