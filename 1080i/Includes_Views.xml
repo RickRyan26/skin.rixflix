@@ -174,7 +174,6 @@
                 <visible>$EXP[View_Row_Info_Details_Expression]</visible>
                 <visible>!$EXP[View_Mode_Comb_Flix_Expression]</visible>
                 <visible>!$EXP[View_Mode_Comb_Tall_Expression]</visible>
-                <visible>!$EXP[Exp_RixFlix_SeasonStrip]</visible>
                 <include content="View_Line">
                     <param name="use_spinner">true</param>
                     <param name="run_spinner">[Container.IsUpdating]</param>
@@ -184,7 +183,6 @@
                 <visible>!$EXP[View_Row_Info_Details_Expression]</visible>
                 <visible>!$EXP[View_Mode_Comb_Flix_Expression]</visible>
                 <visible>!$EXP[View_Mode_Comb_Tall_Expression]</visible>
-                <visible>!$EXP[Exp_RixFlix_SeasonStrip]</visible>
                 <include content="View_Line">
                     <param name="use_spinner">true</param>
                     <param name="run_spinner">[Container.IsUpdating]</param>
@@ -195,8 +193,6 @@
                 <visible allowhiddenfocus="true">$EXP[View_Mode_Comb_Tall_Expression]</visible>
                 <include>View_Combined_List_Horz_Selector</include>
             </control>
-            <!-- RixFlix: every season page carries the show's seasons -->
-            <include>RixFlix_Season_Strip</include>
             <control type="group">
                 <visible allowhiddenfocus="true">$EXP[View_Mode_Comb_Flix_Expression]</visible>
                 <include>View_Combined_Row_Horz_Selector</include>

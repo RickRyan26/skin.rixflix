@@ -122,6 +122,10 @@
                         <onfocus>SetProperty(TMDbHelper.WidgetContainer,53$PARAM[id])</onfocus>
                         <onfocus>ClearProperty(Background.ShowOverlay,Home)</onfocus>
                         <onfocus>ClearProperty(InfoPanel.FullSwitch,Home)</onfocus>
+                        <!-- RixFlix: a skin row never gets Kodi's first-unwatched focus, so
+                             the add-on lands it on the next unwatched episode (the one being
+                             resumed when part-watched). No-op when already there. -->
+                        <onfocus condition="Container.Content(seasons)">RunScript(special://home/addons/context.rixflix.gotoshow/focusepisode.py,53$PARAM[id])</onfocus>
 
                     </include>
 
@@ -166,6 +170,13 @@
             <include content="$PARAM[include_movement]">
                 <param name="id">$PARAM[id]</param>
             </include>
+            <!-- RixFlix (2026-09-11): on a series page a season tab's OK drops into that
+                 season's episodes below; it never opens the one-season page Kodi would
+                 open by default (the family only ever wants the page with ALL the tabs).
+                 While the row is still loading the OK is swallowed rather than let
+                 through to that page. -->
+            <onclick condition="Container.Content(seasons) + !Integer.IsEqual(Container(53$PARAM[id]).NumItems,0)">SetFocus(53$PARAM[id])</onclick>
+            <onclick condition="Container.Content(seasons) + Integer.IsEqual(Container(53$PARAM[id]).NumItems,0)">SetFocus(52$PARAM[id])</onclick>
             <left>40</left>
             <centertop>0</centertop>
             <height>80</height>

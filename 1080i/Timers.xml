@@ -17,4 +17,18 @@
         <onstop>ClearProperty(RixFlix.AutoplayTrailerResolved,Home)</onstop>
         <onstop>ClearProperty(RixFlix.AutoplayTrailer,Home)</onstop>
     </timer>
+    <timer>
+        <name>rixflix_series_page</name>
+        <description>A one-season episode page is never a destination: route it to the series page (all season tabs)</description>
+        <!-- Rick, 2026-09-11: "We only want to ever navigate to the series page that has ALL the season tabs." -->
+        <!-- Kodi opens videodb://tvshows/titles/SHOW/SEASON/ from any native Select on a season tab, from `..` and from -->
+        <!-- older links; a skin cannot intercept a view container's click. This fires the moment such a page shows and -->
+        <!-- toseries.py does Container.Update(SHOW ROOT,replace). Excluded: the series page itself (content seasons), -->
+        <!-- the all-episodes search path (/-1/-1/), playlists and Recently Added (other prefixes). reset="true": it -->
+        <!-- re-arms once the page has changed, so the next stray season page is caught too. -->
+        <!-- Skin timers are parsed before include expressions and therefore cannot use $EXP. -->
+        <start reset="true">Window.IsActive(videos) + Container.Content(episodes) + String.StartsWith(Container.FolderPath,videodb://tvshows/titles/) + !String.Contains(Container.FolderPath,/-1/-1/) + String.IsEqual(Container.ListItem.DBType,episode) + !Container.IsUpdating</start>
+        <stop>!Container.Content(episodes) | !String.StartsWith(Container.FolderPath,videodb://tvshows/titles/)</stop>
+        <onstart>RunScript(special://home/addons/context.rixflix.gotoshow/toseries.py)</onstart>
+    </timer>
 </timers>
