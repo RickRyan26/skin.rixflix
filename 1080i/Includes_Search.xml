@@ -284,6 +284,9 @@
 
             <onup condition="!Skin.HasSetting(Search.DisableDiscover) + !Skin.HasSetting(Search.DisableCombined)">RunPlugin(plugin://plugin.video.themoviedb.helper/?info=user_discover$INFO[Window(Home).Property(TMDbHelper.UserDiscover.Folderpath.ParamString),&amp;,])</onup>
             <ondown>601</ondown>
+            <!-- RixFlix: back to the list the nav bar's Search box was pressed on (see
+                 Custom_1105_Search.xml). Without an origin Kodi's own Back applies. -->
+            <onback condition="!String.IsEmpty(Window(Home).Property(RixFlix.SearchReturn.Path))">ActivateWindow($INFO[Window(Home).Property(RixFlix.SearchReturn.Window)],$INFO[Window(Home).Property(RixFlix.SearchReturn.Path)],return)</onback>
 
             <texturefocus />
             <texturenofocus />
