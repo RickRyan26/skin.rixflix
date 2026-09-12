@@ -285,8 +285,15 @@
             <onup condition="!Skin.HasSetting(Search.DisableDiscover) + !Skin.HasSetting(Search.DisableCombined)">RunPlugin(plugin://plugin.video.themoviedb.helper/?info=user_discover$INFO[Window(Home).Property(TMDbHelper.UserDiscover.Folderpath.ParamString),&amp;,])</onup>
             <ondown>601</ondown>
             <!-- RixFlix: back to the list the nav bar's Search box was pressed on (see
-                 Custom_1105_Search.xml). Without an origin Kodi's own Back applies. -->
+                 Custom_1105_Search.xml). Without an origin Kodi's own Back applies.
+                 The control-id line is NOT decoration: CGUIWindow::OnMove executes a
+                 movement's built-ins and then returns false unless the movement also
+                 names a control, and a false lets the window's default Back run too -
+                 which popped the freshly opened list straight to Home (kodi.log
+                 2026-09-12 11:53:54, "PreviousWindow: Deactivate" 136 ms after the
+                 ReplaceWindow). 3001 is the search bar's hidden focus proxy. -->
             <onback condition="!String.IsEmpty(Window(Home).Property(RixFlix.SearchReturn.Path))">ReplaceWindow($INFO[Window(Home).Property(RixFlix.SearchReturn.Window)],$INFO[Window(Home).Property(RixFlix.SearchReturn.Path)],return)</onback>
+            <onback condition="!String.IsEmpty(Window(Home).Property(RixFlix.SearchReturn.Path))">3001</onback>
 
             <texturefocus />
             <texturenofocus />
