@@ -11,7 +11,8 @@
     <!--     Recently Watched row opens the series root, a tab's OK drops into  -->
     <!--     that season's episodes (Includes_Views_Combined.xml) instead of    -->
     <!--     opening the season, and the episode row lands on the next          -->
-    <!--     unwatched episode (focusepisode.py).                               -->
+    <!--     episode (focusepisode.py) - and since 1.10.1 the page itself opens  -->
+    <!--     with the focus on it (Timers.xml rixflix_series_land, landseries.py).-->
     <!--  2. The Home hub's Up-bar (Search + Home) exists only on hubs. The  -->
     <!--     nav bar below gives every media window the same Up gesture.     -->
     <!--  3. "No Results" while the search is still running - see            -->

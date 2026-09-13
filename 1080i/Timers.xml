@@ -32,6 +32,21 @@
         <onstart>RunScript(context.rixflix.gotoshow,toseries)</onstart>
     </timer>
     <timer>
+        <name>rixflix_series_land</name>
+        <description>The series page opens ON the next episode: the focus drops into the episode row the moment the page is up</description>
+        <!-- Rick, 2026-09-12: clicking a series "navigates to the correct view but not the next episode I want to watch". -->
+        <!-- Kodi's first-unwatched focus stops at the All Seasons TAB; the row below drew from episode 1 until the viewer -->
+        <!-- pressed into it. landseries.py waits for the row to fill, enters it and lands it (focusepisode.py's chooser: -->
+        <!-- the episode being resumed, else the one after the last played, else the first unwatched) - one OK plays. -->
+        <!-- Runs for the whole visit and stops when the page is left (window, content or path), so it fires ONCE per -->
+        <!-- entry - also after playback returns here, which is when the next episode has changed. Container.IsUpdating -->
+        <!-- is deliberately NOT a stop: a library refresh under the viewer must not re-land the focus. -->
+        <!-- Skin timers are parsed before include expressions and therefore cannot use $EXP. -->
+        <start reset="false">Window.IsActive(videos) + Container.Content(seasons) + String.StartsWith(Container.FolderPath,videodb://tvshows/titles/) + !Container.IsUpdating</start>
+        <stop>!Window.IsActive(videos) | !Container.Content(seasons) | !String.StartsWith(Container.FolderPath,videodb://tvshows/titles/)</stop>
+        <onstart>RunScript(context.rixflix.gotoshow,landseries)</onstart>
+    </timer>
+    <timer>
         <name>rixflix_search_return</name>
         <description>Back on a nav-bar search returns to the list it was opened from (armed by the search field's onback)</description>
         <!-- The window switch lives here, not in the onback, because a switch inside a movement handler cannot consume -->

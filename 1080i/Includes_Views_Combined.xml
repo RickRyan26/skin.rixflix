@@ -123,8 +123,10 @@
                         <onfocus>ClearProperty(Background.ShowOverlay,Home)</onfocus>
                         <onfocus>ClearProperty(InfoPanel.FullSwitch,Home)</onfocus>
                         <!-- RixFlix: a skin row never gets Kodi's first-unwatched focus, so
-                             the add-on lands it on the next unwatched episode (the one being
-                             resumed when part-watched). No-op when already there. -->
+                             the add-on lands it on the next episode (the one being resumed,
+                             else the one after the last played, else the first unwatched).
+                             No-op when already there. On page entry the rixflix_series_land
+                             timer drops the focus in here first (landseries.py). -->
                         <onfocus condition="Container.Content(seasons)">RunScript(context.rixflix.gotoshow,focusepisode,53$PARAM[id])</onfocus>
 
                     </include>
