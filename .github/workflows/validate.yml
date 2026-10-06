@@ -187,3 +187,5 @@ jobs:
           assert set(stale) <= allowed, stale
           print('PASS: source parsed; identity, branding, restart, performance and Up-Next-stays-gone invariants hold')
           PY
+      - name: Check foreground trailer handoff
+        run: python3 scripts/check_trailer_handoff.py

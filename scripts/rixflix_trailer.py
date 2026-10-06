@@ -1,10 +1,12 @@
 """Resolve a library YouTube trailer to signed HLS for background or on-demand play."""
 
+import fcntl
 import json
 import os
 import re
 import subprocess
 import sys
+import tempfile
 import time
 from urllib.parse import parse_qs, urlparse
 
@@ -65,14 +67,22 @@ def hls_manifest(document):
     return manifest
 
 
-def hls_listitem(manifest):
-    """Make Kodi use InputStream Adaptive for YouTube's demuxed HLS master."""
-    item = xbmcgui.ListItem(path=manifest)
-    item.setContentLookup(False)
-    item.setMimeType("application/vnd.apple.mpegurl")
-    item.setProperty("inputstream", "inputstream.adaptive")
-    item.setProperty("inputstream.adaptive.manifest_type", "hls")
-    return item
+def hls_playlist(manifest, directory):
+    """Preserve ISA metadata through Kodi's M3U parser, avoiding play(URL, ListItem)."""
+    if "\n" in manifest or "\r" in manifest:
+        raise ValueError("invalid HLS manifest")
+    with tempfile.NamedTemporaryFile(
+        mode="w", encoding="utf-8", suffix=".m3u8", prefix="trailer-",
+        dir=directory, delete=False,
+    ) as playlist:
+        playlist.write(
+            "#EXTM3U\n#EXTINF:-1,Trailer\n"
+            "#KODIPROP:inputstream=inputstream.adaptive\n"
+            "#KODIPROP:inputstream.adaptive.manifest_type=hls\n"
+            "#KODIPROP:mimetype=application/vnd.apple.mpegurl\n"
+            + manifest + "\n"
+        )
+        return playlist.name
 
 
 def main():
@@ -80,10 +90,22 @@ def main():
     mode = sys.argv[2] if len(sys.argv) == 3 else "background"
     home = xbmcgui.Window(10000)
     foreground_claimed = False
+    owner_lock = None
+    playlist_path = None
     try:
         if mode not in ("background", "foreground"):
             raise ValueError("unsupported playback mode")
         if mode == "foreground":
+            directory = xbmcvfs.translatePath("special://temp/rixflix-trailers")
+            os.makedirs(directory, exist_ok=True)
+            # UI properties are not an atomic mutex. Keep one stable lock inode
+            # through playback, even after the loading label clears.
+            owner_lock = open(os.path.join(directory, "foreground.lock"), "a")
+            try:
+                fcntl.flock(owner_lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
+            except BlockingIOError:
+                log("ignored duplicate on-demand request (owner active)")
+                return
             if home.getProperty(RESOLVING_PROPERTY):
                 log("ignored duplicate on-demand request")
                 return
@@ -116,10 +138,13 @@ def main():
                 home.clearProperty(UNAVAILABLE_PROPERTY)
             home.setProperty(ON_DEMAND_PROPERTY, manifest)
             player = xbmc.Player()
-            # Kodi's native demuxer can sit on YouTube's separate audio/video HLS
-            # variants until this deadline expires. InputStream Adaptive joins them
-            # directly and gives an on-demand button a materially faster handoff.
-            player.play(manifest, hls_listitem(manifest), windowed=False)
+            playlist_path = hls_playlist(manifest, directory)
+            owned_paths = (manifest, playlist_path)
+            previous_path = xbmc.getInfoLabel("Player.Filenameandpath")
+            # No ListItem: Python posts TMSG_MEDIA_PLAY(-1, -1). Kodi expands
+            # the M3U with ISA/MIME metadata; param2=0 instead dereferences an
+            # unchecked stale playlist index in Kodi 22.
+            player.play(playlist_path, windowed=False)
             monitor = xbmc.Monitor()
             deadline = time.monotonic() + 20
             started = False
@@ -128,13 +153,16 @@ def main():
                 player_path = xbmc.getInfoLabel("Player.Filenameandpath")
                 playing = player.isPlayingVideo()
                 if not started and home.getProperty(RESOLVING_PROPERTY) != requested:
-                    if player_path == manifest:
+                    if player_path in owned_paths:
                         player.stop()
                     log("on-demand request cancelled before playback")
                     break
-                if playing and player_path and player_path != manifest:
-                    break
-                if playing:
+                if playing and player_path and player_path not in owned_paths:
+                    # play() posts asynchronously. The previous movie can still
+                    # be reported during the handoff; only a new replacement yields.
+                    if started or player_path != previous_path:
+                        break
+                if playing and player_path in owned_paths:
                     if not started:
                         started = True
                         clear_if_equal(home, RESOLVING_PROPERTY, requested)
@@ -142,14 +170,14 @@ def main():
                     if xbmc.getCondVisibility("Window.IsActive(fullscreenvideo)"):
                         saw_fullscreen = True
                     elif saw_fullscreen:
-                        # Back returned to the movie surface: stop only our exact signed URL.
-                        if xbmc.getInfoLabel("Player.Filenameandpath") == manifest:
+                        # Back returned to the movie surface: stop only our exact owned item.
+                        if xbmc.getInfoLabel("Player.Filenameandpath") in owned_paths:
                             player.stop()
                         break
                 elif started:
                     break
                 elif time.monotonic() >= deadline:
-                    if player_path == manifest:
+                    if player_path in owned_paths:
                         player.stop()
                     home.setProperty(UNAVAILABLE_PROPERTY, requested)
                     log("on-demand player did not start before deadline", xbmc.LOGWARNING)
@@ -167,6 +195,10 @@ def main():
         if foreground_claimed:
             clear_if_equal(home, RESOLVING_PROPERTY, requested)
             clear_if_equal(home, ON_DEMAND_PROPERTY, locals().get("manifest", ""))
+        if playlist_path:
+            os.unlink(playlist_path)
+        if owner_lock:
+            owner_lock.close()
 
 
 if __name__ == "__main__":
