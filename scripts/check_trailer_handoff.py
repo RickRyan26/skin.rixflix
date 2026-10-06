@@ -8,6 +8,8 @@ import tempfile
 from types import SimpleNamespace
 from unittest.mock import patch
 
+sys.dont_write_bytecode = True
+
 
 REQUEST = "plugin://plugin.video.youtube/play/?video_id=abcdefghijk"
 MANIFEST = "https://manifest.googlevideo.com/api/manifest/hls_variant/test"
