@@ -1,4 +1,8 @@
 <include content="Widget_Row">
+    <!-- Home lists retain AF3's tall clipping area, but reserve 130px more pitch.
+         At 1010 the next header began at y450, inside the Premiere footer (y446-474)
+         and poster badges. 1140 places it at y580, beyond cards and their shadows. -->
+    <param name="widgetheight">1140</param>
     <param name="id">{widget_id}</param>
     <param name="groupid">{widget_group_id}</param>
     <param name="label">{widget_label}</param>

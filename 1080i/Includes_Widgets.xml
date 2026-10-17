@@ -540,6 +540,7 @@
     </include>
 
     <include name="Widget_Row">
+        <param name="widgetheight">widget_items_h</param>
         <param name="grouplistid">5000</param>
         <param name="widgetconstants_affix" />
         <definition>
@@ -559,6 +560,7 @@
                 <param name="widget_hideartwork">$PARAM[widget_hideartwork]</param>
                 <param name="widget_showoverlay">$PARAM[widget_showoverlay]</param>
 
+                <param name="widgetheight">$PARAM[widgetheight]</param>
                 <param name="widgettop">widget_items_t$PARAM[widgetconstants_affix]</param>
                 <param name="labelheight">widget_label_h$PARAM[widgetconstants_affix]</param>
 
