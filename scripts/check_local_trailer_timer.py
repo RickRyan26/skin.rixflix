@@ -7,6 +7,7 @@ root = ET.parse(ROOT / '1080i/Timers.xml').getroot()
 local = next(t for t in root.findall('timer') if t.findtext('name') == 'rixflix_local_new_release_trailer')
 start, stop = local.findtext('start'), local.findtext('stop')
 assert local.find('start').get('reset') == 'false'
+assert 'Skin.HasSetting(RixFlix.EnableLocalNewReleaseTrailers)' in start
 assert 'Control.HasFocus(501)' in start and 'Window.IsActive(home)' in start
 assert '!Player.HasMedia' in start
 assert '!Control.HasFocus(501)' in stop and '!Window.IsActive(home)' in stop
