@@ -628,4 +628,48 @@
             <param name="id">$PARAM[id]</param>
         </include>
     </include>
+
+    <include name="Widget_Busy_BlankItem_Premiere">
+        <include content="Widget_Busy_BlankItem">
+            <param name="item_w">580</param>
+            <param name="item_h">390</param>
+            <param name="itemlayout_w">620</param>
+            <param name="itemlayout_h">430</param>
+            <param name="colordiffuse">$PARAM[colordiffuse]</param>
+            <param name="first_row">false</param>
+            <param name="second_row">false</param>
+        </include>
+    </include>
+    <include name="Widget_Busy_BlankItems__List_Premiere_Row">
+        <include>Widget_Busy_BlankItem_Premiere</include>
+        <include>Widget_Busy_BlankItem_Premiere</include>
+        <include>Widget_Busy_BlankItem_Premiere</include>
+    </include>
+    <include name="Widget_Busy_Spinner_Height__List_Premiere_Row">
+        <height>390</height>
+    </include>
+
+    <include name="Widget_Busy_BlankItem_Category">
+        <include content="Widget_Busy_BlankItem">
+            <param name="item_w">300</param>
+            <param name="item_h">230</param>
+            <param name="itemlayout_w">340</param>
+            <param name="itemlayout_h">270</param>
+            <param name="colordiffuse">$PARAM[colordiffuse]</param>
+            <param name="first_row">false</param>
+            <param name="second_row">false</param>
+        </include>
+    </include>
+    <include name="Widget_Busy_BlankItems__List_Category_Row">
+        <include>Widget_Busy_BlankItem_Category</include>
+        <include>Widget_Busy_BlankItem_Category</include>
+        <include>Widget_Busy_BlankItem_Category</include>
+        <include>Widget_Busy_BlankItem_Category</include>
+        <include>Widget_Busy_BlankItem_Category</include>
+        <include>Widget_Busy_BlankItem_Category</include>
+    </include>
+    <include name="Widget_Busy_Spinner_Height__List_Category_Row">
+        <height>230</height>
+    </include>
+
 </includes>
