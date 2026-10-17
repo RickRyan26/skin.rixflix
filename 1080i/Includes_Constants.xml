@@ -195,6 +195,7 @@
     <constant name="widget_grouplist_b">-880</constant>
     <constant name="widget_grouplist_t_detailed">940</constant> <!-- 940 -->
     <constant name="widget_grouplist_b_detailed">-880</constant>
+    <constant name="widget_grouplist_b_home">-1010</constant>
 
 
     <constant name="widget_tbump_h_detailed">580</constant>  <!-- Bumper to address label top spacing (140) [200] [580] {640} -->

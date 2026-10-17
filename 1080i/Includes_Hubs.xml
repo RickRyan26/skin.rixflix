@@ -314,7 +314,9 @@
                 <height>widget_tbump_h_detailed</height>
             </control>
             <top>widget_grouplist_t_detailed</top>
-            <bottom>widget_grouplist_b_detailed</bottom>
+            <!-- A focused row is 1140px + 10px top. Match its 1150px extent:
+                 a 1020px viewport scrolls 130px past the header and clips posters. -->
+            <bottom>widget_grouplist_b_home</bottom>
             <nested />
         </control>
     </include>
