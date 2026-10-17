@@ -878,4 +878,47 @@
         </definition>
     </include>
 
+
+    <include name="List_Premiere_Row">
+        <definition>
+            <include content="List_Core">
+                <param name="orientation">horizontal</param>
+                <param name="control">fixedlist</param>
+                <param name="id">$PARAM[id]</param>
+                <param name="item_w">580</param>
+                <param name="item_h">390</param>
+                <param name="itemlayout_w">620</param>
+                <param name="itemlayout_h">430</param>
+                <param name="itemlayout_include">Layout_Premiere</param>
+                <param name="offset_y">80</param>
+                <param name="offset_x">view_offx</param>
+                <param name="hidden_button_enabled">$PARAM[hidden_button_enabled]</param>
+                <param name="hidden_button">$PARAM[hidden_button]</param>
+                <nested />
+                <movement>2</movement>
+            </include>
+        </definition>
+    </include>
+
+    <include name="List_Category_Row">
+        <definition>
+            <include content="List_Core">
+                <param name="orientation">horizontal</param>
+                <param name="control">fixedlist</param>
+                <param name="id">$PARAM[id]</param>
+                <param name="item_w">300</param>
+                <param name="item_h">230</param>
+                <param name="itemlayout_w">340</param>
+                <param name="itemlayout_h">270</param>
+                <param name="itemlayout_include">Layout_Category</param>
+                <param name="offset_y">80</param>
+                <param name="offset_x">view_offx</param>
+                <param name="hidden_button_enabled">$PARAM[hidden_button_enabled]</param>
+                <param name="hidden_button">$PARAM[hidden_button]</param>
+                <nested />
+                <movement>4</movement>
+            </include>
+        </definition>
+    </include>
+
 </includes>

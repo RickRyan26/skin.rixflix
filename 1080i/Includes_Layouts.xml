@@ -2515,4 +2515,85 @@
             </control>
         </definition>
     </include>
+
+    <!-- Premiere ticket: wider than the standard 410px landscape card, with a
+         crimson ticket spine, release-date ribbon and a separate opaque title strip.
+         No per-item timer, extra provider or speculative artwork request. -->
+    <include name="Layout_Premiere">
+        <param name="selected">false</param>
+        <definition>
+            <control type="group">
+                <width>580</width><height>390</height>
+                <control type="image">
+                    <width>580</width><height>390</height>
+                    <texture colordiffuse="ff212127">common/white.png</texture>
+                </control>
+                <control type="image">
+                    <left>8</left><top>8</top><width>564</width><height>310</height>
+                    <texture background="true">$VAR[Image_Landscape]</texture>
+                    <aspectratio>scale</aspectratio>
+                </control>
+                <control type="image">
+                    <width>8</width><height>390</height>
+                    <texture colordiffuse="ffe50914">common/white.png</texture>
+                </control>
+                <control type="image">
+                    <left>22</left><top>22</top><width>210</width><height>42</height>
+                    <texture colordiffuse="ffe50914">common/box.png</texture>
+                </control>
+                <control type="label">
+                    <left>34</left><top>22</top><width>190</width><height>42</height>
+                    <font>font_tiny_bold</font><textcolor>ffffffff</textcolor>
+                    <label>NEW RELEASE</label>
+                </control>
+                <control type="label">
+                    <left>28</left><top>324</top><width>524</width><height>32</height>
+                    <font>font_main_bold</font><textcolor>fff7f4ef</textcolor>
+                    <label>$INFO[ListItem.Label]</label>
+                </control>
+                <control type="label">
+                    <left>28</left><top>356</top><width>524</width><height>28</height>
+                    <font>font_tiny</font><textcolor>ffcbc5be</textcolor>
+                    <label>$INFO[ListItem.Property(RixFlix.ReleaseDate),PREMIERED  ]</label>
+                </control>
+                <control type="image">
+                    <visible>$PARAM[selected]</visible>
+                    <left>8</left><top>386</top><width>572</width><height>4</height>
+                    <texture colordiffuse="fff7f4ef">common/white.png</texture>
+                </control>
+            </control>
+        </definition>
+    </include>
+
+    <include name="Layout_Category">
+        <param name="selected">false</param>
+        <definition>
+            <control type="group">
+                <width>300</width><height>230</height>
+                <control type="image">
+                    <width>300</width><height>230</height>
+                    <texture colordiffuse="ff212127">common/box.png</texture>
+                </control>
+                <control type="image">
+                    <visible>$PARAM[selected]</visible>
+                    <width>300</width><height>230</height>
+                    <texture colordiffuse="ff8c101b">common/box.png</texture>
+                </control>
+                <control type="image">
+                    <left>24</left><top>24</top><width>64</width><height>64</height>
+                    <texture>$INFO[ListItem.Icon]</texture><aspectratio>keep</aspectratio>
+                </control>
+                <control type="label">
+                    <left>24</left><top>112</top><width>252</width><height>52</height>
+                    <font>font_main_bold</font><textcolor>fff7f4ef</textcolor>
+                    <label>$INFO[ListItem.Label]</label>
+                </control>
+                <control type="label">
+                    <left>24</left><top>174</top><width>252</width><height>32</height>
+                    <font>font_tiny_bold</font><textcolor>ffddd5ce</textcolor>
+                    <label>EXPLORE  →</label>
+                </control>
+            </control>
+        </definition>
+    </include>
 </includes>

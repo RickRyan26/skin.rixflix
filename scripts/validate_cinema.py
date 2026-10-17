@@ -22,6 +22,16 @@ def luminance(argb):
 
 
 def check():
+    layouts = ET.parse(ROOT / '1080i/Includes_Layouts.xml').getroot()
+    lists = ET.parse(ROOT / '1080i/Includes_Lists.xml').getroot()
+    rules = ET.parse(ROOT / 'shortcuts/generator/data/setup/widgets_include_row.xml').getroot()
+    for style, width, height in (('Premiere', '580', '390'), ('Category', '300', '230')):
+        assert rules.find("rules/rule[condition='{item_widget_style}==" + style + "']/value").text == 'List_' + style + '_Row'
+        row = lists.find("include[@name='List_" + style + "_Row']/definition/include")
+        assert params(row)['item_w'] == width and params(row)['item_h'] == height
+        layout = layouts.find("include[@name='Layout_" + style + "']/definition/control")
+        assert layout.findtext('width') == width and layout.findtext('height') == height
+        assert not layout.findall('.//animation'), 'Home cards must not add per-item animation'
     hubs = ET.parse(ROOT / '1080i/Includes_Hubs.xml').getroot()
     template = hubs.find("include[@name='Hub_Spotlight_Button_Cinema']")
     control = template.find('definition/control')
