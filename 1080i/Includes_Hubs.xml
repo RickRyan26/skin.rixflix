@@ -466,7 +466,7 @@
                         <param name="ink">rix_cinema_ink</param>
                         <param name="focus_surface">rix_cinema_accent</param>
                         <param name="focus_ink">rix_cinema_paper</param>
-                        <onclick condition="$EXP[Exp_RixFlix_AutoplayTrailer]">PlayerControl(Stop)</onclick>
+                        <onclick condition="$EXP[Exp_RixFlix_AutoplayTrailer] + [String.IsEqual(Window(Home).Property(RixFlix.AutoplayTrailerResolved),Player.Filenameandpath) | String.IsEqual(Window(Home).Property(RixFlix.LocalTrailerPlaylist),Player.Filenameandpath)]">PlayerControl(Stop)</onclick>
                         <onclick condition="$EXP[Exp_RixFlix_AutoplayTrailer]">ClearProperty(RixFlix.AutoplayTrailerResolved,Home)</onclick>
                         <onclick condition="$EXP[Exp_RixFlix_AutoplayTrailer]">ClearProperty(RixFlix.AutoplayTrailer,Home)</onclick>
                         <onclick>SetFocus(301)</onclick>

@@ -1,6 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <timers>
     <timer>
+        <name>rixflix_local_new_release_trailer</name>
+        <description>Local-only New Releases hover selection; resident service owns playback</description>
+        <!-- No RunScript or resolver on focus. Keep running through natural end
+             so one dwell cannot replay indefinitely. Timers cannot use $EXP. -->
+        <start reset="false">Window.IsActive(home) + Control.HasFocus(501) + !Player.HasMedia + !Window.IsVisible(busydialog) + !Window.IsVisible(busydialognocancel) + !String.IsEmpty(Container(501).ListItem.DBID) + !String.IsEmpty(Container(501).ListItem.Trailer)</start>
+        <stop>!Window.IsActive(home) | !Control.HasFocus(501) | Window.IsVisible(busydialog) | Window.IsVisible(busydialognocancel) | !String.IsEqual(Window(Home).Property(RixFlix.LocalTrailerFocusID),Container(501).ListItem.DBID) | !String.IsEqual(Window(Home).Property(RixFlix.LocalTrailerFocusType),Container(501).ListItem.DBTYPE)</stop>
+        <onstart>SetProperty(RixFlix.LocalTrailerFocusID,$INFO[Container(501).ListItem.DBID],Home)</onstart>
+        <onstart>SetProperty(RixFlix.LocalTrailerFocusType,$INFO[Container(501).ListItem.DBTYPE],Home)</onstart>
+        <onstart>SetProperty(RixFlix.LocalTrailerMetadata,$ESCINFO[Container(501).ListItem.Trailer],Home)</onstart>
+        <onstart>SetProperty(RixFlix.LocalTrailerSelection,$INFO[Container(501).ListItem.DBTYPE]-$INFO[Container(501).ListItem.DBID],Home)</onstart>
+        <onstop>ClearProperty(RixFlix.LocalTrailerSelection,Home)</onstop>
+        <onstop>ClearProperty(RixFlix.LocalTrailerMetadata,Home)</onstop>
+        <onstop>ClearProperty(RixFlix.LocalTrailerFocusID,Home)</onstop>
+        <onstop>ClearProperty(RixFlix.LocalTrailerFocusType,Home)</onstop>
+    </timer>
+    <timer>
         <name>rixflix_spotlight_trailer</name>
         <description>Play the selected Home spotlight trailer behind the menu after three idle seconds</description>
         <!-- PARKED OFF BY DEFAULT: cold YouTube resolution is too slow and the surrounding menu UX needs another pass. -->
