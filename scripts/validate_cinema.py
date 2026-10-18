@@ -117,7 +117,7 @@ def check_home_rows(constants):
     assert len(slides) == 1 and slides[0].get('effect') == 'slide'
     expressions = ET.parse(ROOT / '1080i/Includes_Expressions.xml').getroot()
     showing = expressions.find("expression[@name='Exp_RixFlix_HomeTrailerShowing']").text
-    for part in ('Control.HasFocus(501)', 'Player.HasVideo', 'RixFlix.LocalTrailerActive', 'RixFlix.LocalTrailerSelection'):
+    for part in ('Control.HasFocus(501)', 'Player.HasVideo', 'RixFlix.LocalTrailerActiveID', 'Container(501).ListItem.DBID', 'RixFlix.LocalTrailerActiveType'):
         assert part in showing, part
     return pitch, sizes
 
