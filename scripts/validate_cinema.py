@@ -165,7 +165,7 @@ def check():
     assert any(o.text == 'Control.Move(301,1)' for o in play.findall('onright')), 'Right = next title'
     assert hubs.find("include[@name='Hub_Spotlight_List']/definition/control").get('type') == 'wraplist'
     window = ET.tostring(hubs.find("include[@name='Hub_Window']"), encoding='unicode')
-    assert 'Hub_Spotlight_Info' not in window, 'no spotlight plot/metadata'
+    assert 'Hub_Spotlight_Info' in window, 'the spotlight shows its logo/title and plot'
     assert 'foreground' not in ET.tostring(spotlight, encoding='unicode'), 'no Play Trailer button'
     info = hubs.find("include[@name='Hub_Combined_Info']/control/control[2]/include[@content='Info_Panel']")
     assert params(info)['visible_plot'] == params(info)['visible_meta'] == '!Window.IsActive(home)', 'Home info is title + one line'
