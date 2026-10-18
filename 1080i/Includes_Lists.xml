@@ -892,10 +892,11 @@
                 <param name="itemlayout_h">home_premiere_itemlayout_h</param>
                 <param name="itemlayout_include">Layout_Premiere</param>
                 <param name="offset_y">home_row_offset_y</param>
-                <param name="offset_x">view_offx</param>
+                <param name="offset_x">home_row_list_offx</param>
                 <param name="hidden_button_enabled">$PARAM[hidden_button_enabled]</param>
                 <param name="hidden_button">$PARAM[hidden_button]</param>
                 <nested />
+                <left>home_row_list_l</left>
                 <movement>4</movement>
             </include>
         </definition>
@@ -914,10 +915,11 @@
                 <param name="itemlayout_h">view_poster_itemlayout_h</param>
                 <param name="itemlayout_include">Layout_Poster</param>
                 <param name="offset_y">home_row_offset_y</param>
-                <param name="offset_x">view_offx</param>
+                <param name="offset_x">home_row_list_offx</param>
                 <param name="hidden_button_enabled">$PARAM[hidden_button_enabled]</param>
                 <param name="hidden_button">$PARAM[hidden_button]</param>
                 <nested />
+                <left>home_row_list_l</left>
                 <movement>view_poster_movement</movement>
             </include>
         </definition>
@@ -936,10 +938,11 @@
                 <param name="itemlayout_h">home_category_itemlayout_h</param>
                 <param name="itemlayout_include">Layout_Category</param>
                 <param name="offset_y">home_row_offset_y</param>
-                <param name="offset_x">view_offx</param>
+                <param name="offset_x">home_row_list_offx</param>
                 <param name="hidden_button_enabled">$PARAM[hidden_button_enabled]</param>
                 <param name="hidden_button">$PARAM[hidden_button]</param>
                 <nested />
+                <left>home_row_list_l</left>
                 <movement>4</movement>
             </include>
         </definition>

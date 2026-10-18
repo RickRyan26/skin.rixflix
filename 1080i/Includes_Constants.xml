@@ -224,6 +224,12 @@
          card top (16 = top 20 - 4 for a 40px centred line), reading downward. Kodi clips
          the label's pre-rotation rect to the grouplist (x >= 0), so the rect must start at
          the anchor and extend right; a rect centred on x=40 lost the title's first half. -->
+    <!-- Home row lists start at x=64, not 0: a scrolled row's previous card ends at x=64
+         (card x=80 minus the 16px gap), so the list clips it instead of letting it cover
+         the title margin (1.12.1 theater capture: Recently Added focused on item 2).
+         Cards stay at x=80: list left + item offset == view_offx. -->
+    <constant name="home_row_list_l">64</constant>
+    <constant name="home_row_list_offx">16</constant>
     <constant name="home_title_left">-40</constant>
     <constant name="home_title_w">371</constant>
     <constant name="home_title_t">-4</constant>

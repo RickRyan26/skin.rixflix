@@ -59,6 +59,12 @@ is reserved above a row. Kodi clips a label's **pre-rotation** rect to the group
 so it rotates about (left, top + 20) (`CGUILabel::Render`), and its rect starts at
 the anchor and runs right.
 
+The margin must also stay clear of cards. The row lists used to start at x=0 with
+cards offset 80. A row scrolled past its first item therefore drew the previous card
+over x=0–64, and in 1.12.1 that card hid "Recently Added". Since 1.12.2 the three
+Home lists start at `home_row_list_l` (64) with a 16px item offset. Cards stay at
+x=80, and the previous card ends exactly at the list's clip edge.
+
 **Info panel.** On Home the focused row's panel shows the title and one detail line
 (quality, stars, date, runtime). The plot and the "Ends at" metadata block show only
 off Home. Rows below

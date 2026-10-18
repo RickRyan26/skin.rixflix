@@ -45,6 +45,9 @@ def check_home_rows(constants):
         w, h, lw = num(row['item_w']), num(row['item_h']), num(row['itemlayout_w'])
         assert lw - w == num('home_row_gap_w') == 16, (include, 'horizontal gap', lw - w)
         assert row['offset_y'] == 'home_row_offset_y', include
+        # A scrolled row's previous card must be clipped by the list, not cover the title margin.
+        list_l = lists.find(f"include[@name='{include}']/definition/include").findtext('left')
+        assert (list_l, row['offset_x']) == ('home_row_list_l', 'home_row_list_offx'), include
         assert widgets.find(f"include[@name='Widget_Busy_BlankItems__{include}']") is not None, include
         assert widgets.findtext(f"include[@name='Widget_Busy_Spinner_Height__{include}']/height") == row['item_h']
         sizes[style] = (w, h)
@@ -75,6 +78,9 @@ def check_home_rows(constants):
     card_top = row_top + num('home_row_offset_y')
     assert 16 <= pitch - sh <= 40, ('row gap', pitch - sh)
     assert num('home_row_bump_h') == -num('home_row_label_t'), 'first row starts at the viewport top'
+    assert num('home_row_list_l') + num('home_row_list_offx') == num('view_offx'), 'cards stay at x=80'
+    assert num('home_row_list_l') == num('view_offx') - num('home_row_gap_w'), 'previous card ends at the list edge'
+    assert num('home_row_list_l') >= num('view_pad') + num('home_title_left') + 40 / 2, 'title margin is clear'
     assert num('home_premiere_row_h') - num('home_row_h') == round(ph - sh), 'New Releases pays its own height'
     # Focused rows start at y500 (940 - 440); one full row and most of the next fit.
     assert 500 + pitch + card_top + sh * 0.4 <= 1080, ('at least 40% of the next row must show', pitch)
