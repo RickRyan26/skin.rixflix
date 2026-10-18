@@ -257,7 +257,6 @@
 
     <include name="Hub_Combined_Info">
         <control type="group">
-            <animation effect="fade" start="100" end="0" time="300" condition="$EXP[Exp_RixFlix_HomeTrailerShowing]">Conditional</animation>
             <animation effect="fade" start="0" end="100" delay="399" time="1" condition="!$EXP[Hub_Spotlight_Visible_Expression]">Conditional</animation>
             <animation effect="fade" start="100" end="0" condition="$EXP[Hub_Spotlight_Visible_Expression]">Conditional</animation>
             <control type="group">
@@ -277,15 +276,18 @@
             </control>
             <control type="group">
                 <visible>!$EXP[Exp_Hubs_SlideInfo]</visible>
+                <!-- Room for the plot and "Ends at" under the logo (first <height> wins). -->
+                <height>540</height>
                 <include>Info_Panel_Dimensions</include>
                 <include>Home_Info_Animation</include>
                 <include content="Info_Panel">
                     <param name="visible">[!$EXP[Exp_InfoDialogs] + Integer.IsEqual(Window.Property(TMDBHelper.WidgetContainer),$PARAM[id])]</param>
-                    <!-- Home (Rick, 2026-10-18 "more poster, less chrome"): title and one
-                         detail line only; the plot and the "Ends at" block stay elsewhere. -->
+                    <!-- Rick 2026-10-18 16:35: every row shows what the spotlight shows (logo,
+                         ratings, date, length, description, ends-at), and keeps it while a
+                         preview plays beside it. Only the spotlight has a Play button. -->
                     <param name="visible_line">true</param>
-                    <param name="visible_plot">!Window.IsActive(home)</param>
-                    <param name="visible_meta">!Window.IsActive(home)</param>
+                    <param name="visible_plot">true</param>
+                    <param name="visible_meta">true</param>
                     <param name="include_title">false</param>
                     <param name="container">Container($PARAM[id]).</param>
                 </include>
@@ -307,10 +309,9 @@
         <definition>
             <control type="grouplist" id="602">
                 <animation effect="slide" start="0" end="0,-440" condition="true">Conditional</animation>
-                <!-- A New Releases preview playing behind Home: the rows slide most of the way
-                     off screen and return when focus moves or the preview ends. Visual only:
-                     keyed off the resident's existing ownership properties, never starts/stops. -->
-                <animation effect="slide" start="0" end="0,480" time="500" tween="cubic" easing="inout" condition="$EXP[Exp_RixFlix_HomeTrailerShowing]">Conditional</animation>
+                <!-- Rick 2026-10-18 16:35: New Releases sits nearly on the bottom edge so the
+                     preview above it has room; rows never move for a playing preview. -->
+                <animation effect="slide" start="0" end="0,home_premiere_drop" time="300" tween="cubic" easing="inout" condition="Window.IsActive(home) + Control.HasFocus(501)">Conditional</animation>
 
                 <onup condition="!Control.IsVisible(301) + Skin.HasSetting(HomeSwitcher.Vertical)">SetProperty(Bumper.Direction,Up,Home)</onup>
                 <onup condition="!Control.IsVisible(301) + Skin.HasSetting(HomeSwitcher.Vertical)">ActivateWindow(1180)</onup>
@@ -582,6 +583,14 @@
         </definition>
     </include>
 
+    <!-- The stock "Random Movies" spotlight as a capped videodb query (ORDER BY RANDOM()
+         LIMIT 30) instead of the .xsp, which loads every movie. rixseed is ignored by the
+         query; it only changes the URL so each Home load draws a new set. -->
+    <variable name="Path_RixFlix_HomeSpotlight">
+        <value condition="String.IsEqual(Skin.String(HomeSwitcher.Home.Spotlight.Path),special://skin/extras/playlists/RandomMovies.xsp)">videodb://movies/titles/?xsp=%7B%22type%22%3A%22movies%22%2C%22rules%22%3A%7B%22and%22%3A%5B%7B%22field%22%3A%22lastplayed%22%2C%22operator%22%3A%22notinthelast%22%2C%22value%22%3A%5B%2214%20days%22%5D%7D%5D%7D%2C%22order%22%3A%7B%22method%22%3A%22random%22%2C%22direction%22%3A%22ascending%22%7D%2C%22limit%22%3A30%7D&amp;rixseed=$INFO[Window(Home).Property(RixFlix.SpotlightSeed)]</value>
+        <value>$INFO[Skin.String(HomeSwitcher.Home.Spotlight.Path)]</value>
+    </variable>
+
     <include name="Hub_Window_Side_Slide_Animation">
         <param name="visible">true</param>
         <param name="windowclose">true</param>
@@ -679,6 +688,7 @@
     <include name="Hub_Window">
         <param name="overlay">true</param>
         <param name="spotlight">true</param>
+        <param name="spotlight_content">$INFO[Skin.String(HomeSwitcher.$PARAM[window].Spotlight.Path)]</param>
         <definition>
 
             <include>Hub_Window_Background</include>
@@ -686,7 +696,7 @@
             <!-- Spotlight List -->
             <include content="Hub_Spotlight_List" condition="!String.IsEmpty(Skin.String(HomeSwitcher.$PARAM[window].Spotlight.Target)) + $PARAM[spotlight]">
                 <param name="window">$PARAM[window]</param>
-                <param name="content">$INFO[Skin.String(HomeSwitcher.$PARAM[window].Spotlight.Path)]</param>
+                <param name="content">$PARAM[spotlight_content]</param>
                 <param name="sortby">$INFO[Skin.String(HomeSwitcher.$PARAM[window].Spotlight.SortMethod)]</param>
                 <param name="sortorder">$INFO[Skin.String(HomeSwitcher.$PARAM[window].Spotlight.SortOrder)]</param>
                 <!-- Static on purpose: a dynamic <content target> is evaluated by

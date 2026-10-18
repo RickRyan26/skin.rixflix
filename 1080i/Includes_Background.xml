@@ -149,11 +149,14 @@
 
     <include name="Background_Video">
         <!-- Home (Rick, 2026-10-18 "the trailer should play where the video wallpapers are
-             behind all the posters"): a New Releases preview is scaled into the same
-             top-right wallpaper box as the fanart, not drawn full-frame under a stretched mask. -->
+             behind all the posters", then "take up more of the screen"): the preview fills a
+             right-anchored 16:9 box larger than the fanart, behind the info and the rows. -->
         <control type="group">
             <visible>Window.IsVisible(home)</visible>
-            <include>Background_Video_FlixArt</include>
+            <include content="Background_Video_FlixArt">
+                <param name="w">home_preview_w</param>
+                <param name="h">home_preview_h</param>
+            </include>
         </control>
         <control type="group">
             <description>On-screen videowindow for background video</description>
@@ -171,38 +174,42 @@
     </include>
 
     <include name="Background_Video_FlixArt">
+        <param name="w">flixart_size_w</param>
+        <param name="h">flixart_size_h</param>
+        <definition>
         <control type="group">
             <description>On-screen videowindow for background video</description>
             <control type="group">
                 <top>0</top>
-                <height>flixart_size_h</height>
+                <height>$PARAM[h]</height>
                 <visible>![$EXP[Exp_Video_IsNotPlaying]]</visible>
                 <control type="videowindow">
                     <right>0</right>
-                    <width>flixart_size_w</width>
+                    <width>$PARAM[w]</width>
                     <visible>!Window.IsVisible(1123)</visible>
                 </control>
                 <control type="visualisation">
                     <right>0</right>
-                    <width>flixart_size_w</width>
+                    <width>$PARAM[w]</width>
                     <visible>!Window.IsVisible(1123)</visible>
                 </control>
                 <control type="image">
                     <right>0</right>
-                    <width>flixart_size_w</width>
+                    <width>$PARAM[w]</width>
                     <texture colordiffuse="black">diffuse/flixart/flixart_invert.png</texture>
                 </control>
                 <control type="image">
                     <left>0</left>
-                    <right>flixart_size_w</right>
+                    <right>$PARAM[w]</right>
                     <texture colordiffuse="black">common/white.png</texture>
                 </control>
             </control>
             <control type="image">
-                <top>flixart_size_h</top>
+                <top>$PARAM[h]</top>
                 <texture colordiffuse="black">common/white.png</texture>
             </control>
         </control>
+        </definition>
     </include>
 
     <include name="Background_Main_Plain">

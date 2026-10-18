@@ -17,12 +17,16 @@
     <onload condition="!Skin.HasSetting(Home.FirstRun)">AlarmClock(reloadskin,ReloadSkin(),00:00,silent)</onload>
 
     <onload>$VAR[Action_RatingsMonitor]</onload>
+    <!-- Home is KEEP_IN_MEMORY (GUIWindowHome.cpp), so its spotlight provider only re-queries
+         when its URL changes. A new seed per Home load = a fresh SQL RANDOM() draw of 30. -->
+    <onload>SetProperty(RixFlix.SpotlightSeed,$INFO[System.Time(hh:mm:ss)],Home)</onload>
     <onload condition="Skin.HasSetting(Home.FirstRun) + String.IsEmpty(Window(1198).Property(FirstStart))">$VAR[Action_FirstStart_HomeFocus]</onload>
     <onload condition="Skin.HasSetting(Home.FirstRun) + String.IsEmpty(Window(1198).Property(FirstStart))">SetProperty(FirstStart,True,1198)</onload>
 
     <controls>
         <include content="Hub_Window">
             <param name="window">home</param>
+            <param name="spotlight_content">$VAR[Path_RixFlix_HomeSpotlight]</param>
         </include>
     </controls>
 </window>

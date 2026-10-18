@@ -204,6 +204,9 @@
          The title sits rotated in the 80px left margin, so no header row is reserved.
          New Releases is always the first row (first focusable: Kodi scrolls it to 0), so
          its taller poster is paid for by its own list height, not by the next label. -->
+    <constant name="home_preview_w">1600</constant>
+    <constant name="home_preview_h">900</constant>
+    <constant name="home_premiere_drop">80</constant>
     <constant name="home_row_bump_h">754</constant>
     <constant name="home_row_label_t">-754</constant>
     <constant name="home_row_h">1140</constant>

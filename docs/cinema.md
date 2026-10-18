@@ -79,17 +79,24 @@ dropped, because every later item draws its own leading divider. The plot and th
 off Home. Rows below
 the focused one are no longer dimmed. All rows dim to 30% only behind the spotlight.
 
-**Spotlight.** It has only Play (311): no header, plot/metadata panel, More
+**Spotlight.** It has only Play (311): no header, More
 Information or Play Trailer. Info still opens the info dialog through
 `Hub_Spotlight_Button`. Left/Right call `Control.Move(301,∓1)` on the random wraplist,
 so Left brings back the previous title and Right the next.
 
-**Preview reaction.** `Exp_RixFlix_HomeTrailerShowing` is true when Home row 501 is
-focused, the resident's `RixFlix.LocalTrailerActive` equals the timer's
-`RixFlix.LocalTrailerSelection`, and the player holds the owned playlist/file.
-While it is true, grouplist 602 slides 480px down (500ms) and the focused-row info
-panel fades. The reaction reverses when focus moves (the timer clears the selection)
-or the preview ends (`Player.HasVideo`). Start and stop logic are unchanged.
+**Preview stage (1.12.8, Rick 2026-10-18 16:35).** A Home preview plays in a
+right-anchored 1600×900 box (`home_preview_w/h`, `Background_Video_FlixArt` with params),
+larger than the 1280×720 fanart and behind the info panel and rows. Rows never move for a
+preview and the focused-row info (logo, ratings, date, length, plot, ends-at) stays up
+beside it. New Releases drops `home_premiere_drop` (80px) while 501 has focus so its
+posters end ~16px above the bottom edge. The now-playing footer ("Trailer" + progress
+ring) hides while `Exp_RixFlix_PreviewPlaying`.
+
+**Random spotlight.** Home is `KEEP_IN_MEMORY` (`GUIWindowHome.cpp`), so a static
+spotlight URL is queried once per Kodi run. `Path_RixFlix_HomeSpotlight` replaces the
+stock RandomMovies.xsp (which loaded every movie) with a `videodb://movies/titles/?xsp=`
+query, random order, limit 30, plus `rixseed=<Home load time>`: the option is ignored by
+the query but changes the URL, so every Home load draws a fresh set.
 
 **Residency.** Every row still holds at most 15 items. More cards are on screen,
 though: about 5.4 New Releases posters (was ~3 landscape cards), 6.7 per poster row,
@@ -98,4 +105,4 @@ before the layout is accepted (Rixflix `docs/home-theater.md`).
 
 `python3 scripts/validate_cinema.py` asserts this geometry, the Home include mapping,
 poster-only New Releases, plain Categories, the Play-only spotlight with Left/Right
-walking 301, and the preview slide.
+walking 301, the preview stage, footer and the random spotlight query.

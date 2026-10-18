@@ -110,7 +110,7 @@
         <control type="group">
             <width>720</width>
             <right>-20</right>
-            <visible>Player.HasMedia</visible>
+            <visible>Player.HasMedia + !$EXP[Exp_RixFlix_PreviewPlaying]</visible>
             <control type="group">
                 <right>0</right>
                 <visible>!Window.IsActive(DialogVolumeBar.xml)</visible>

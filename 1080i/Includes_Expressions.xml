@@ -66,13 +66,9 @@
     <!-- Background trailer playback must not turn Back into "open fullscreen player". -->
     <expression name="Exp_RixFlix_AutoplayTrailer">[!String.IsEmpty(Window(Home).Property(RixFlix.AutoplayTrailer))]</expression>
     <expression name="Exp_RixFlix_HasForegroundMedia">[Player.HasMedia + !$EXP[Exp_RixFlix_AutoplayTrailer]]</expression>
-    <!-- A New Releases local preview is actually on screen: Home, row 501 focused, the
-         resident's active key equals the timer's selection, and the player holds the
-         owned playlist/file. Drives only the rows' slide-away. -->
-    <!-- The resident publishes LocalTrailerActiveID/Type for the preview it plays. Not
-         LocalTrailerSelection: the hover timer clears that when the start busy dialog
-         appears, so this never held over a playing preview (theater 2026-10-18). -->
-    <expression name="Exp_RixFlix_HomeTrailerShowing">[Window.IsActive(home) + Control.HasFocus(501) + Player.HasVideo + !String.IsEmpty(Window(Home).Property(RixFlix.LocalTrailerActiveID)) + String.IsEqual(Window(Home).Property(RixFlix.LocalTrailerActiveID),Container(501).ListItem.DBID) + String.IsEqual(Window(Home).Property(RixFlix.LocalTrailerActiveType),Container(501).ListItem.DBTYPE) + [String.IsEqual(Window(Home).Property(RixFlix.LocalTrailerPlaylist),Player.Filenameandpath) | String.IsEqual(Window(Home).Property(RixFlix.AutoplayTrailerResolved),Player.Filenameandpath)]]</expression>
+    <!-- A Home preview (New Releases local file or spotlight autoplay) owns the player.
+         Hides the now-playing footer ("Trailer" + progress ring; Rick 2026-10-18). -->
+    <expression name="Exp_RixFlix_PreviewPlaying">[Player.HasVideo + [String.Contains(Player.Filenameandpath,/rixflix-trailers/) | String.Contains(Player.Filenameandpath,/.rixflix/trailers/) | String.IsEqual(Window(Home).Property(RixFlix.LocalTrailerPlaylist),Player.Filenameandpath) | String.IsEqual(Window(Home).Property(RixFlix.AutoplayTrailerResolved),Player.Filenameandpath)]]</expression>
     <expression name="Exp_RixFlix_NoForegroundMedia">[!Player.HasMedia | $EXP[Exp_RixFlix_AutoplayTrailer]]</expression>
 
     <expression name="Exp_Hubs_Menu_Loopback">[Skin.HasSetting(HomeSwitcher.LoopBack) | Skin.HasSetting(HomeSwitcher.Vertical)]</expression>

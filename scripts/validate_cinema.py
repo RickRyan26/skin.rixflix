@@ -112,18 +112,30 @@ def check_home_rows(constants):
     assert title.findtext('aligny') == 'center' and title.findtext('height') == '40'
     assert '{widget_home_title_top}' not in template
 
-    # The rows slide away from a playing New Releases preview, and only react to it.
-    slides = [a for a in grouplist.findall('animation') if 'Exp_RixFlix_HomeTrailerShowing' in (a.get('condition') or '')]
-    assert len(slides) == 1 and slides[0].get('effect') == 'slide'
-    expressions = ET.parse(ROOT / '1080i/Includes_Expressions.xml').getroot()
-    showing = expressions.find("expression[@name='Exp_RixFlix_HomeTrailerShowing']").text
-    for part in ('Control.HasFocus(501)', 'Player.HasVideo', 'RixFlix.LocalTrailerActiveID', 'Container(501).ListItem.DBID', 'RixFlix.LocalTrailerActiveType'):
-        assert part in showing, part
-    # Home previews play inside the wallpaper box, never full-frame under the stretched mask.
+    # Rick 2026-10-18 16:35: rows never move for a preview; New Releases drops to the bottom
+    # edge while focused, and the focused-row info (with plot and ends-at) stays up.
+    assert not [a for a in grouplist.iter('animation') if 'Trailer' in (a.get('condition') or '')]
+    drops = [a for a in grouplist.findall('animation') if a.get('condition') == 'Window.IsActive(home) + Control.HasFocus(501)']
+    assert len(drops) == 1 and drops[0].get('end') == '0,home_premiere_drop'
+    poster_bottom = 940 - 440 + num('home_premiere_drop') + card_top + ph
+    assert 1040 <= poster_bottom <= 1076, ('New Releases posters nearly touch the bottom', poster_bottom)
+    info = hubs.find("include[@name='Hub_Combined_Info']")
+    assert 'Trailer' not in ET.tostring(info, encoding='unicode')
+    panel = params(info.findall('.//include[@content="Info_Panel"]')[-1])
+    assert (panel['visible_plot'], panel['visible_meta']) == ('true', 'true'), 'every row shows the plot'
+    furniture = ET.parse(ROOT / '1080i/Includes_Furniture.xml').getroot()
+    assert '!$EXP[Exp_RixFlix_PreviewPlaying]' in furniture.find("include[@name='Furniture_Player']/control").findtext('visible')
+    # Home previews play in a right-anchored box larger than the fanart, never full-frame.
     background = ET.parse(ROOT / '1080i/Includes_Background.xml').getroot()
     video = background.find("include[@name='Background_Video']")
     home = [g for g in video.findall('control') if g.findtext('visible') == 'Window.IsVisible(home)']
-    assert len(home) == 1 and home[0].findtext('include') == 'Background_Video_FlixArt'
+    assert len(home) == 1 and home[0].find('include').get('content') == 'Background_Video_FlixArt'
+    box = params(home[0].find('include'))
+    assert (num(box['w']), num(box['h'])) == (1600, 900), box
+    # The spotlight re-draws on every Home load and never loads the whole library.
+    assert 'RixFlix.SpotlightSeed' in (ROOT / '1080i/Home.xml').read_text()
+    spot = hubs.find("variable[@name='Path_RixFlix_HomeSpotlight']/value").text
+    assert '%22limit%22%3A30' in spot and '%22random%22' in spot and 'RixFlix.SpotlightSeed' in spot
     return pitch, sizes
 
 
@@ -172,8 +184,6 @@ def check():
     window = ET.tostring(hubs.find("include[@name='Hub_Window']"), encoding='unicode')
     assert 'Hub_Spotlight_Info' in window, 'the spotlight shows its logo/title and plot'
     assert 'foreground' not in ET.tostring(spotlight, encoding='unicode'), 'no Play Trailer button'
-    info = hubs.find("include[@name='Hub_Combined_Info']/control/control[2]/include[@content='Info_Panel']")
-    assert params(info)['visible_plot'] == params(info)['visible_meta'] == '!Window.IsActive(home)', 'Home info is title + one line'
 
     colors = {c.get('name'): c.text for c in ET.parse(ROOT / 'colors/defaults.xml').getroot()}
     ratios = []
@@ -187,7 +197,7 @@ def check():
     for name in ('View_Line_Label', 'View_Line_SubLabel'):
         assert len(views.find(f"include[@name='{name}']/control").findall('textcolor')) == 1
     print(f'PASS: Home rows pitch {pitch:g}px, 16px card gap, New Releases {sizes["Premiere"][0]:g}x'
-          f'{sizes["Premiere"][1]:g} posters, inline titles, rows slide for previews; '
+          f'{sizes["Premiere"][1]:g} posters, inline titles, previews leave rows in place; '
           f'spotlight Play-only (Left/Right walk 301), {len(ratios)} contrast states (min {min(ratios):.2f}:1)')
 
 
