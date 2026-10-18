@@ -37,4 +37,68 @@
             <value>List_Landscape_Row</value>
         </rule>
     </rules>
+    <!-- Home only (widgets_row.xmltemplate). widget_include stays the shared mapping
+         that search rows also use. -->
+    <rules name="widget_home_include">
+        <rule>
+            <condition>{item_widget_style}==Premiere</condition>
+            <value>List_Premiere_Row</value>
+        </rule>
+        <rule>
+            <condition>{item_widget_style}==Category</condition>
+            <value>List_Category_Row</value>
+        </rule>
+        <rule>
+            <condition>{item_widget_style}==Landscape</condition>
+            <value>List_Landscape_Row</value>
+        </rule>
+        <rule>
+            <condition>{item_widget_style}==Poster</condition>
+            <value>List_Home_Poster_Row</value>
+        </rule>
+        <rule>
+            <condition>{item_widget_style}==Square</condition>
+            <value>List_Square_Row</value>
+        </rule>
+        <rule>
+            <condition>{item_widget_style}==Circle</condition>
+            <value>List_Circle_Row</value>
+        </rule>
+        <rule>
+            <condition>{item_widget_style}==Board</condition>
+            <value>List_Board_Row</value>
+        </rule>
+        <rule>
+            <condition>{item_widget_style}==Card</condition>
+            <value>List_Card_Row</value>
+        </rule>
+        <rule>
+            <condition>True</condition>
+            <value>List_Landscape_Row</value>
+        </rule>
+    </rules>
+    <rules name="widget_home_height">
+        <rule>
+            <condition>{item_widget_style}==Premiere</condition>
+            <value>home_premiere_row_h</value>
+        </rule>
+        <rule>
+            <condition>True</condition>
+            <value>home_row_h</value>
+        </rule>
+    </rules>
+    <rules name="widget_home_title_top">
+        <rule>
+            <condition>{item_widget_style}==Premiere</condition>
+            <value>home_title_t_premiere</value>
+        </rule>
+        <rule>
+            <condition>{item_widget_style}==Category</condition>
+            <value>home_title_t_category</value>
+        </rule>
+        <rule>
+            <condition>True</condition>
+            <value>home_title_t_poster</value>
+        </rule>
+    </rules>
 </contents>

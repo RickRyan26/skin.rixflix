@@ -197,6 +197,36 @@
     <constant name="widget_grouplist_b_detailed">-880</constant>
     <constant name="widget_grouplist_b_home">-1010</constant>
 
+    <!-- Home rows (Rick, 2026-10-18: more poster, less chrome). Kodi's grouplist pitch is
+         Size = top + height per child, and a focused row scrolls to the viewport top when
+         viewport (1150) = list top (10) + list height. Row pitch is then
+         viewport + label top: 1150 - 754 = 396, i.e. a 371px poster plus a 25px gutter.
+         The title sits rotated in the 80px left margin, so no header row is reserved.
+         New Releases is always the first row (first focusable: Kodi scrolls it to 0), so
+         its taller poster is paid for by its own list height, not by the next label. -->
+    <constant name="home_row_bump_h">754</constant>
+    <constant name="home_row_label_t">-754</constant>
+    <constant name="home_row_h">1140</constant>
+    <constant name="home_row_offset_y">6</constant>
+    <constant name="home_row_busy_t">-64</constant>
+    <constant name="home_row_gap_w">16</constant>
+    <constant name="home_poster_itemlayout_w">276</constant>
+    <constant name="home_premiere_item_w">325</constant>
+    <constant name="home_premiere_item_h">464</constant>
+    <constant name="home_premiere_itemlayout_w">341</constant>
+    <constant name="home_premiere_itemlayout_h">504</constant>
+    <constant name="home_premiere_row_h">1233</constant>
+    <constant name="home_category_item_w">300</constant>
+    <constant name="home_category_item_h">180</constant>
+    <constant name="home_category_itemlayout_w">316</constant>
+    <constant name="home_category_itemlayout_h">220</constant>
+    <!-- Rotated title rect: 371 wide, 40 high, centred on x=40 and on the card centre. -->
+    <constant name="home_title_left">-225.5</constant>
+    <constant name="home_title_w">371</constant>
+    <constant name="home_title_t_poster">182</constant>
+    <constant name="home_title_t_premiere">228</constant>
+    <constant name="home_title_t_category">86</constant>
+
 
     <constant name="widget_tbump_h_detailed">580</constant>  <!-- Bumper to address label top spacing (140) [200] [580] {640} -->
     <constant name="widget_label_h_detailed">0</constant>  <!-- Space between label and widget (0) [-60] {-60} -->

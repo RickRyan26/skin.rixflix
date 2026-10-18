@@ -2,12 +2,14 @@
 """Source-level cinema checks; live navigation still belongs to the AM9 smoke.
 
 Button/label contracts: https://kodi.wiki/view/Button_control
+Grouplist pitch (Size = top + height, focus scroll): xbmc/guilib/GUIControlGroupList.cpp
 Contrast: https://www.w3.org/WAI/WCAG22/Understanding/contrast-minimum.html
 """
 from pathlib import Path
 import xml.etree.ElementTree as ET
 
 ROOT = Path(__file__).resolve().parents[1]
+CRIMSON = ('e50914', '8c101b')
 
 
 def params(node):
@@ -21,53 +23,131 @@ def luminance(argb):
     return sum(v * w for v, w in zip(linear, (0.2126, 0.7152, 0.0722)))
 
 
-def check():
-    layouts = ET.parse(ROOT / '1080i/Includes_Layouts.xml').getroot()
+def check_home_rows(constants):
+    def num(value):
+        return float(constants.get(value, value))
+
     lists = ET.parse(ROOT / '1080i/Includes_Lists.xml').getroot()
-    rules = ET.parse(ROOT / 'shortcuts/generator/data/setup/widgets_include_row.xml').getroot()
+    layouts = ET.parse(ROOT / '1080i/Includes_Layouts.xml').getroot()
     widgets = ET.parse(ROOT / '1080i/Includes_Widgets.xml').getroot()
-    for style, width, height in (('Premiere', '580', '390'), ('Category', '300', '230')):
-        assert rules.find("rules/rule[condition='{item_widget_style}==" + style + "']/value").text == 'List_' + style + '_Row'
-        row = lists.find("include[@name='List_" + style + "_Row']/definition/include")
-        assert params(row)['item_w'] == width and params(row)['item_h'] == height
-        layout = layouts.find("include[@name='Layout_" + style + "']/definition/control")
-        assert layout.findtext('width') == width and layout.findtext('height') == height
+    rules = ET.parse(ROOT / 'shortcuts/generator/data/setup/widgets_include_row.xml').getroot()
+
+    def rule(name, style):
+        return rules.find(f"rules[@name='{name}']/rule[condition='{{item_widget_style}}=={style}']/value").text
+
+    # Search rows share widget_include; Home has its own mapping.
+    assert rule('widget_include', 'Poster') == 'List_Poster_Row'
+    sizes = {}
+    for style, include in (('Premiere', 'List_Premiere_Row'), ('Poster', 'List_Home_Poster_Row'),
+                           ('Category', 'List_Category_Row')):
+        assert rule('widget_home_include', style) == include, style
+        row = params(lists.find(f"include[@name='{include}']/definition/include"))
+        w, h, lw = num(row['item_w']), num(row['item_h']), num(row['itemlayout_w'])
+        assert lw - w == num('home_row_gap_w') == 16, (include, 'horizontal gap', lw - w)
+        assert row['offset_y'] == 'home_row_offset_y', include
+        assert widgets.find(f"include[@name='Widget_Busy_BlankItems__{include}']") is not None, include
+        assert widgets.findtext(f"include[@name='Widget_Busy_Spinner_Height__{include}']/height") == row['item_h']
+        sizes[style] = (w, h)
+
+    # New Releases: the standard poster layout, larger, with no text or ribbon of its own.
+    premiere = layouts.find("include[@name='Layout_Premiere']/definition")
+    poster = premiere.find("include[@content='Layout_Poster']")
+    assert poster is not None and params(poster)['indicator'] == 'false'
+    assert not premiere.findall('.//control'), 'New Releases cards are poster art only'
+    (pw, ph), (sw, sh) = sizes['Premiere'], sizes['Poster']
+    assert pw > sw and ph > sh and abs(pw / ph - sw / sh) < 0.01, 'larger posters, same aspect'
+
+    category = layouts.find("include[@name='Layout_Category']/definition/control")
+    text = ET.tostring(category, encoding='unicode').lower()
+    assert not any(c in text for c in CRIMSON), 'Categories carry no red styling'
+    assert 'EXPLORE' not in text.upper() and 'ListItem.Icon' not in ET.tostring(category, encoding='unicode')
+    for layout in (premiere, category):
         assert not layout.findall('.//animation'), 'Home cards must not add per-item animation'
-        assert widgets.find("include[@name='Widget_Busy_BlankItems__List_" + style + "_Row']") is not None
-        assert widgets.findtext("include[@name='Widget_Busy_Spinner_Height__List_" + style + "_Row']/height") == height
+
+    # Vertical geometry, per Kodi's grouplist: pitch of a child is its top + height.
+    hubs = ET.parse(ROOT / '1080i/Includes_Hubs.xml').getroot()
+    grouplist = hubs.find("include[@name='Hub_Widgets_Grouplist']/definition/control")
+    viewport = 1080 - num(grouplist.findtext('top')) - num(grouplist.findtext('bottom'))
+    row_top = num('widget_items_t_detailed')
+    assert num('widget_label_h_detailed') == 0
+    assert viewport == row_top + num('home_row_h'), ('focused row must scroll to the top', viewport)
+    pitch = viewport + num('home_row_label_t')
+    card_top = row_top + num('home_row_offset_y')
+    assert 16 <= pitch - sh <= 40, ('row gap', pitch - sh)
+    assert num('home_row_bump_h') == -num('home_row_label_t'), 'first row starts at the viewport top'
+    assert num('home_premiere_row_h') - num('home_row_h') == round(ph - sh), 'New Releases pays its own height'
+    # Focused rows start at y500 (940 - 440); one full row and most of the next fit.
+    assert 500 + pitch + card_top + sh * 0.4 <= 1080, ('at least 40% of the next row must show', pitch)
+    for style, (w, h) in sizes.items():
+        title = num('home_title_t_' + style.lower())
+        assert abs(title + 20 - (card_top + h / 2)) <= 1, (style, 'title centred on cards')
+    assert num('home_title_left') + num('home_title_w') / 2 == -40, 'title centred in the left margin'
+
+    template = (ROOT / 'shortcuts/generator/data/parts/widgets_row.xmltemplate').read_text()
+    for marker in ('<param name="widgetheight">{widget_home_height}</param>',
+                   '<param name="labeltop">home_row_label_t</param>',
+                   '<param name="inline_label">true</param>',
+                   '<param name="include">{widget_home_include}</param>'):
+        assert marker in template, marker
+    base = (ROOT / 'shortcuts/generator/data/base/home_widgets_standard.xml').read_text()
+    assert 'widgets_grouplist_home.xmltemplate' in base
+    bumper = (ROOT / 'shortcuts/generator/data/parts/widgets_grouplist_home.xmltemplate').read_text()
+    assert '<param name="bumper_h">home_row_bump_h</param>' in bumper
+    title = widgets.find("include[@name='Widget_Inline_Title']/definition/control")
+    assert title.findtext('angle') == '90' and title.findtext('align') == 'center'
+
+    # The rows slide away from a playing New Releases preview, and only react to it.
+    slides = [a for a in grouplist.findall('animation') if 'Exp_RixFlix_HomeTrailerShowing' in (a.get('condition') or '')]
+    assert len(slides) == 1 and slides[0].get('effect') == 'slide'
+    expressions = ET.parse(ROOT / '1080i/Includes_Expressions.xml').getroot()
+    showing = expressions.find("expression[@name='Exp_RixFlix_HomeTrailerShowing']").text
+    for part in ('Control.HasFocus(501)', 'Player.HasVideo', 'RixFlix.LocalTrailerActive', 'RixFlix.LocalTrailerSelection'):
+        assert part in showing, part
+    return pitch, sizes
+
+
+def check():
+    constants = {c.get('name'): (c.text or '').strip()
+                 for c in ET.parse(ROOT / '1080i/Includes_Constants.xml').getroot().findall('constant')}
+    pitch, sizes = check_home_rows(constants)
+
     hubs = ET.parse(ROOT / '1080i/Includes_Hubs.xml').getroot()
     template = hubs.find("include[@name='Hub_Spotlight_Button_Cinema']")
     control = template.find('definition/control')
     assert control.get('type') == 'button' and control.find('nested') is not None
     assert len(template.find('definition')) == 1, 'Decorations must not split the action hit area'
-    row = hubs.find("include[@name='Hub_Spotlight']/definition/control/control[@id='310']")
+    spotlight = hubs.find("include[@name='Hub_Spotlight']/definition/control")
+    row = spotlight.find("control[@id='310']")
     buttons = row.findall("include[@content='Hub_Spotlight_Button_Cinema']")
-    assert [params(b)['id'] for b in buttons] == ['311', '312', '313']
+    assert [params(b)['id'] for b in buttons] == ['311'], 'the spotlight has only Play'
+    assert spotlight.find("include[@content='View_Line']") is None, 'no spotlight header'
     assert not row.findall("control[@type='group']"), 'Nested focus groups break Left/Right'
-    assert buttons[0].findtext('onright') == '312'
-    assert buttons[1].findtext('onleft') == '311'
-    assert buttons[2].findtext('onleft[2]') == '312'
-    for button in buttons:
-        nav = button.find("include[@content='Hub_Spotlight_Button']")
-        assert params(nav)['id'] == params(button)['id'], 'Info/Back must restore its own action'
-    assert 'RixFlix.UnavailableTrailer' in buttons[2].findtext('visible')
-    # All three actions and both carousel arrows fit even the skin's 1440px layout.
-    defaults = params(template)
-    width = sum(int(params(b).get('width', defaults['width'])) for b in buttons)
-    assert width + 2 * 40 + 4 * int(row.findtext('itemgap')) <= 1440 - 2 * 80
+    play = buttons[0]
+    assert play.find("include[@content='Hub_Spotlight_Button']") is not None
+    assert params(play.find("include[@content='Hub_Spotlight_Button']"))['id'] == '311'
+    assert 'Hub_Spotlight_OnLeft' in [i.text for i in play.findall('include')]
+    on_left = hubs.find("include[@name='Hub_Spotlight_OnLeft']")
+    assert any(o.text == 'Control.Move(301,-1)' for o in on_left.findall('onleft')), 'Left = previous title'
+    assert any(o.text == 'Control.Move(301,1)' for o in play.findall('onright')), 'Right = next title'
+    assert hubs.find("include[@name='Hub_Spotlight_List']/definition/control").get('type') == 'wraplist'
+    window = ET.tostring(hubs.find("include[@name='Hub_Window']"), encoding='unicode')
+    assert 'Hub_Spotlight_Info' not in window, 'no spotlight plot/metadata'
+    assert 'foreground' not in ET.tostring(spotlight, encoding='unicode'), 'no Play Trailer button'
+
     colors = {c.get('name'): c.text for c in ET.parse(ROOT / 'colors/defaults.xml').getroot()}
     ratios = []
-    for button in buttons:
-        style = defaults | params(button)
-        for ink, surface in (('ink', 'surface'), ('focus_ink', 'focus_surface')):
-            light, dark = sorted((luminance(colors[style[ink]]), luminance(colors[style[surface]])), reverse=True)
-            ratio = (light + 0.05) / (dark + 0.05)
-            assert ratio >= 4.5, (params(button)['id'], ink, ratio)
-            ratios.append(ratio)
+    style = params(template) | params(play)
+    for ink, surface in (('ink', 'surface'), ('focus_ink', 'focus_surface')):
+        light, dark = sorted((luminance(colors[style[ink]]), luminance(colors[style[surface]])), reverse=True)
+        ratio = (light + 0.05) / (dark + 0.05)
+        assert ratio >= 4.5, (ink, ratio)
+        ratios.append(ratio)
     views = ET.parse(ROOT / '1080i/Includes_Views.xml').getroot()
     for name in ('View_Line_Label', 'View_Line_SubLabel'):
         assert len(views.find(f"include[@name='{name}']/control").findall('textcolor')) == 1
-    print(f'PASS: 3 direct actions, focus restoration, compact layout, 6 contrast states (min {min(ratios):.2f}:1)')
+    print(f'PASS: Home rows pitch {pitch:g}px, 16px card gap, New Releases {sizes["Premiere"][0]:g}x'
+          f'{sizes["Premiere"][1]:g} posters, inline titles, rows slide for previews; '
+          f'spotlight Play-only (Left/Right walk 301), {len(ratios)} contrast states (min {min(ratios):.2f}:1)')
 
 
 if __name__ == '__main__':

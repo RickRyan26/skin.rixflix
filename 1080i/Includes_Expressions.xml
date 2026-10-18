@@ -66,6 +66,10 @@
     <!-- Background trailer playback must not turn Back into "open fullscreen player". -->
     <expression name="Exp_RixFlix_AutoplayTrailer">[!String.IsEmpty(Window(Home).Property(RixFlix.AutoplayTrailer))]</expression>
     <expression name="Exp_RixFlix_HasForegroundMedia">[Player.HasMedia + !$EXP[Exp_RixFlix_AutoplayTrailer]]</expression>
+    <!-- A New Releases local preview is actually on screen: Home, row 501 focused, the
+         resident's active key equals the timer's selection, and the player holds the
+         owned playlist/file. Drives only the rows' slide-away. -->
+    <expression name="Exp_RixFlix_HomeTrailerShowing">[Window.IsActive(home) + Control.HasFocus(501) + Player.HasVideo + !String.IsEmpty(Window(Home).Property(RixFlix.LocalTrailerSelection)) + String.IsEqual(Window(Home).Property(RixFlix.LocalTrailerActive),Window(Home).Property(RixFlix.LocalTrailerSelection)) + [String.IsEqual(Window(Home).Property(RixFlix.LocalTrailerPlaylist),Player.Filenameandpath) | String.IsEqual(Window(Home).Property(RixFlix.AutoplayTrailerResolved),Player.Filenameandpath)]]</expression>
     <expression name="Exp_RixFlix_NoForegroundMedia">[!Player.HasMedia | $EXP[Exp_RixFlix_AutoplayTrailer]]</expression>
 
     <expression name="Exp_Hubs_Menu_Loopback">[Skin.HasSetting(HomeSwitcher.LoopBack) | Skin.HasSetting(HomeSwitcher.Vertical)]</expression>

@@ -5,7 +5,7 @@
     <value name="includes_part">
         <value name="grouplist_id">602</value>
         <value name="grouplist_refocus">SetFocus(302)</value>
-        <template>generator/data/parts/widgets_grouplist.xmltemplate</template>
+        <template>generator/data/parts/widgets_grouplist_home.xmltemplate</template>
         <value name="all_widgets">
             <items menu="{item}">
                 <item>

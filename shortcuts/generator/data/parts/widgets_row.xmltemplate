@@ -1,13 +1,17 @@
 <include content="Widget_Row">
-    <!-- Home lists retain AF3's tall clipping area, but reserve 130px more pitch.
-         At 1010 the next header began at y450, inside the Premiere footer (y446-474)
-         and poster badges. 1140 places it at y580, beyond cards and their shadows. -->
-    <param name="widgetheight">1140</param>
+    <!-- Home rows: titles live inside the row (rotated in the left margin), cards are
+         16px apart and rows 396px apart. Geometry: home_* constants in Includes_Constants.xml.
+         Only New Releases' taller row extends its own list (see widget_home_height). -->
+    <param name="widgetheight">{widget_home_height}</param>
+    <param name="labeltop">home_row_label_t</param>
+    <param name="inline_label">true</param>
+    <param name="inline_label_top">{widget_home_title_top}</param>
+    <param name="busy_top">home_row_busy_t</param>
     <param name="id">{widget_id}</param>
     <param name="groupid">{widget_group_id}</param>
     <param name="label">{widget_label}</param>
     <param name="usewidgetlabel">{widget_usewidgetlabel}</param>
-    <param name="include">{widget_include}</param>
+    <param name="include">{widget_home_include}</param>
     <param name="grouplistid">{grouplist_id}</param>
     <param name="refocus">{grouplist_refocus}</param>
     <param name="detailed">{widget_detailed}</param>
@@ -15,7 +19,9 @@
     <param name="altvisible">{widget_altvisible}</param>
     <param name="busy_isupdating">{widget_busy_isupdating}</param>
     <param name="widgetfade_include">{widget_widgetfade_include}</param>
-    <param name="widgetfade_disable">{widget_widgetfade_disable}</param>
+    <!-- Rows below the focused one stay at full strength (more poster on screen);
+         they still dim behind the spotlight's Play button. -->
+    <param name="widgetfade_disable">!Integer.IsEqual(Window.Property(TMDBHelper.WidgetContainer),301)</param>
     <param name="widgetconstants_affix">{widgetconstants_affix}</param>
 
     <onfocus>ClearProperty(HomeSwitcher.IsVisible,Home)</onfocus>

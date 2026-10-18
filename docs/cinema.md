@@ -26,3 +26,53 @@ the AM9 live smokes and a Kodi capture remain required for runtime/visual claims
 Contracts: [Kodi buttons](https://kodi.wiki/view/Button_control),
 [Kodi labels](https://kodi.wiki/view/Label_control), and
 [W3C contrast guidance](https://www.w3.org/WAI/WCAG22/Understanding/contrast-minimum.html).
+
+# Home: more poster, less chrome — 1.12.0
+
+Rick, 2026-10-18: New Releases are just larger posters, cards and rows sit closer,
+row titles live inside the row, the spotlight is only Play, Categories lose the red,
+and the rows get out of the way of a playing New Releases preview.
+
+**Rows.** Home rows (`widgets_row.xmltemplate`, `widgets_grouplist_home.xmltemplate`)
+use the `home_*` constants in `Includes_Constants.xml`. Kodi's grouplist gives each
+child a pitch of `top + height` and scrolls a focused child to the viewport top when
+`viewport = list top + list height` (`GUIControlGroupList.cpp`, `GUI_MSG_FOCUSED`).
+With the 1150px viewport and label top −754, rows are **396px apart** (was 570): the
+focused row starts at y500 and ~45% of the next row shows. The first row is aligned
+by the 754px bumper. New Releases is always first, and Kodi scrolls the first focusable
+row to 0, so its taller posters are paid for by its own list height
+(`home_premiere_row_h`, +93px), not by the next row's label. Moving New Releases off
+the top would misalign it by that 93px.
+
+**Cards.** Poster rows use `List_Home_Poster_Row`: the standard 260×371 poster, 16px
+apart instead of 40 (6.7 across instead of 6.1). New Releases (`Layout_Premiere`) is
+the standard poster layout at 325×464, with no ribbon, title, date or badges.
+Categories (`Layout_Category`) are plain 300×180 tiles on the poster surface, with
+the same thin focus box. The shared `widget_include` mapping still sends search rows
+to `List_Poster_Row`; Home has its own `widget_home_include`.
+
+**Titles.** `Widget_Inline_Title` is a 90° label (reading bottom to top) centred in
+the 80px left margin and on the row's cards. Kodi rotates a centred label about its
+own centre (`CGUILabel::Render`). No header line is reserved above a row. Rows below
+the focused one are no longer dimmed. All rows dim to 30% only behind the spotlight.
+
+**Spotlight.** It has only Play (311): no header, plot/metadata panel, More
+Information or Play Trailer. Info still opens the info dialog through
+`Hub_Spotlight_Button`. Left/Right call `Control.Move(301,∓1)` on the random wraplist,
+so Left brings back the previous title and Right the next.
+
+**Preview reaction.** `Exp_RixFlix_HomeTrailerShowing` is true when Home row 501 is
+focused, the resident's `RixFlix.LocalTrailerActive` equals the timer's
+`RixFlix.LocalTrailerSelection`, and the player holds the owned playlist/file.
+While it is true, grouplist 602 slides 480px down (500ms) and the focused-row info
+panel fades. The reaction reverses when focus moves (the timer clears the selection)
+or the preview ends (`Player.HasVideo`). Start and stop logic are unchanged.
+
+**Residency.** Every row still holds at most 15 items. More cards are on screen,
+though: about 5.4 New Releases posters (was ~3 landscape cards), 6.7 per poster row,
+and part of a second row. That needs a fresh `rixflix-ui-bench.py --residency` run
+before the layout is accepted (Rixflix `docs/home-theater.md`).
+
+`python3 scripts/validate_cinema.py` asserts this geometry, the Home include mapping,
+poster-only New Releases, plain Categories, the Play-only spotlight with Left/Right
+walking 301, and the preview slide.

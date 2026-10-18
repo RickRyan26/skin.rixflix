@@ -1,0 +1,7 @@
+<include content="Hub_Widgets_Grouplist">
+    <!-- Home rows draw their (inline) title at label top home_row_label_t, so the
+         first row needs the matching bumper. Search keeps the shared template. -->
+    <param name="bumper_h">home_row_bump_h</param>
+    {top_widgets}
+    {all_widgets}
+</include>

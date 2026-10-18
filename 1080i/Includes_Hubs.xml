@@ -257,6 +257,7 @@
 
     <include name="Hub_Combined_Info">
         <control type="group">
+            <animation effect="fade" start="100" end="0" time="300" condition="$EXP[Exp_RixFlix_HomeTrailerShowing]">Conditional</animation>
             <animation effect="fade" start="0" end="100" delay="399" time="1" condition="!$EXP[Hub_Spotlight_Visible_Expression]">Conditional</animation>
             <animation effect="fade" start="100" end="0" condition="$EXP[Hub_Spotlight_Visible_Expression]">Conditional</animation>
             <control type="group">
@@ -300,25 +301,32 @@
     </include>
 
     <include name="Hub_Widgets_Grouplist">
-        <control type="grouplist" id="602">
-            <animation effect="slide" start="0" end="0,-440" condition="true">Conditional</animation>
+        <param name="bumper_h">widget_tbump_h_detailed</param>
+        <definition>
+            <control type="grouplist" id="602">
+                <animation effect="slide" start="0" end="0,-440" condition="true">Conditional</animation>
+                <!-- A New Releases preview playing behind Home: the rows slide most of the way
+                     off screen and return when focus moves or the preview ends. Visual only:
+                     keyed off the resident's existing ownership properties, never starts/stops. -->
+                <animation effect="slide" start="0" end="0,480" time="500" tween="cubic" easing="inout" condition="$EXP[Exp_RixFlix_HomeTrailerShowing]">Conditional</animation>
 
-            <onup condition="!Control.IsVisible(301) + Skin.HasSetting(HomeSwitcher.Vertical)">SetProperty(Bumper.Direction,Up,Home)</onup>
-            <onup condition="!Control.IsVisible(301) + Skin.HasSetting(HomeSwitcher.Vertical)">ActivateWindow(1180)</onup>
-            <onup condition="!Control.IsVisible(301) + !Skin.HasSetting(HomeSwitcher.Vertical)">302</onup>
-            <onup condition="Control.IsVisible(301)">301</onup>
-            <ondown>ActivateWindow(1180)</ondown>
-            <include>Hub_Grouplist_OnLeftRight</include>
-            <orientation>vertical</orientation>
-            <control type="group" id="599">
-                <height>widget_tbump_h_detailed</height>
+                <onup condition="!Control.IsVisible(301) + Skin.HasSetting(HomeSwitcher.Vertical)">SetProperty(Bumper.Direction,Up,Home)</onup>
+                <onup condition="!Control.IsVisible(301) + Skin.HasSetting(HomeSwitcher.Vertical)">ActivateWindow(1180)</onup>
+                <onup condition="!Control.IsVisible(301) + !Skin.HasSetting(HomeSwitcher.Vertical)">302</onup>
+                <onup condition="Control.IsVisible(301)">301</onup>
+                <ondown>ActivateWindow(1180)</ondown>
+                <include>Hub_Grouplist_OnLeftRight</include>
+                <orientation>vertical</orientation>
+                <control type="group" id="599">
+                    <height>$PARAM[bumper_h]</height>
+                </control>
+                <top>widget_grouplist_t_detailed</top>
+                <!-- A focused row is 1140px + 10px top. Match its 1150px extent:
+                     a 1020px viewport scrolls 130px past the header and clips posters. -->
+                <bottom>widget_grouplist_b_home</bottom>
+                <nested />
             </control>
-            <top>widget_grouplist_t_detailed</top>
-            <!-- A focused row is 1140px + 10px top. Match its 1150px extent:
-                 a 1020px viewport scrolls 130px past the header and clips posters. -->
-            <bottom>widget_grouplist_b_home</bottom>
-            <nested />
-        </control>
+        </definition>
     </include>
 
     <include name="Hub_Combined_Widgets_Grouplist">
@@ -411,16 +419,8 @@
                 <height>hub_spotlight_h</height>
                 <visible>$EXP[Hub_Spotlight_Visible_Expression]</visible>
                 <include>Home_Info_Animation</include>
-                <control type="group">
-                    <animation effect="fade" start="100" end="30" time="200" condition="!ControlGroup(310).HasFocus() + !String.IsEmpty(Window(Home).Property(HomeSwitcher.IsVisible)) + Skin.HasSetting(Spotlight.EnableSlide)">Conditional</animation>
-                    <include content="View_Line">
-                        <param name="use_spinner">true</param>
-                        <param name="run_spinner">[Container(301).IsUpdating]</param>
-                        <param name="label">$INFO[Skin.String(HomeSwitcher.$PARAM[window].Spotlight.Label),, ]</param>
-                        <param name="top">20</param>
-                    </include>
-                </control>
-
+                <!-- Rick, 2026-10-18: the spotlight is the trailer's stage. Only Play; Left/Right
+                     walk the random wraplist (301), so Left brings back the previous title. -->
                 <control type="grouplist" id="310">
 
                     <include content="Animation_Fade_Out">
@@ -480,49 +480,10 @@
                             <param name="window">$PARAM[window]</param>
                         </include>
                         <include>Hub_Spotlight_OnLeft</include>
-                        <onright>312</onright>
+                        <onright condition="$EXP[Exp_Hubs_Spotlight_HasItems]">Control.Move(301,1)</onright>
                         <onup condition="Skin.HasSetting(HomeSwitcher.Vertical)">SetProperty(Bumper.Direction,Up,Home)</onup>
                         <onup condition="Skin.HasSetting(HomeSwitcher.Vertical)">ActivateWindow(1180)</onup>
                         <onup condition="!Skin.HasSetting(HomeSwitcher.Vertical)">300</onup>
-                        <ondown>$VAR[Hub_Action_Widgets]</ondown>
-                    </include>
-
-                    <include content="Hub_Spotlight_Button_Cinema">
-                        <param name="id">312</param>
-
-                        <param name="label">$VAR[Label_FullscreenWidget_InfoButton]</param>
-
-                        <onclick>SetFocus(301)</onclick>
-                        <onclick>$VAR[Action_FullscreenWidget_InfoButton]</onclick>
-                        <onclick>SetFocus(312)</onclick>
-                        <include content="Hub_Spotlight_Button">
-                            <param name="id">312</param>
-                            <param name="window">$PARAM[window]</param>
-                        </include>
-                        <onleft>311</onleft>
-                        <onright condition="String.StartsWith(Container(301).ListItem.Trailer,plugin://plugin.video.youtube/play/?video_id=) + !String.IsEqual(Window(Home).Property(RixFlix.UnavailableTrailer),Container(301).ListItem.Trailer)">313</onright>
-                    </include>
-
-                    <!-- On-demand is intentionally separate from the parked idle-autoplay flag. -->
-                    <include content="Hub_Spotlight_Button_Cinema">
-                        <param name="id">313</param>
-
-                        <param name="label">$VAR[Label_RixFlix_TrailerButton]</param>
-
-                        <visible>String.StartsWith(Container(301).ListItem.Trailer,plugin://plugin.video.youtube/play/?video_id=) + !String.IsEqual(Window(Home).Property(RixFlix.UnavailableTrailer),Container(301).ListItem.Trailer)</visible>
-                        <onclick condition="String.IsEmpty(Window(Home).Property(RixFlix.TrailerResolving))">RunScript(special://skin/scripts/rixflix_trailer.py,$ESCINFO[Container(301).ListItem.Trailer],foreground)</onclick>
-                        <include content="Hub_Spotlight_Button">
-                            <param name="id">313</param>
-                            <param name="window">$PARAM[window]</param>
-                        </include>
-                        <onleft condition="!String.IsEmpty(Window(Home).Property(RixFlix.TrailerResolving))">ClearProperty(RixFlix.TrailerResolving,Home)</onleft>
-                        <onleft>312</onleft>
-                        <onright>noop</onright>
-                        <onback condition="!String.IsEmpty(Window(Home).Property(RixFlix.TrailerResolving))">ClearProperty(RixFlix.TrailerResolving,Home)</onback>
-                        <onup condition="Skin.HasSetting(HomeSwitcher.Vertical)">SetProperty(Bumper.Direction,Up,Home)</onup>
-                        <onup condition="Skin.HasSetting(HomeSwitcher.Vertical)">ActivateWindow(1180)</onup>
-                        <onup condition="!Skin.HasSetting(HomeSwitcher.Vertical)">300</onup>
-                        <ondown condition="!String.IsEmpty(Window(Home).Property(RixFlix.TrailerResolving))">ClearProperty(RixFlix.TrailerResolving,Home)</ondown>
                         <ondown>$VAR[Hub_Action_Widgets]</ondown>
                     </include>
 
@@ -780,7 +741,6 @@
                         <!-- Info Panels -->
                         <include condition="String.IsEqual(Skin.String(HomeSwitcher.$PARAM[window].Mode),Wall)">skinvariables-$PARAM[window]widgets-wall-info</include>
                         <include condition="String.IsEqual(Skin.String(HomeSwitcher.$PARAM[window].Mode),Combined) | String.IsEqual(Skin.String(HomeSwitcher.$PARAM[window].Mode),Standard)">skinvariables-$PARAM[window]widgets-combined-info</include>
-                        <include condition="!String.IsEmpty(Skin.String(HomeSwitcher.$PARAM[window].Spotlight.Target))">Hub_Spotlight_Info</include>
                     </control>
                     <include content="Hub_VertMenu" condition="Skin.HasSetting(HomeSwitcher.Vertical)">
                         <param name="window">$PARAM[window]</param>
