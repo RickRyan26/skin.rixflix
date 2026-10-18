@@ -220,12 +220,13 @@
     <constant name="home_category_item_h">180</constant>
     <constant name="home_category_itemlayout_w">316</constant>
     <constant name="home_category_itemlayout_h">220</constant>
-    <!-- Rotated title rect: 371 wide, 40 high, centred on x=40 and on the card centre. -->
-    <constant name="home_title_left">-225.5</constant>
+    <!-- Rotated title: anchored at x=40 (left -40 inside the view_pad group) and at the
+         card top (16 = top 20 - 4 for a 40px centred line), reading downward. Kodi clips
+         the label's pre-rotation rect to the grouplist (x >= 0), so the rect must start at
+         the anchor and extend right; a rect centred on x=40 lost the title's first half. -->
+    <constant name="home_title_left">-40</constant>
     <constant name="home_title_w">371</constant>
-    <constant name="home_title_t_poster">182</constant>
-    <constant name="home_title_t_premiere">228</constant>
-    <constant name="home_title_t_category">86</constant>
+    <constant name="home_title_t">-4</constant>
 
 
     <constant name="widget_tbump_h_detailed">580</constant>  <!-- Bumper to address label top spacing (140) [200] [580] {640} -->

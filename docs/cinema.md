@@ -51,9 +51,17 @@ Categories (`Layout_Category`) are plain 300×180 tiles on the poster surface, w
 the same thin focus box. The shared `widget_include` mapping still sends search rows
 to `List_Poster_Row`; Home has its own `widget_home_include`.
 
-**Titles.** `Widget_Inline_Title` is a 90° label (reading bottom to top) centred in
-the 80px left margin and on the row's cards. Kodi rotates a centred label about its
-own centre (`CGUILabel::Render`). No header line is reserved above a row. Rows below
+**Titles.** `Widget_Inline_Title` is a −90° label reading top to bottom from the
+row's card top, with its line centred on x=40 in the 80px left margin. No header line
+is reserved above a row. Kodi clips a label's **pre-rotation** rect to the grouplist
+(x ≥ 0). 1.12.0 centred a 371px rect on x=40, and the theater capture read
+"v Releases" / "inue Movies". 1.12.1 therefore left-aligns and y-centres the label,
+so it rotates about (left, top + 20) (`CGUILabel::Render`), and its rect starts at
+the anchor and runs right.
+
+**Info panel.** On Home the focused row's panel shows the title and one detail line
+(quality, stars, date, runtime). The plot and the "Ends at" metadata block show only
+off Home. Rows below
 the focused one are no longer dimmed. All rows dim to 30% only behind the spotlight.
 
 **Spotlight.** It has only Play (311): no header, plot/metadata panel, More

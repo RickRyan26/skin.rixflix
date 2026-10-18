@@ -78,10 +78,11 @@ def check_home_rows(constants):
     assert num('home_premiere_row_h') - num('home_row_h') == round(ph - sh), 'New Releases pays its own height'
     # Focused rows start at y500 (940 - 440); one full row and most of the next fit.
     assert 500 + pitch + card_top + sh * 0.4 <= 1080, ('at least 40% of the next row must show', pitch)
-    for style, (w, h) in sizes.items():
-        title = num('home_title_t_' + style.lower())
-        assert abs(title + 20 - (card_top + h / 2)) <= 1, (style, 'title centred on cards')
-    assert num('home_title_left') + num('home_title_w') / 2 == -40, 'title centred in the left margin'
+    # Kodi clips the label's PRE-rotation rect to the grouplist (x >= 0): the rect must
+    # start at its rotation anchor (left-aligned, y-centred) and run right, never centre
+    # on the margin (1.12.0 theater capture showed "v Releases").
+    assert num('home_title_left') + num('view_pad') == 40, 'title line centred in the left margin'
+    assert num('home_title_t') + 20 == card_top, 'title starts at the card top'
 
     template = (ROOT / 'shortcuts/generator/data/parts/widgets_row.xmltemplate').read_text()
     for marker in ('<param name="widgetheight">{widget_home_height}</param>',
@@ -94,7 +95,9 @@ def check_home_rows(constants):
     bumper = (ROOT / 'shortcuts/generator/data/parts/widgets_grouplist_home.xmltemplate').read_text()
     assert '<param name="bumper_h">home_row_bump_h</param>' in bumper
     title = widgets.find("include[@name='Widget_Inline_Title']/definition/control")
-    assert title.findtext('angle') == '90' and title.findtext('align') == 'center'
+    assert title.findtext('angle') == '-90' and title.findtext('align') == 'left'
+    assert title.findtext('aligny') == 'center' and title.findtext('height') == '40'
+    assert '{widget_home_title_top}' not in template
 
     # The rows slide away from a playing New Releases preview, and only react to it.
     slides = [a for a in grouplist.findall('animation') if 'Exp_RixFlix_HomeTrailerShowing' in (a.get('condition') or '')]
@@ -133,6 +136,8 @@ def check():
     window = ET.tostring(hubs.find("include[@name='Hub_Window']"), encoding='unicode')
     assert 'Hub_Spotlight_Info' not in window, 'no spotlight plot/metadata'
     assert 'foreground' not in ET.tostring(spotlight, encoding='unicode'), 'no Play Trailer button'
+    info = hubs.find("include[@name='Hub_Combined_Info']/control/control[2]/include[@content='Info_Panel']")
+    assert params(info)['visible_plot'] == params(info)['visible_meta'] == '!Window.IsActive(home)', 'Home info is title + one line'
 
     colors = {c.get('name'): c.text for c in ET.parse(ROOT / 'colors/defaults.xml').getroot()}
     ratios = []

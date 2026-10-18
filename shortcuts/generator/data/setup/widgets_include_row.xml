@@ -87,18 +87,4 @@
             <value>home_row_h</value>
         </rule>
     </rules>
-    <rules name="widget_home_title_top">
-        <rule>
-            <condition>{item_widget_style}==Premiere</condition>
-            <value>home_title_t_premiere</value>
-        </rule>
-        <rule>
-            <condition>{item_widget_style}==Category</condition>
-            <value>home_title_t_category</value>
-        </rule>
-        <rule>
-            <condition>True</condition>
-            <value>home_title_t_poster</value>
-        </rule>
-    </rules>
 </contents>

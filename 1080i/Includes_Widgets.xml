@@ -7,7 +7,7 @@
         <param name="labeltop">widget_label_t</param>
         <param name="labelheight">widget_label_h</param>
         <param name="inline_label">false</param>
-        <param name="inline_label_top">home_title_t_poster</param>
+        <param name="inline_label_top">home_title_t</param>
         <param name="busy_top">10</param>
         <definition>
             <control type="group" id="$PARAM[groupid]">
@@ -59,10 +59,12 @@
         </definition>
     </include>
 
-    <!-- Row title inside the row: rotated 90 degrees (reads bottom to top) in the 80px
-         left margin, centred on the cards. Kodi rotates a centred label about its own
-         centre (CGUILabel::Render), so the 371x40 rect is centred on x=40. The parent
-         Widget_Label group starts at view_pad, hence the negative left. -->
+    <!-- Row title inside the row: rotated to read top to bottom from the row's card top,
+         in the 80px left margin. A left-aligned, y-centred label rotates about
+         (left, top + height/2) (CGUILabel::Render), so the line is centred on x=40 and
+         its pre-rotation rect starts there and runs right. Centring the rect on x=40
+         put the title's first half at negative x, where the grouplist clips it
+         (1.12.0 theater capture: "v Releases"). The parent group starts at view_pad. -->
     <include name="Widget_Inline_Title">
         <param name="label_fallback" />
         <definition>
@@ -71,8 +73,8 @@
                 <top>$PARAM[top]</top>
                 <width>home_title_w</width>
                 <height>40</height>
-                <angle>90</angle>
-                <align>center</align>
+                <angle>-90</angle>
+                <align>left</align>
                 <aligny>center</aligny>
                 <font>font_mini_bold</font>
                 <textcolor>main_fg_70</textcolor>
@@ -97,7 +99,7 @@
         <param name="widget_hideartwork">false</param>
         <param name="widget_showoverlay">false</param>
         <param name="inline_label">false</param>
-        <param name="inline_label_top">home_title_t_poster</param>
+        <param name="inline_label_top">home_title_t</param>
         <param name="busy_top">10</param>
         <definition>
             <include content="Widget_Label">
@@ -555,7 +557,7 @@
         <param name="widgettop">widget_items_t</param>
         <param name="widgetheight">widget_items_h</param>
         <param name="inline_label">false</param>
-        <param name="inline_label_top">home_title_t_poster</param>
+        <param name="inline_label_top">home_title_t</param>
         <param name="busy_top">10</param>
         <definition>
             <include content="Widget_Content">
@@ -592,7 +594,7 @@
         <param name="widgetheight">widget_items_h</param>
         <param name="labeltop">widget_label_t</param>
         <param name="inline_label">false</param>
-        <param name="inline_label_top">home_title_t_poster</param>
+        <param name="inline_label_top">home_title_t</param>
         <param name="busy_top">10</param>
         <param name="grouplistid">5000</param>
         <param name="widgetconstants_affix" />

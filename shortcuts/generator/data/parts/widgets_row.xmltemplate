@@ -5,7 +5,7 @@
     <param name="widgetheight">{widget_home_height}</param>
     <param name="labeltop">home_row_label_t</param>
     <param name="inline_label">true</param>
-    <param name="inline_label_top">{widget_home_title_top}</param>
+    <param name="inline_label_top">home_title_t</param>
     <param name="busy_top">home_row_busy_t</param>
     <param name="id">{widget_id}</param>
     <param name="groupid">{widget_group_id}</param>

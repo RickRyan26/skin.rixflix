@@ -281,9 +281,11 @@
                 <include>Home_Info_Animation</include>
                 <include content="Info_Panel">
                     <param name="visible">[!$EXP[Exp_InfoDialogs] + Integer.IsEqual(Window.Property(TMDBHelper.WidgetContainer),$PARAM[id])]</param>
+                    <!-- Home (Rick, 2026-10-18 "more poster, less chrome"): title and one
+                         detail line only; the plot and the "Ends at" block stay elsewhere. -->
                     <param name="visible_line">true</param>
-                    <param name="visible_plot">true</param>
-                    <param name="visible_meta">true</param>
+                    <param name="visible_plot">!Window.IsActive(home)</param>
+                    <param name="visible_meta">!Window.IsActive(home)</param>
                     <param name="include_title">false</param>
                     <param name="container">Container($PARAM[id]).</param>
                 </include>
