@@ -509,6 +509,7 @@
                         <param name="is_fd">[Integer.IsGreater($PARAM[container]$PARAM[listitem].VideoResolution,720)]</param>
                         <param name="is_hd">[Integer.IsEqual($PARAM[container]$PARAM[listitem].VideoResolution,720)]</param>
                         <param name="is_sd">[!String.IsEmpty($PARAM[container]$PARAM[listitem].VideoResolution)]</param>
+                        <param name="is_tv">[String.IsEqual($PARAM[container]$PARAM[listitem].DBType,tvshow) | String.IsEqual($PARAM[container]$PARAM[listitem].DBType,season)]</param>
                     </include>
                     <include content="Info_Line_VideoQuality_HDRType" condition="Skin.HasSetting(InfoTags.EnableHDR)">
                         <param name="colordiffuse">$PARAM[colordiffuse]</param>
@@ -714,6 +715,7 @@
 
     <include name="Info_Line_VideoQuality_Resolution">
         <param name="visible">true</param>
+        <param name="is_tv">false</param>
         <definition>
             <include content="Info_Line_Pill_Text">
                 <param name="colordiffuse">$PARAM[colordiffuse]</param>
@@ -749,7 +751,16 @@
             <include content="Info_Line_Pill_Icon">
                 <param name="colordiffuse">$PARAM[colordiffuse]</param>
                 <param name="icon">flags/info-inverted.png</param>
-                <param name="visible">$PARAM[visible] + !$PARAM[is_8k] + !$PARAM[is_4k] + !$PARAM[is_fd] + !$PARAM[is_hd] + !$PARAM[is_sd]</param>
+                <param name="visible">$PARAM[visible] + !$PARAM[is_8k] + !$PARAM[is_4k] + !$PARAM[is_fd] + !$PARAM[is_hd] + !$PARAM[is_sd] + ![$PARAM[is_tv]]</param>
+                <param name="width">60</param>
+            </include>
+            <!-- Shows and seasons carry no stream details, so they used to get the bare "i"
+                 pill. "TV" says something useful there. The pill must stay present: every
+                 later item in the line draws its own leading divider. -->
+            <include content="Info_Line_Pill_Text">
+                <param name="colordiffuse">$PARAM[colordiffuse]</param>
+                <param name="label">TV</param>
+                <param name="visible">$PARAM[visible] + !$PARAM[is_8k] + !$PARAM[is_4k] + !$PARAM[is_fd] + !$PARAM[is_hd] + !$PARAM[is_sd] + $PARAM[is_tv]</param>
                 <param name="width">60</param>
             </include>
         </definition>

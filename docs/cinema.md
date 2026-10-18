@@ -65,8 +65,17 @@ over x=0–64, and in 1.12.1 that card hid "Recently Added". Since 1.12.2 the th
 Home lists start at `home_row_list_l` (64) with a 16px item offset. Cards stay at
 x=80, and the previous card ends exactly at the list's clip edge.
 
+**Rows above focus.** The grouplist clip starts 16px above the focused cards. The
+previous row's progress/count badges hang about 25px below its cards, so their rims
+showed as arcs over the focused row (1.12.2 capture, Continue Shows). Since 1.12.3
+`widgets_row.xmltemplate` fades any row whose id is lower than the focused control's
+while focus is inside grouplist 602 (row ids are 501 + index). The fade takes 200ms,
+in step with the scroll, and Up fades the row back in.
+
 **Info panel.** On Home the focused row's panel shows the title and one detail line
-(quality, stars, date, runtime). The plot and the "Ends at" metadata block show only
+(quality, stars, date, runtime). Shows and seasons have no stream details. AF3 gave
+them a bare "i" pill, and since 1.12.3 they get "TV". The first pill cannot simply be
+dropped, because every later item draws its own leading divider. The plot and the "Ends at" metadata block show only
 off Home. Rows below
 the focused one are no longer dimmed. All rows dim to 30% only behind the spotlight.
 

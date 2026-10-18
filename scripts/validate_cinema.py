@@ -100,6 +100,13 @@ def check_home_rows(constants):
     assert 'widgets_grouplist_home.xmltemplate' in base
     bumper = (ROOT / 'shortcuts/generator/data/parts/widgets_grouplist_home.xmltemplate').read_text()
     assert '<param name="bumper_h">home_row_bump_h</param>' in bumper
+    # Rows above the focused one fade, so their badges cannot rim the focused row.
+    assert ('condition="ControlGroup({grouplist_id}).HasFocus + '
+            'Integer.IsGreater(System.CurrentControlId,{widget_id})"') in template
+    assert '<value name="grouplist_id">602</value>' in base
+    info = ET.parse(ROOT / '1080i/Includes_Info.xml').getroot()
+    pills = info.find("include[@name='Info_Line_VideoQuality_Resolution']/definition")
+    assert [params(i)['label'] for i in pills if params(i).get('label') == 'TV'] == ['TV'], 'shows get a TV pill'
     title = widgets.find("include[@name='Widget_Inline_Title']/definition/control")
     assert title.findtext('angle') == '-90' and title.findtext('align') == 'left'
     assert title.findtext('aligny') == 'center' and title.findtext('height') == '40'
