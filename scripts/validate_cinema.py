@@ -119,6 +119,11 @@ def check_home_rows(constants):
     showing = expressions.find("expression[@name='Exp_RixFlix_HomeTrailerShowing']").text
     for part in ('Control.HasFocus(501)', 'Player.HasVideo', 'RixFlix.LocalTrailerActiveID', 'Container(501).ListItem.DBID', 'RixFlix.LocalTrailerActiveType'):
         assert part in showing, part
+    # Home previews play inside the wallpaper box, never full-frame under the stretched mask.
+    background = ET.parse(ROOT / '1080i/Includes_Background.xml').getroot()
+    video = background.find("include[@name='Background_Video']")
+    home = [g for g in video.findall('control') if g.findtext('visible') == 'Window.IsVisible(home)']
+    assert len(home) == 1 and home[0].findtext('include') == 'Background_Video_FlixArt'
     return pitch, sizes
 
 

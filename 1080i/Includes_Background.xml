@@ -148,8 +148,16 @@
     </include>
 
     <include name="Background_Video">
+        <!-- Home (Rick, 2026-10-18 "the trailer should play where the video wallpapers are
+             behind all the posters"): a New Releases preview is scaled into the same
+             top-right wallpaper box as the fanart, not drawn full-frame under a stretched mask. -->
+        <control type="group">
+            <visible>Window.IsVisible(home)</visible>
+            <include>Background_Video_FlixArt</include>
+        </control>
         <control type="group">
             <description>On-screen videowindow for background video</description>
+            <visible>!Window.IsVisible(home)</visible>
             <control type="videowindow">
                 <visible>!Window.IsVisible(1123)</visible>
             </control>
