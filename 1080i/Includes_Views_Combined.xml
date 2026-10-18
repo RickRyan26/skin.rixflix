@@ -118,7 +118,10 @@
                              The add-on script feeds the video playlist from this episode on. -->
                         <onclick condition="!Container(53$PARAM[id]).ListItem.IsFolder + String.IsEqual(Container(53$PARAM[id]).ListItem.DBType,episode) + !String.IsEmpty(Container(53$PARAM[id]).ListItem.DBID)">RunScript(context.rixflix.gotoshow,playfromhere,$INFO[Container(53$PARAM[id]).ListItem.DBID])</onclick>
                         <onclick condition="!Container(53$PARAM[id]).ListItem.IsFolder + ![String.IsEqual(Container(53$PARAM[id]).ListItem.DBType,episode) + !String.IsEmpty(Container(53$PARAM[id]).ListItem.DBID)]">PlayMedia($ESCINFO[Container(53$PARAM[id]).ListItem.FileNameAndPath])</onclick>
-                        <content target="$VAR[Path_CollectionNode_Target]" sortby="$VAR[View_Combined_SortBy]" sortorder="ascending">$VAR[View_53$PARAM[id]_Content]</content>
+                        <!-- target is static: a dynamic target is read under the provider lock on a
+                             JobWorker and deadlocks against the GUI lock (see Includes_Hubs.xml
+                             Hub_Window). RixFlix has no music library, so videos is always right. -->
+                        <content target="videos" sortby="$VAR[View_Combined_SortBy]" sortorder="ascending">$VAR[View_53$PARAM[id]_Content]</content>
                         <onfocus>SetProperty(TMDbHelper.WidgetContainer,53$PARAM[id])</onfocus>
                         <onfocus>ClearProperty(Background.ShowOverlay,Home)</onfocus>
                         <onfocus>ClearProperty(InfoPanel.FullSwitch,Home)</onfocus>
@@ -401,7 +404,7 @@
                     <effect type="fade" start="100" end="0" time="200" delay="600" />
                 </animation>
 
-                <content target="$VAR[Path_CollectionNode_Target]" sortby="$VAR[View_Combined_SortBy]" sortorder="ascending">$VAR[View_53$PARAM[id]_Content]</content>
+                <content target="videos" sortby="$VAR[View_Combined_SortBy]" sortorder="ascending">$VAR[View_53$PARAM[id]_Content]</content>
 
                 <nested />
 

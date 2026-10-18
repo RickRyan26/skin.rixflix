@@ -122,7 +122,25 @@ def check_home_rows(constants):
     return pitch, sizes
 
 
+def check_static_content_targets():
+    """A runtime-dynamic <content target> deadlocks Kodi RC1: StartDirectoryJob reads it
+    under the provider lock on a JobWorker, and that label read waits for the GUI lock
+    the main thread holds while waiting in UpdateURL for the same provider lock. Player
+    OnPlay/OnStop refresh every provider, so Home previews hit it (theater 2026-10-18)."""
+    dynamic = []
+    for path in sorted((ROOT / '1080i').glob('*.xml')):
+        if path.name == 'FileManager.xml':  # manual browser; no playback-driven refresh
+            continue
+        root = ET.parse(path).getroot()
+        values = [n.get('target') or '' for n in root.iter('content')]
+        values += [n.text or '' for n in root.iter('param') if n.get('name') == 'target']
+        dynamic += [(path.name, v) for v in values
+                    if any(t in v for t in ('$INFO[', '$VAR[', '$ESCINFO['))]
+    assert not dynamic, ('dynamic <content target>', dynamic)
+
+
 def check():
+    check_static_content_targets()
     constants = {c.get('name'): (c.text or '').strip()
                  for c in ET.parse(ROOT / '1080i/Includes_Constants.xml').getroot().findall('constant')}
     pitch, sizes = check_home_rows(constants)

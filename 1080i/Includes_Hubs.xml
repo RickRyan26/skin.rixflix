@@ -689,7 +689,13 @@
                 <param name="content">$INFO[Skin.String(HomeSwitcher.$PARAM[window].Spotlight.Path)]</param>
                 <param name="sortby">$INFO[Skin.String(HomeSwitcher.$PARAM[window].Spotlight.SortMethod)]</param>
                 <param name="sortorder">$INFO[Skin.String(HomeSwitcher.$PARAM[window].Spotlight.SortOrder)]</param>
-                <param name="target">$INFO[Skin.String(HomeSwitcher.$PARAM[window].Spotlight.Target)]</param>
+                <!-- Static on purpose: a dynamic <content target> is evaluated by
+                     CDirectoryProvider::StartDirectoryJob under the provider lock on a
+                     JobWorker, and a label read there waits for the GUI lock the main
+                     thread holds while it waits for that provider lock (Kodi RC1 ABBA
+                     deadlock; theater 2026-10-18 01:55 gdb). Spotlight.Target is only ever
+                     set to videos (shortcuts/skinvariables-startup.json). -->
+                <param name="target">videos</param>
                 <param name="limit">$INFO[Skin.String(HomeSwitcher.$PARAM[window].Spotlight.Limit)]</param>
             </include>
 
