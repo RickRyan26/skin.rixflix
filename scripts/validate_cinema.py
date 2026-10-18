@@ -133,9 +133,11 @@ def check_home_rows(constants):
     box = params(home[0].find('include'))
     assert (num(box['w']), num(box['h'])) == (1600, 900), box
     # The spotlight re-draws on every Home load and never loads the whole library.
-    assert 'RixFlix.SpotlightSeed' in (ROOT / '1080i/Home.xml').read_text()
-    spot = hubs.find("variable[@name='Path_RixFlix_HomeSpotlight']/value").text
-    assert '%22limit%22%3A30' in spot and '%22random%22' in spot and 'RixFlix.SpotlightSeed' in spot
+    assert 'SetProperty(RixFlix.SpotlightSlot,$VAR[Action_RixFlix_NextSpotlightSlot],Home)' in (ROOT / '1080i/Home.xml').read_text()
+    slots = [v.text for v in hubs.findall("variable[@name='Path_RixFlix_HomeSpotlight']/value")][:2]
+    assert [Path(t).name for t in slots] == ['RandomSpotlightB.xsp', 'RandomSpotlightA.xsp'], slots
+    a, b = ((ROOT / 'extras/playlists' / n).read_text() for n in ('RandomSpotlightA.xsp', 'RandomSpotlightB.xsp'))
+    assert a == b and '<limit>30</limit>' in a and '>random</order>' in a
     return pitch, sizes
 
 

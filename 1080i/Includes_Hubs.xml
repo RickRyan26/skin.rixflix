@@ -583,12 +583,20 @@
         </definition>
     </include>
 
-    <!-- The stock "Random Movies" spotlight as a capped videodb query (ORDER BY RANDOM()
-         LIMIT 30) instead of the .xsp, which loads every movie. rixseed is ignored by the
-         query; it only changes the URL so each Home load draws a new set. -->
+    <!-- The stock "Random Movies" spotlight, capped at 30 (RandomMovies.xsp loads all ~730).
+         Home is KEEP_IN_MEMORY (GUIWindowHome.cpp), so its provider re-queries only when the
+         URL changes: Home's onload flips RixFlix.SpotlightSlot A<->B, two identical .xsp
+         files, and each query is a fresh random draw. Not a videodb ?xsp= URL: its order and
+         limit are dropped (GetMoviesByWhere sorts with the caller's SortDescription), and
+         special:// paths take no ?options (URL.cpp), so a seed query string cannot work. -->
     <variable name="Path_RixFlix_HomeSpotlight">
-        <value condition="String.IsEqual(Skin.String(HomeSwitcher.Home.Spotlight.Path),special://skin/extras/playlists/RandomMovies.xsp)">videodb://movies/titles/?xsp=%7B%22type%22%3A%22movies%22%2C%22rules%22%3A%7B%22and%22%3A%5B%7B%22field%22%3A%22lastplayed%22%2C%22operator%22%3A%22notinthelast%22%2C%22value%22%3A%5B%2214%20days%22%5D%7D%5D%7D%2C%22order%22%3A%7B%22method%22%3A%22random%22%2C%22direction%22%3A%22ascending%22%7D%2C%22limit%22%3A30%7D&amp;rixseed=$INFO[Window(Home).Property(RixFlix.SpotlightSeed)]</value>
+        <value condition="String.IsEqual(Skin.String(HomeSwitcher.Home.Spotlight.Path),special://skin/extras/playlists/RandomMovies.xsp) + String.IsEqual(Window(Home).Property(RixFlix.SpotlightSlot),B)">special://skin/extras/playlists/RandomSpotlightB.xsp</value>
+        <value condition="String.IsEqual(Skin.String(HomeSwitcher.Home.Spotlight.Path),special://skin/extras/playlists/RandomMovies.xsp)">special://skin/extras/playlists/RandomSpotlightA.xsp</value>
         <value>$INFO[Skin.String(HomeSwitcher.Home.Spotlight.Path)]</value>
+    </variable>
+    <variable name="Action_RixFlix_NextSpotlightSlot">
+        <value condition="String.IsEqual(Window(Home).Property(RixFlix.SpotlightSlot),A)">B</value>
+        <value>A</value>
     </variable>
 
     <include name="Hub_Window_Side_Slide_Animation">

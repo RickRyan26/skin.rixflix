@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!-- Home spotlight (A and B are identical; Home alternates them so each load re-queries). -->
+<smartplaylist type="movies">
+    <name>Random Movies</name>
+    <match>all</match>
+    <rule field="lastplayed" operator="notinthelast">
+        <value>14 Days</value>
+    </rule>
+    <limit>30</limit>
+    <order direction="ascending">random</order>
+</smartplaylist>

@@ -93,10 +93,13 @@ posters end ~16px above the bottom edge. The now-playing footer ("Trailer" + pro
 ring) hides while `Exp_RixFlix_PreviewPlaying`.
 
 **Random spotlight.** Home is `KEEP_IN_MEMORY` (`GUIWindowHome.cpp`), so a static
-spotlight URL is queried once per Kodi run. `Path_RixFlix_HomeSpotlight` replaces the
-stock RandomMovies.xsp (which loaded every movie) with a `videodb://movies/titles/?xsp=`
-query, random order, limit 30, plus `rixseed=<Home load time>`: the option is ignored by
-the query but changes the URL, so every Home load draws a fresh set.
+spotlight URL is queried once per Kodi run. `Path_RixFlix_HomeSpotlight` swaps the stock
+RandomMovies.xsp (which loaded all ~730 movies) for RandomSpotlightA/B.xsp (identical:
+random order, limit 30), and Home's onload flips `RixFlix.SpotlightSlot` so every load
+changes the URL and re-queries. Rejected: a `videodb://movies/titles/?xsp=` URL (1.12.8
+shipped it; the box loaded 726 items in database order because `GetMoviesByWhere` sorts
+with the caller's SortDescription, not the xsp's) and a `?seed` on the special:// path
+(CURL does not split options for special://, so the file lookup fails).
 
 **Residency.** Every row still holds at most 15 items. More cards are on screen,
 though: about 5.4 New Releases posters (was ~3 landscape cards), 6.7 per poster row,
