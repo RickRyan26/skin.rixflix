@@ -329,7 +329,10 @@
             <texture colordiffuse="shadow_back">common/white.png</texture>
         </control>
         <control type="group">
-            <visible>!String.IsEmpty(Window(Home).Property(HomeSwitcher.IsVisible))</visible>
+            <!-- Rick 2026-10-18 23:43: the header (wordmark, date, time, weather) is always up
+                 while the spotlight has focus, not only after Up. This dialog (1182) cannot
+                 read Home's focus, so it keys on the container Home's spotlight sets. -->
+            <visible>!String.IsEmpty(Window(Home).Property(HomeSwitcher.IsVisible)) | [Window.IsActive(home) + Integer.IsEqual(Window(Home).Property(TMDbHelper.WidgetContainer),301)]</visible>
             <include content="Animation_ConditionalFade">
                 <param name="condition">Window.IsVisible(1105)</param>
             </include>
@@ -338,6 +341,10 @@
                 <param name="label">$VAR[Home_Header_Label]</param>
             </include>
             <control type="group">
+                <!-- No Search / Home / Settings bar on Home: Up from the spotlight opens search
+                     with its keyboard, and Down off the last row opens Options. RixFlix is only
+                     movies and TV, and Back always ends on Home. -->
+                <visible>!Window.IsVisible(Home)</visible>
                 <include>Home_Group_Definition</include>
                 <include>Home_Reposition</include>
                 <control type="group">

@@ -68,6 +68,12 @@
     <expression name="Exp_RixFlix_HasForegroundMedia">[Player.HasMedia + !$EXP[Exp_RixFlix_AutoplayTrailer]]</expression>
     <!-- A Home preview (New Releases local file or spotlight autoplay) owns the player.
          Hides the now-playing footer ("Trailer" + progress ring; Rick 2026-10-18). -->
+    <!-- A Home hover preview's player is opening: the service set LocalTrailerActive just
+         before Player.play and sets LocalTrailerCancel when the viewer selects or leaves.
+         RC1 raises DialogBusy on every VideoPlayer open (CGUIDialogBusy::WaitOnEvent), so each
+         focus change flashed the bottom-right spinner (Rick 2026-10-18 22:40). Real playback
+         cancels the preview first, so it keeps its spinner. -->
+    <expression name="Exp_RixFlix_PreviewStarting">[Window.IsActive(home) + !String.IsEmpty(Window(Home).Property(RixFlix.LocalTrailerActive)) + String.IsEmpty(Window(Home).Property(RixFlix.LocalTrailerCancel))]</expression>
     <expression name="Exp_RixFlix_PreviewPlaying">[Player.HasVideo + [String.Contains(Player.Filenameandpath,/rixflix-trailers/) | String.Contains(Player.Filenameandpath,/.rixflix/trailers/) | String.IsEqual(Window(Home).Property(RixFlix.LocalTrailerPlaylist),Player.Filenameandpath) | String.IsEqual(Window(Home).Property(RixFlix.AutoplayTrailerResolved),Player.Filenameandpath)]]</expression>
     <expression name="Exp_RixFlix_NoForegroundMedia">[!Player.HasMedia | $EXP[Exp_RixFlix_AutoplayTrailer]]</expression>
 

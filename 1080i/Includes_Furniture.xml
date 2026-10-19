@@ -36,13 +36,26 @@
     <variable name="Furniture_Header_Right_Temperature">
         <value condition="!Skin.HasSetting(Header.DisableWeather)">$INFO[Weather.Temperature]</value>
     </variable>
+    <!-- Rick 2026-10-18 23:43: local air quality beside the temperature. The Rixflix
+         service sets Window(Home).Property(RixFlix.AQI) (US AQI) and RixFlix.AQI.Level
+         (EPA band) and clears both when stale, so an empty property draws nothing.
+         The number takes its band's colour, the label stays secondary. -->
+    <variable name="Furniture_Header_Right_AQI">
+        <value condition="Skin.HasSetting(Header.DisableWeather) | String.IsEmpty(Window(Home).Property(RixFlix.AQI))"></value>
+        <value condition="String.IsEqual(Window(Home).Property(RixFlix.AQI.Level),good)"> • AQI [COLOR=FF8FD694]$INFO[Window(Home).Property(RixFlix.AQI)][/COLOR]</value>
+        <value condition="String.IsEqual(Window(Home).Property(RixFlix.AQI.Level),moderate)"> • AQI [COLOR=FFF2D46B]$INFO[Window(Home).Property(RixFlix.AQI)][/COLOR]</value>
+        <value condition="String.IsEqual(Window(Home).Property(RixFlix.AQI.Level),usg)"> • AQI [COLOR=FFF5A25D]$INFO[Window(Home).Property(RixFlix.AQI)][/COLOR]</value>
+        <value condition="String.IsEqual(Window(Home).Property(RixFlix.AQI.Level),unhealthy)"> • AQI [COLOR=FFF07A72]$INFO[Window(Home).Property(RixFlix.AQI)][/COLOR]</value>
+        <value condition="String.IsEqual(Window(Home).Property(RixFlix.AQI.Level),very-unhealthy) | String.IsEqual(Window(Home).Property(RixFlix.AQI.Level),hazardous)"> • AQI [COLOR=FFC98BE0]$INFO[Window(Home).Property(RixFlix.AQI)][/COLOR]</value>
+        <value> • AQI $INFO[Window(Home).Property(RixFlix.AQI)]</value>
+    </variable>
     <include name="Furniture_Header_Right">
         <control type="group">
             <right>0</right>
             <width>720</width>
             <visible>$PARAM[visible_right]</visible>
             <control type="label">
-                <label>$INFO[System.Time]$VAR[Furniture_Header_Right_Temperature, • ,]</label>
+                <label>$INFO[System.Time]$VAR[Furniture_Header_Right_Temperature, • ,]$VAR[Furniture_Header_Right_AQI]</label>
                 <align>right</align>
                 <aligny>center</aligny>
                 <textcolor>$PARAM[textcolor]</textcolor>
@@ -497,6 +510,18 @@
                 <param name="posy">48</param>
             </include>
 
+            <!-- Rick 2026-10-18 23:43: the bottom-right toast (e.g. jellyfin-kodi's
+                 "<title> / downloading" progress, DialogExtendedProgressBar) could not be
+                 read over posters. It sits on an opaque rounded cinema card that also
+                 covers the spinner ring (100px around the 50px icon at right 15). -->
+            <control type="image">
+                <visible>$PARAM[haslabel]</visible>
+                <left>-24</left>
+                <right>-24</right>
+                <top>-14</top>
+                <bottom>-14</bottom>
+                <texture colordiffuse="rix_cinema_surface" border="20">common/box.png</texture>
+            </control>
             <include content="Furniture_Busy_FloatingText" condition="$PARAM[haslabel]">
                 <param name="mainlabel">$PARAM[mainlabel]</param>
                 <param name="minilabel">$PARAM[minilabel]</param>

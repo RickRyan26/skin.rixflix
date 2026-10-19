@@ -140,3 +140,56 @@ before the layout is accepted (Rixflix `docs/home-theater.md`).
 `python3 scripts/validate_cinema.py` asserts this geometry, the Home include mapping,
 poster-only New Releases, plain Categories, the Play-only spotlight with Left/Right
 walking 301, the preview stage, footer and the random spotlight query.
+
+# Home without the nav bar — 1.12.11
+
+Rick, 2026-10-18 22:40 and 23:43: Recently Added becomes a landscape preview row like
+New Releases. The header stays up on the spotlight. The Search / Home / Settings bar goes,
+because RixFlix is only movies and TV and Back always ends on Home.
+
+**Navigation.** Up from the spotlight runs `opensearch.py`, which opens search with its
+keyboard. Back on the spotlight stays on the spotlight. It used to walk hidden
+button 300 → 303 → `ActivateWindow(1170)`. At 22:52 a Back on the resume menu fell
+through that chain: Options opened during the menu's close animation ("ignoring
+action 92"), and the TV showed black while the remote made navigation sounds. 303 now
+also refuses to open 1170 over any modal dialog. Down off the last Home row opens
+Options (1170, the old gear), via the `ondown` param of `Hub_Widgets_Grouplist`; search
+rows keep the bumper. The header lives in dialog 1182, which cannot read Home's focus.
+It keys on `Window(Home).Property(TMDbHelper.WidgetContainer)` = 301, which only the
+spotlight sets. The bar's group is hidden while Home is visible.
+
+**Header.** `System.Time • temperature • AQI n`. The number takes its EPA band colour.
+The Rixflix service owns `Window(Home).Property(RixFlix.AQI)` and `RixFlix.AQI.Level`
+and clears them when stale, so an empty property draws nothing.
+
+**Recently Added.** Style `PremiereFull` is `List_Premiere_Row` (432×243) at the standard
+1140px row height. Only the first row may be short: Kodi scrolls the first focusable
+row to 0, and a short second row lands 128px higher or lower depending on direction.
+Rows 501 and 502 both drop by `home_premiere_drop`, so focused cards end at y1060 and
+Continue Movies stays below the screen. One skin timer serves both rows, keyed on
+`Container.ListItem` (the focused list on Home). Two per-row timers race: moving
+502 → 501 runs 501's onstart, then 502's onstop clears the selection.
+
+**No bounce.** Spotlight → 501 runs the row drop together with group 400's 440px
+`Exp_Hubs_Spotlight_SlideDown` slide. 1.12.10 paired a 300ms cubic in-out drop with that
+400ms quadratic slide. The sum dipped and climbed back (Rick: "janky bounce"). The drop
+now uses the same time and tween, as two one-way (`reversible="false"`) animations like
+400's. A reversible animation replays its curve mirrored on the way back and bounces
+again.
+
+**No busy flash.** RC1 raises DialogBusy on every VideoPlayer open
+(`CGUIDialogBusy::WaitOnEvent`), so each preview start flashed the bottom-right spinner.
+`Exp_RixFlix_PreviewStarting` hides it while the service's `LocalTrailerActive` is set and
+no `LocalTrailerCancel` is pending. Real playback cancels the preview first, so it keeps its
+spinner. The poster skeleton flash itself came from the display: `adjustrefreshrate=2`
+resets GLES on every player stop, and the resize frees every texture. That fix is the
+Rixflix theater profile's `On start` (3).
+
+**Toast card.** `Furniture_Busy_Main` draws an opaque `rix_cinema_surface` rounded card
+under any labelled bottom-right toast. An example is jellyfin-kodi's "<title> / …"
+progress (DialogExtendedProgressBar), which could not be read over posters. Label-less
+DialogBusy stays a bare spinner.
+
+`validate_cinema.py` asserts the drop curves against the spotlight slide, the
+PremiereFull mapping and both bottom edges, the Up/Back/Down routes, the header and bar
+visibility, and an opaque toast card.

@@ -119,8 +119,26 @@ def check_home_rows(constants):
     # Rick 2026-10-18 16:35: rows never move for a preview; New Releases drops to the bottom
     # edge while focused, and the focused-row info (with plot and ends-at) stays up.
     assert not [a for a in grouplist.iter('animation') if 'Trailer' in (a.get('condition') or '')]
-    drops = [a for a in grouplist.findall('animation') if a.get('condition') == 'Window.IsActive(home) + Control.HasFocus(501)']
-    assert len(drops) == 1 and drops[0].get('end') == '0,home_premiere_drop'
+    # 1.12.11: New Releases AND Recently Added drop. The drop runs alongside group 400's
+    # 440px spotlight slide (Spotlight -> 501). Different curves summed to a visible bounce
+    # (Rick 2026-10-18 23:43), so the drop matches that slide's time and tween, one-way each.
+    focused = '[Control.HasFocus(501) | Control.HasFocus(502)]'
+    drops = [a for a in grouplist.findall('animation') if focused in (a.get('condition') or '')]
+    assert [a.get('end') for a in drops] == ['0,home_premiere_drop', '0'], drops
+    spot = [a for a in hubs.findall("include[@name='Hub_Spotlight']/definition/animation")]
+    assert spot and all((a.get('time'), a.get('tween')) == (spot[0].get('time'), spot[0].get('tween')) for a in spot)
+    for a in drops:
+        assert (a.get('time'), a.get('tween'), a.get('easing'), a.get('reversible')) == \
+            (spot[0].get('time'), spot[0].get('tween'), spot[0].get('easing'), 'false'), a.attrib
+    # Recently Added: the same landscape card, the standard row height (only the first row
+    # may be short: a short second row lands 128px differently by direction).
+    assert rule('widget_home_include', 'PremiereFull') == 'List_Premiere_Row'
+    assert rule('widget_include', 'PremiereFull') == 'List_Premiere_Row'
+    assert rules.find("rules[@name='widget_home_height']/rule[condition='{item_widget_style}==PremiereFull']") is None
+    added_bottom = 940 - 440 + num('home_premiere_drop') + card_top + ph
+    assert added_bottom == 1060, ('Recently Added cards share the New Releases bottom edge', added_bottom)
+    below_added = 940 - 440 + num('home_premiere_drop') + row_top + num('home_row_h') + num('home_row_label_t') + card_top
+    assert below_added >= 1080, ('Continue Movies must stay below the screen edge', below_added)
     poster_bottom = 940 - 440 + num('home_premiere_drop') + card_top + ph
     assert poster_bottom == 1060, ('New Releases cards keep the 1.12.9 bottom edge', poster_bottom)
     # The row below stays off screen while New Releases is focused (the cards' row pays its height).
@@ -205,7 +223,28 @@ def check():
     assert 'Hub_Spotlight_Info' in window, 'the spotlight shows its logo/title and plot'
     assert 'foreground' not in ET.tostring(spotlight, encoding='unicode'), 'no Play Trailer button'
 
+    # Rick 2026-10-18 23:43: no nav bar on Home. Up from the spotlight = search with its
+    # keyboard; Back stays on the spotlight (the 300 -> 303 -> Options chain opened 1170
+    # over a closing resume menu and blacked out the TV); Down off the last row = Options.
+    search = 'RunScript(context.rixflix.gotoshow,opensearch)'
+    for node in (row, play):
+        ups = [o for o in node.findall('onup') if o.get('condition') == '!Skin.HasSetting(HomeSwitcher.Vertical)']
+        assert [o.text for o in ups] == [search], (node.get('id'), [o.text for o in ups])
+    button = hubs.find("include[@name='Hub_Spotlight_Button']")
+    backs = [o.text for o in button.findall('onback') if o.get('condition') == '$EXP[Exp_RixFlix_NoForegroundMedia]']
+    assert backs == ['$PARAM[id]'], backs
+    assert '<param name="ondown">ActivateWindow(1170)</param>' in (ROOT / 'shortcuts/generator/data/parts/widgets_grouplist_home.xmltemplate').read_text()
+    home_x = ET.parse(ROOT / '1080i/Includes_Home.xml').getroot()
+    header = home_x.find("include[@name='Home_Switcher_Horz']").findall('control')[1]
+    assert 'Integer.IsEqual(Window(Home).Property(TMDbHelper.WidgetContainer),301)' in header.findtext('visible')
+    nav = [g for g in header.findall('control') if g.findtext('visible') == '!Window.IsVisible(Home)']
+    assert len(nav) == 1, 'the Search / Home / Settings bar hides on Home'
+    assert any(i.text == 'Home_Switcher_Right_Buttons' for i in nav[0].iter('include')), 'gear hides with the bar'
+    # The bottom-right toast is readable over posters: an opaque card under its text.
+    busy = ET.parse(ROOT / '1080i/Includes_Furniture.xml').getroot().find("include[@name='Furniture_Busy_Main']/definition")
+    card = busy.find("control[@type='image']")
     colors = {c.get('name'): c.text for c in ET.parse(ROOT / 'colors/defaults.xml').getroot()}
+    assert card is not None and colors[card.find('texture').get('colordiffuse')][:2] == 'ff', 'opaque toast card'
     ratios = []
     style = params(template) | params(play)
     for ink, surface in (('ink', 'surface'), ('focus_ink', 'focus_surface')):

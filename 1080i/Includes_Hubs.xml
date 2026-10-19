@@ -306,18 +306,27 @@
 
     <include name="Hub_Widgets_Grouplist">
         <param name="bumper_h">widget_tbump_h_detailed</param>
+        <param name="ondown">ActivateWindow(1180)</param>
         <definition>
             <control type="grouplist" id="602">
                 <animation effect="slide" start="0" end="0,-440" condition="true">Conditional</animation>
                 <!-- Rick 2026-10-18 16:35: New Releases sits nearly on the bottom edge so the
-                     preview above it has room; rows never move for a playing preview. -->
-                <animation effect="slide" start="0" end="0,home_premiere_drop" time="300" tween="cubic" easing="inout" condition="Window.IsActive(home) + Control.HasFocus(501)">Conditional</animation>
+                     preview above it has room; rows never move for a playing preview.
+                     1.12.11: Recently Added (502) gets the same card and the same drop.
+                     Spotlight -> 501 runs this drop together with group 400's 440px
+                     Exp_Hubs_Spotlight_SlideDown slide. 1.12.10 used 300ms cubic in-out against
+                     that 400ms quadratic, so the rows dipped and climbed back (Rick: "janky
+                     bounce"). Same time, tween and easing, in two one-way animations like 400's,
+                     make the sum monotonic in both directions. A reversible animation would
+                     replay the curve mirrored on the way back up and bounce again. -->
+                <animation effect="slide" start="0" end="0,home_premiere_drop" time="400" tween="quadratic" reversible="false" condition="Window.IsActive(home) + [Control.HasFocus(501) | Control.HasFocus(502)]">Conditional</animation>
+                <animation effect="slide" start="0,home_premiere_drop" end="0" time="400" tween="quadratic" reversible="false" condition="!Window.IsActive(home) | ![Control.HasFocus(501) | Control.HasFocus(502)]">Conditional</animation>
 
                 <onup condition="!Control.IsVisible(301) + Skin.HasSetting(HomeSwitcher.Vertical)">SetProperty(Bumper.Direction,Up,Home)</onup>
                 <onup condition="!Control.IsVisible(301) + Skin.HasSetting(HomeSwitcher.Vertical)">ActivateWindow(1180)</onup>
                 <onup condition="!Control.IsVisible(301) + !Skin.HasSetting(HomeSwitcher.Vertical)">302</onup>
                 <onup condition="Control.IsVisible(301)">301</onup>
-                <ondown>ActivateWindow(1180)</ondown>
+                <ondown>$PARAM[ondown]</ondown>
                 <include>Hub_Grouplist_OnLeftRight</include>
                 <orientation>vertical</orientation>
                 <control type="group" id="599">
@@ -373,7 +382,11 @@
         <oninfo>Action(Info)</oninfo>
         <oninfo>SetFocus($PARAM[id])</oninfo>
 
-        <onback condition="$EXP[Exp_RixFlix_NoForegroundMedia]">300</onback>
+        <!-- Back on the spotlight stays put. It used to reach hidden button 300 and then 303,
+             which opens Options (1170). At 22:52 on 2026-10-18, Back on the resume menu fell
+             through that chain. 1170 opened while the menu's close animation ran, and the
+             TV went black with only navigation sounds. Home is the end of every Back chain. -->
+        <onback condition="$EXP[Exp_RixFlix_NoForegroundMedia]">$PARAM[id]</onback>
         <onback condition="$EXP[Exp_RixFlix_HasForegroundMedia]">SetProperty(FullscreenRefocus,SetFocus($PARAM[id]))</onback>
         <onback condition="$EXP[Exp_RixFlix_HasForegroundMedia]">309</onback>
     </include>
@@ -448,7 +461,10 @@
 
                     <onup condition="Skin.HasSetting(HomeSwitcher.Vertical)">SetProperty(Bumper.Direction,Up,Home)</onup>
                     <onup condition="Skin.HasSetting(HomeSwitcher.Vertical)">ActivateWindow(1180)</onup>
-                    <onup condition="!Skin.HasSetting(HomeSwitcher.Vertical)">300</onup>
+                    <!-- Rick 2026-10-18 23:43: no Home/Search/Settings bar on Home. Up opens
+                         search WITH its keyboard (opensearch.py proves each step), Down off
+                         the last row opens Options (Hub_Widgets_Grouplist ondown). -->
+                    <onup condition="!Skin.HasSetting(HomeSwitcher.Vertical)">RunScript(context.rixflix.gotoshow,opensearch)</onup>
                     <ondown>$VAR[Hub_Action_Widgets]</ondown>
 
                     <centertop>140</centertop>
@@ -493,7 +509,7 @@
                         <onright condition="$EXP[Exp_Hubs_Spotlight_HasItems]">Control.Move(301,1)</onright>
                         <onup condition="Skin.HasSetting(HomeSwitcher.Vertical)">SetProperty(Bumper.Direction,Up,Home)</onup>
                         <onup condition="Skin.HasSetting(HomeSwitcher.Vertical)">ActivateWindow(1180)</onup>
-                        <onup condition="!Skin.HasSetting(HomeSwitcher.Vertical)">300</onup>
+                        <onup condition="!Skin.HasSetting(HomeSwitcher.Vertical)">RunScript(context.rixflix.gotoshow,opensearch)</onup>
                         <ondown>$VAR[Hub_Action_Widgets]</ondown>
                     </include>
 
@@ -555,7 +571,7 @@
                 <onfocus>SetProperty(TMDbHelper.WidgetContainer,301,$PARAM[window])</onfocus>
                 <onfocus>ClearProperty(Background.ShowOverlay,Home)</onfocus>
 
-                <onfocus condition="Integer.IsEqual(Container(301).NumItems,0)">SetFocus(300)</onfocus>
+                <onfocus condition="Integer.IsEqual(Container(301).NumItems,0)">$VAR[Hub_Action_Widgets]</onfocus>
                 <onfocus condition="!Integer.IsEqual(Container(301).NumItems,0)">SetFocus(311)</onfocus>
 
                 <visible>$EXP[Exp_Hubs_Spotlight_HasItems]</visible>
@@ -682,7 +698,7 @@
             <param name="id">303</param>
             <onfocus>$VAR[Hub_Action_Reset]</onfocus>
             <onfocus>SetFocus(300)</onfocus>
-            <onfocus>ActivateWindow(1170)</onfocus>
+            <onfocus condition="!System.HasActiveModalDialog + !Window.IsVisible(DialogContextMenu.xml)">ActivateWindow(1170)</onfocus>
         </include>
 
         <include content="Object_Hidden_Button">

@@ -5,6 +5,10 @@
             <value>List_Premiere_Row</value>
         </rule>
         <rule>
+            <condition>{item_widget_style}==PremiereFull</condition>
+            <value>List_Premiere_Row</value>
+        </rule>
+        <rule>
             <condition>{item_widget_style}==Category</condition>
             <value>List_Category_Row</value>
         </rule>
@@ -42,6 +46,14 @@
     <rules name="widget_home_include">
         <rule>
             <condition>{item_widget_style}==Premiere</condition>
+            <value>List_Premiere_Row</value>
+        </rule>
+        <!-- Recently Added (1.12.11): the New Releases landscape card, but the standard
+             1140px row height. Only the FIRST row may be shorter (Kodi scrolls it to 0);
+             a short second row lands 128px differently by direction. widget_home_height
+             therefore falls through to home_row_h for it. -->
+        <rule>
+            <condition>{item_widget_style}==PremiereFull</condition>
             <value>List_Premiere_Row</value>
         </rule>
         <rule>

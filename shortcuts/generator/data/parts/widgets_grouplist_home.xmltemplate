@@ -2,6 +2,8 @@
     <!-- Home rows draw their (inline) title at label top home_row_label_t, so the
          first row needs the matching bumper. Search keeps the shared template. -->
     <param name="bumper_h">home_row_bump_h</param>
+    <!-- Down off the last Home row opens Options (Rick 2026-10-18 23:43; it replaced the gear). -->
+    <param name="ondown">ActivateWindow(1170)</param>
     {top_widgets}
     {all_widgets}
 </include>
