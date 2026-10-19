@@ -2327,8 +2327,9 @@
                         <height>64</height>
                         <width>64</width>
                         <include content="Object_Indicator">
-                            <right>0</right>
-                            <centerbottom>50%</centerbottom>
+                            <!-- Centred in this 64px slot: the ring is 56px (nested values win). -->
+                            <right>4</right>
+                            <bottom>4</bottom>
                             <param name="affix">$PARAM[affix]</param>
                             <param name="listitem">$PARAM[listitem]</param>
                             <param name="selected">$PARAM[selected]</param>

@@ -945,10 +945,15 @@
         <definition>
             <control type="group">
                 <nested />
-                <centerbottom>0</centerbottom>
-                <right>25</right>
-                <width>64</width>
-                <height>64</height>
+                <!-- Rick 2026-10-19: the progress / episode-count ring sits INSIDE the card's
+                     bottom-right corner. AF3 centred it on the bottom edge 25px in, so half of
+                     it hung below the poster, under the next row's title and over the card gap.
+                     12px inset at 56px leaves the focus halo (Object_Indicator_Selected) on the
+                     artwork too. -->
+                <bottom>12</bottom>
+                <right>12</right>
+                <width>56</width>
+                <height>56</height>
 
                 <!-- Visibility of Group -->
                 <include content="Object_Indicator_Visible">

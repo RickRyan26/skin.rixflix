@@ -245,6 +245,9 @@ def check():
     card = busy.find("control[@type='image']")
     colors = {c.get('name'): c.text for c in ET.parse(ROOT / 'colors/defaults.xml').getroot()}
     assert card is not None and colors[card.find('texture').get('colordiffuse')][:2] == 'ff', 'opaque toast card'
+    # Rick 2026-10-19: the progress ring sits inside the card's bottom-right corner.
+    ring = ET.parse(ROOT / '1080i/Includes_Objects.xml').getroot().find("include[@name='Object_Indicator']/definition/control")
+    assert ring.find('centerbottom') is None and int(ring.findtext('bottom')) >= 8 and int(ring.findtext('right')) >= 8
     ratios = []
     style = params(template) | params(play)
     for ink, surface in (('ink', 'surface'), ('focus_ink', 'focus_surface')):
