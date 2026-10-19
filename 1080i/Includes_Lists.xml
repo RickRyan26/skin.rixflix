@@ -879,7 +879,7 @@
     </include>
 
 
-    <!-- Home New Releases: larger posters, 16px apart; five of them are fully on screen. -->
+    <!-- Home New Releases: 16:9 landscape cards, 16px apart; about four are on screen. -->
     <include name="List_Premiere_Row">
         <definition>
             <include content="List_Core">

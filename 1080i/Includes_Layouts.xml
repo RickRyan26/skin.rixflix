@@ -2442,6 +2442,7 @@
         <param name="listitem">ListItem</param>
         <param name="progress">Progress</param>
         <param name="affix" />
+        <param name="badges">true</param>
         <definition>
             <control type="group">
 
@@ -2480,11 +2481,11 @@
                     <visible>[String.IsEqual($PARAM[listitem].DBType,movie) | String.IsEqual($PARAM[listitem].DBType,tvshow)] + String.IsEmpty($PARAM[listitem].Art(landscape)) + String.IsEmpty($PARAM[listitem].Art(tvshow.landscape))</visible>
                 </include>
 
-                <include content="Object_ProgressLine">
+                <include content="Object_ProgressLine" condition="$PARAM[badges]">
                     <param name="progress">$PARAM[listitem].$PARAM[progress]</param>
                 </include>
 
-                <include content="Object_Indicator" condition="!$PARAM[selected]">
+                <include content="Object_Indicator" condition="!$PARAM[selected] + $PARAM[badges]">
                     <param name="affix">$PARAM[affix]</param>
                     <param name="listitem">$PARAM[listitem]</param>
                 </include>
@@ -2516,19 +2517,22 @@
         </definition>
     </include>
 
-    <!-- New Releases (Rick, 2026-10-18): poster art only, larger than the standard
-         260x371 poster. It is the standard poster layout at a bigger size, so focus,
-         artwork fallback and shadows match every other row. No ribbon, title or date. -->
+    <!-- New Releases (Rick, 2026-10-18 21:29): 16:9 landscape art, shorter than a poster
+         so the cards cover less of the preview above them. It is the stock landscape
+         layout, so focus, shadows and the landscape -> fanart (+ clearlogo) fallback match
+         every other landscape list. detailed=true fills the card (scale) and draws no
+         label block. No ribbon, title or date. -->
     <include name="Layout_Premiere">
         <param name="selected">false</param>
         <definition>
-            <include content="Layout_Poster">
+            <include content="Layout_Landscape">
                 <param name="selected">$PARAM[selected]</param>
                 <param name="item_w">$PARAM[item_w]</param>
                 <param name="item_h">$PARAM[item_h]</param>
                 <param name="id">$PARAM[id]</param>
-                <param name="detailed">false</param>
+                <param name="detailed">true</param>
                 <param name="indicator">false</param>
+                <param name="badges">false</param>
             </include>
         </definition>
     </include>

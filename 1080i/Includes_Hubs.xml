@@ -435,6 +435,13 @@
 
                     <orientation>horizontal</orientation>
                     <itemgap>16</itemgap>
+                    <!-- The unconditional noops are load-bearing. CGUIControlGroupList::AddControl
+                         gives Play (311) Left -> arrow 314 and hands 314 this grouplist's onleft.
+                         It evaluates that action's condition once at window load, while 301 is
+                         still empty. If nothing is met, it treats the row as wrapping and points
+                         314's Left back at 311, so CGUIWindow::OnMove sees a cycle and Left does
+                         nothing (Rick 2026-10-18 21:29). A noop is always met. -->
+                    <onleft>noop</onleft>
                     <include>Hub_Spotlight_OnLeft</include>
                     <onright>noop</onright>
                     <onright condition="$EXP[Exp_Hubs_Spotlight_HasItems]">Control.Move(301,1)</onright>
@@ -594,6 +601,16 @@
         <value condition="String.IsEqual(Skin.String(HomeSwitcher.Home.Spotlight.Path),special://skin/extras/playlists/RandomMovies.xsp)">special://skin/extras/playlists/RandomSpotlightA.xsp</value>
         <value>$INFO[Skin.String(HomeSwitcher.Home.Spotlight.Path)]</value>
     </variable>
+    <!-- A provider whose sort is "none" re-queries on every player OnPlay/OnStop
+         (CDirectoryProvider::OnEventPublished, Topic::PLAYER). Each Home preview start and
+         stop therefore re-drew 30 new random titles, so Left could never bring back the one
+         shown before. Playlist order is exempt from player events and keeps the .xsp's
+         random draw: CSmartPlaylistDirectory numbers items in query order. A sort chosen in
+         skin settings still wins. -->
+    <variable name="Sort_RixFlix_HomeSpotlight">
+        <value condition="!String.IsEmpty(Skin.String(HomeSwitcher.Home.Spotlight.SortMethod))">$INFO[Skin.String(HomeSwitcher.Home.Spotlight.SortMethod)]</value>
+        <value>playlist</value>
+    </variable>
     <variable name="Action_RixFlix_NextSpotlightSlot">
         <value condition="String.IsEqual(Window(Home).Property(RixFlix.SpotlightSlot),A)">B</value>
         <value>A</value>
@@ -697,6 +714,7 @@
         <param name="overlay">true</param>
         <param name="spotlight">true</param>
         <param name="spotlight_content">$INFO[Skin.String(HomeSwitcher.$PARAM[window].Spotlight.Path)]</param>
+        <param name="spotlight_sortby">$INFO[Skin.String(HomeSwitcher.$PARAM[window].Spotlight.SortMethod)]</param>
         <definition>
 
             <include>Hub_Window_Background</include>
@@ -705,7 +723,7 @@
             <include content="Hub_Spotlight_List" condition="!String.IsEmpty(Skin.String(HomeSwitcher.$PARAM[window].Spotlight.Target)) + $PARAM[spotlight]">
                 <param name="window">$PARAM[window]</param>
                 <param name="content">$PARAM[spotlight_content]</param>
-                <param name="sortby">$INFO[Skin.String(HomeSwitcher.$PARAM[window].Spotlight.SortMethod)]</param>
+                <param name="sortby">$PARAM[spotlight_sortby]</param>
                 <param name="sortorder">$INFO[Skin.String(HomeSwitcher.$PARAM[window].Spotlight.SortOrder)]</param>
                 <!-- Static on purpose: a dynamic <content target> is evaluated by
                      CDirectoryProvider::StartDirectoryJob under the provider lock on a

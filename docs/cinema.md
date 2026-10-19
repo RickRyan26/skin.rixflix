@@ -84,6 +84,13 @@ Information or Play Trailer. Info still opens the info dialog through
 `Hub_Spotlight_Button`. Left/Right call `Control.Move(301,∓1)` on the random wraplist,
 so Left brings back the previous title and Right the next.
 
+Through 1.12.9, Left did nothing. `CGUIControlGroupList::AddControl` points Play's Left at
+the arrow image 314 and gives 314 the grouplist's own `onleft`. It checks that action's
+condition once at load, while 301 is still empty. If no condition is met, it treats the row
+as wrapping and points 314's Left back at 311, and `CGUIWindow::OnMove` drops the cycle.
+Right always worked because the grouplist has an unconditional `<onright>noop</onright>`.
+Since 1.12.10 there is a matching `<onleft>noop</onleft>`.
+
 **Preview stage (1.12.8, Rick 2026-10-18 16:35).** A Home preview plays in a
 right-anchored 1600×900 box (`home_preview_w/h`, `Background_Video_FlixArt` with params),
 larger than the 1280×720 fanart and behind the info panel and rows. Rows never move for a
@@ -100,6 +107,30 @@ changes the URL and re-queries. Rejected: a `videodb://movies/titles/?xsp=` URL 
 shipped it; the box loaded 726 items in database order because `GetMoviesByWhere` sorts
 with the caller's SortDescription, not the xsp's) and a `?seed` on the special:// path
 (CURL does not split options for special://, so the file lookup fails).
+
+**Landscape New Releases (1.12.10, Rick 2026-10-18 21:29).** New Releases cards are 16:9
+landscape art at 432×243 (`Layout_Landscape`, filled, with no labels or badges), so
+they cover less of the preview. The focused cards keep the 1.12.9 bottom edge at y1060.
+That needs `home_premiere_drop` = 544 − card height (301). The row height follows the card
+(1012), which keeps Recently Added at y1085, just below the screen.
+
+**No flash on focus change (1.12.10).** `CDirectoryProvider::OnEventPublished` re-queries
+every provider sorted `none`, `lastplayed`, `dateadded`, `playcount` or `lastused` on each
+player OnPlay/OnStop. Every New Releases preview starts and stops a player, so each focus
+change re-ran all five provider rows and the spotlight. Each row then got new list items,
+its cards were rebuilt and their art reloaded. The screen flashed through the loading
+skeletons, and the spotlight re-drew 30 random titles, so Left could not find the previous
+one either. RixFlix provider rows (`widgets_row.xml` `widget_sortby`) and the Home
+spotlight (`Sort_RixFlix_HomeSpotlight`) now sort by `playlist`, which player events
+ignore:
+- Provider items all have program count 0, and `SortUtils` uses `std::stable_sort`, so
+  provider order is kept.
+- `CSmartPlaylistDirectory` numbers the random .xsp results in query order, so the random
+  draw is kept.
+
+Real playback still refreshes the Continue rows, because saving a resume point or playcount
+announces VideoLibrary `OnUpdate` (`SaveFileStateJob`). That invalidates any provider holding
+video items.
 
 **Residency.** Every row still holds at most 15 items. More cards are on screen,
 though: about 5.4 New Releases posters (was ~3 landscape cards), 6.7 per poster row,

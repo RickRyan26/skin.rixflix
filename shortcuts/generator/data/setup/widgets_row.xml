@@ -128,7 +128,29 @@
             <value>videos</value>
         </rule>
     </rules>
-    <value name="widget_sortby">{item_widget_sortby}</value>
+    <!-- RixFlix provider rows sort by playlist order, which keeps the provider's own order:
+         every plugin item has program count 0, and SortUtils uses std::stable_sort. The
+         reason is CDirectoryProvider::OnEventPublished: it re-queries any "none"-sorted
+         provider on every player OnPlay/OnStop. Each New Releases preview start and stop
+         re-ran all five Home rows. Every card was rebuilt and its art reloaded, so the screen
+         flashed through loading skeletons on each focus change (Rick 2026-10-18 21:29).
+         Real playback still refreshes the rows: saving a resume point or playcount
+         announces VideoLibrary OnUpdate (SaveFileStateJob), which invalidates any provider
+         holding video items. -->
+    <rules name="widget_sortby">
+        <rule>
+            <condition>{item_widget_sortby}!=</condition>
+            <value>{item_widget_sortby}</value>
+        </rule>
+        <rule>
+            <condition>{item_path}&lt;&lt;plugin://plugin.video.rixflix.providers/</condition>
+            <value>playlist</value>
+        </rule>
+        <rule>
+            <condition>True</condition>
+            <value>{item_widget_sortby}</value>
+        </rule>
+    </rules>
     <value name="widget_limit">{item_widget_limit}</value>
     <rules name="widget_sortorder">
         <rule>

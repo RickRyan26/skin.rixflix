@@ -26,6 +26,7 @@
         <include content="Hub_Window">
             <param name="window">home</param>
             <param name="spotlight_content">$VAR[Path_RixFlix_HomeSpotlight]</param>
+            <param name="spotlight_sortby">$VAR[Sort_RixFlix_HomeSpotlight]</param>
         </include>
     </controls>
 </window>

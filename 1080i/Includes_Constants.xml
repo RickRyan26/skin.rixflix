@@ -203,10 +203,15 @@
          viewport + label top: 1150 - 754 = 396, i.e. a 371px poster plus a 25px gutter.
          The title sits rotated in the 80px left margin, so no header row is reserved.
          New Releases is always the first row (first focusable: Kodi scrolls it to 0), so
-         its taller poster is paid for by its own list height, not by the next label. -->
+         its card height difference is paid by its own list height, not by the next label.
+         New Releases cards are 16:9 landscape, 432x243 (Rick 2026-10-18 21:29: shorter, so
+         they cover less of the preview). The drop is 544 - card height, which keeps the
+         focused cards' bottom at y1060 (500 + drop + 16 + 243), where the 464px posters
+         ended. The row height follows the card, so Recently Added stays just below the
+         screen edge (y1085), as before. -->
     <constant name="home_preview_w">1600</constant>
     <constant name="home_preview_h">900</constant>
-    <constant name="home_premiere_drop">80</constant>
+    <constant name="home_premiere_drop">301</constant>
     <constant name="home_row_bump_h">754</constant>
     <constant name="home_row_label_t">-754</constant>
     <constant name="home_row_h">1140</constant>
@@ -214,11 +219,11 @@
     <constant name="home_row_busy_t">-64</constant>
     <constant name="home_row_gap_w">16</constant>
     <constant name="home_poster_itemlayout_w">276</constant>
-    <constant name="home_premiere_item_w">325</constant>
-    <constant name="home_premiere_item_h">464</constant>
-    <constant name="home_premiere_itemlayout_w">341</constant>
-    <constant name="home_premiere_itemlayout_h">504</constant>
-    <constant name="home_premiere_row_h">1233</constant>
+    <constant name="home_premiere_item_w">432</constant>
+    <constant name="home_premiere_item_h">243</constant>
+    <constant name="home_premiere_itemlayout_w">448</constant>
+    <constant name="home_premiere_itemlayout_h">283</constant>
+    <constant name="home_premiere_row_h">1012</constant>
     <constant name="home_category_item_w">300</constant>
     <constant name="home_category_item_h">180</constant>
     <constant name="home_category_itemlayout_w">316</constant>

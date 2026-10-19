@@ -52,13 +52,17 @@ def check_home_rows(constants):
         assert widgets.findtext(f"include[@name='Widget_Busy_Spinner_Height__{include}']/height") == row['item_h']
         sizes[style] = (w, h)
 
-    # New Releases: the standard poster layout, larger, with no text or ribbon of its own.
+    # New Releases (Rick 2026-10-18 21:29): the stock landscape layout at 16:9, shorter
+    # than a poster, filled (detailed) and with no labels, badges or ribbon of its own.
     premiere = layouts.find("include[@name='Layout_Premiere']/definition")
-    poster = premiere.find("include[@content='Layout_Poster']")
-    assert poster is not None and params(poster)['indicator'] == 'false'
-    assert not premiere.findall('.//control'), 'New Releases cards are poster art only'
+    landscape = premiere.find("include[@content='Layout_Landscape']")
+    assert landscape is not None
+    assert (params(landscape)['indicator'], params(landscape)['detailed'], params(landscape)['badges']) == ('false', 'true', 'false')
+    assert not premiere.findall('.//control'), 'New Releases cards are landscape art only'
+    stock = layouts.find("include[@name='Layout_Landscape']")
+    assert params(stock)['badges'] == 'true', 'other landscape lists keep their badges'
     (pw, ph), (sw, sh) = sizes['Premiere'], sizes['Poster']
-    assert pw > sw and ph > sh and abs(pw / ph - sw / sh) < 0.01, 'larger posters, same aspect'
+    assert abs(pw / ph - 16 / 9) < 0.01 and ph < sh, 'New Releases: 16:9 landscape, shorter than a poster'
 
     category = layouts.find("include[@name='Layout_Category']/definition/control")
     text = ET.tostring(category, encoding='unicode').lower()
@@ -118,7 +122,10 @@ def check_home_rows(constants):
     drops = [a for a in grouplist.findall('animation') if a.get('condition') == 'Window.IsActive(home) + Control.HasFocus(501)']
     assert len(drops) == 1 and drops[0].get('end') == '0,home_premiere_drop'
     poster_bottom = 940 - 440 + num('home_premiere_drop') + card_top + ph
-    assert 1040 <= poster_bottom <= 1076, ('New Releases posters nearly touch the bottom', poster_bottom)
+    assert poster_bottom == 1060, ('New Releases cards keep the 1.12.9 bottom edge', poster_bottom)
+    # The row below stays off screen while New Releases is focused (the cards' row pays its height).
+    next_row = 940 - 440 + num('home_premiere_drop') + num('widget_items_t_detailed') + num('home_premiere_row_h') + num('home_row_label_t') + card_top
+    assert next_row >= 1080, ('Recently Added must stay below the screen edge', next_row)
     info = hubs.find("include[@name='Hub_Combined_Info']")
     assert 'Trailer' not in ET.tostring(info, encoding='unicode')
     panel = params(info.findall('.//include[@content="Info_Panel"]')[-1])
@@ -182,6 +189,17 @@ def check():
     on_left = hubs.find("include[@name='Hub_Spotlight_OnLeft']")
     assert any(o.text == 'Control.Move(301,-1)' for o in on_left.findall('onleft')), 'Left = previous title'
     assert any(o.text == 'Control.Move(301,1)' for o in play.findall('onright')), 'Right = next title'
+    # GUIControlGroupList::AddControl wraps the arrow image's Left back to Play unless the
+    # grouplist's own onleft has an action met at load (301 is still empty then).
+    for direction in ('onleft', 'onright'):
+        assert any(o.text == 'noop' and not o.get('condition') for o in row.findall(direction)), direction
+    # Player OnPlay/OnStop re-queries "none"-sorted providers: the spotlight and the RixFlix
+    # rows use playlist order, so a preview neither redraws the spotlight nor flashes the rows.
+    assert '<param name="spotlight_sortby">$VAR[Sort_RixFlix_HomeSpotlight]</param>' in (ROOT / '1080i/Home.xml').read_text()
+    assert [v.text for v in hubs.findall("variable[@name='Sort_RixFlix_HomeSpotlight']/value")][-1] == 'playlist'
+    sort_rules = ET.parse(ROOT / 'shortcuts/generator/data/setup/widgets_row.xml').getroot().find("rules[@name='widget_sortby']")
+    provider = [r for r in sort_rules.findall('rule') if 'plugin.video.rixflix.providers' in r.findtext('condition')]
+    assert len(provider) == 1 and provider[0].findtext('value') == 'playlist'
     assert hubs.find("include[@name='Hub_Spotlight_List']/definition/control").get('type') == 'wraplist'
     window = ET.tostring(hubs.find("include[@name='Hub_Window']"), encoding='unicode')
     assert 'Hub_Spotlight_Info' in window, 'the spotlight shows its logo/title and plot'
@@ -199,7 +217,7 @@ def check():
     for name in ('View_Line_Label', 'View_Line_SubLabel'):
         assert len(views.find(f"include[@name='{name}']/control").findall('textcolor')) == 1
     print(f'PASS: Home rows pitch {pitch:g}px, 16px card gap, New Releases {sizes["Premiere"][0]:g}x'
-          f'{sizes["Premiere"][1]:g} posters, inline titles, previews leave rows in place; '
+          f'{sizes["Premiere"][1]:g} landscape cards, inline titles, previews leave rows in place; '
           f'spotlight Play-only (Left/Right walk 301), {len(ratios)} contrast states (min {min(ratios):.2f}:1)')
 
 
