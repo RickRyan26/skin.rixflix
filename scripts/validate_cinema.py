@@ -218,7 +218,14 @@ def check():
     sort_rules = ET.parse(ROOT / 'shortcuts/generator/data/setup/widgets_row.xml').getroot().find("rules[@name='widget_sortby']")
     provider = [r for r in sort_rules.findall('rule') if 'plugin.video.rixflix.providers' in r.findtext('condition')]
     assert len(provider) == 1 and provider[0].findtext('value') == 'playlist'
-    assert hubs.find("include[@name='Hub_Spotlight_List']/definition/control").get('type') == 'wraplist'
+    spotlight_list = hubs.find("include[@name='Hub_Spotlight_List']/definition/control")
+    assert spotlight_list.get('type') == 'wraplist'
+    # A modal/player restore may leave focus on offscreen 301 without its onfocus
+    # redirect. Vertical/Back keys must recover; horizontal wraplists consume Left/Right.
+    assert spotlight_list.findtext('onup') == 'SetFocus(311)'
+    assert spotlight_list.findtext('ondown') == '$VAR[Hub_Action_Widgets]'
+    assert spotlight_list.findtext('onback') == 'SetFocus(311)'
+    assert spotlight_list.find('onclick') is None, 'Play dispatches native Select through 301'
     window = ET.tostring(hubs.find("include[@name='Hub_Window']"), encoding='unicode')
     assert 'Hub_Spotlight_Info' in window, 'the spotlight shows its logo/title and plot'
     assert 'foreground' not in ET.tostring(spotlight, encoding='unicode'), 'no Play Trailer button'

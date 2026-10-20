@@ -567,6 +567,15 @@
                 <onfocus condition="Integer.IsEqual(Container(301).NumItems,0)">$VAR[Hub_Action_Widgets]</onfocus>
                 <onfocus condition="!Integer.IsEqual(Container(301).NumItems,0)">SetFocus(311)</onfocus>
 
+                <!-- Modal/player restoration can leave focus on this offscreen content
+                     owner without replaying onfocus. Always let a physical vertical or
+                     Back action escape to a visible control. Horizontal wraplist input
+                     is consumed natively before onleft/onright, so do not rely on those.
+                     Keep native Select/Info: Play deliberately dispatches through 301. -->
+                <onup>SetFocus(311)</onup>
+                <ondown>$VAR[Hub_Action_Widgets]</ondown>
+                <onback>SetFocus(311)</onback>
+
                 <visible>$EXP[Exp_Hubs_Spotlight_HasItems]</visible>
 
                 <orientation>horizontal</orientation>

@@ -202,3 +202,22 @@ DialogBusy stays a bare spinner.
 `validate_cinema.py` asserts the drop curves against the spotlight slide, the
 PremiereFull mapping and both bottom edges, the Up/Back/Down routes, the header and bar
 visibility, and an opaque toast card.
+
+# Offscreen spotlight focus escape — 1.12.13
+
+A live pre-restart capture after waking/Back showed Home with `System.CurrentControlId`
+301 and `TMDbHelper.WidgetContainer` 301, while the local trailer selection/active
+properties were empty. 301 is the offscreen 1×1 wraplist that owns the random spotlight
+items. Its normal `onfocus` redirects to visible Play (311), but it had no navigation
+routes if a modal/player restore left focus there without replaying that redirect.
+The automatic carousel still advances because its condition sees 310 without focus,
+which explains live artwork alongside remote sounds and apparently inert input.
+
+301 now has explicit Up/Back → Play and Down → the first available provider row.
+Do not substitute `onleft`/`onright` recovery: Kodi's `CGUIBaseContainer::OnLeft/OnRight`
+calls horizontal wrapping-list movement first, and `CGUIWrappingListContainer::MoveUp`
+and `MoveDown` always return true. Such XML routes never run. Native Select and Info
+remain intact because visible Play deliberately focuses 301 and dispatches
+`Action(select)` there for plugin paths; replacing its click action would break that
+playback path. This provides a deterministic remote escape without a background timer
+that could steal focus from a real playback transition.
