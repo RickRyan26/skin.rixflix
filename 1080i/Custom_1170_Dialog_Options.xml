@@ -4,8 +4,18 @@
     <onload>AlarmClock(refocus,SetFocus(7021),00:00,silent)</onload>
     <onload>SetProperty(TMDbHelper.ContextMenu,True)</onload>
     <zorder>1100</zorder>
+    <onunload>ClearProperty(RixFlix.HomeReturn.Go,Home)</onunload>
     <controls>
+            <!-- A numeric target consumes movement before the deferred Home switch. -->
+            <include content="Object_Hidden_Button">
+                <param name="id">7900</param>
+                <onfocus>SetProperty(RixFlix.HomeReturn.Go,1,Home)</onfocus>
+                <onback>7900</onback>
+            </include>
+
         <include content="DialogView">
+            <param name="onback">7900</param>
+            <param name="top_onup">7900</param>
             <param name="header">$LOCALIZE[33063][COLOR=dialog_fg_30] — [/COLOR]$INFO[System.Time]</param>
             <param name="include_listitems">skinvariables-powermenu-staticitems</param>
         </include>

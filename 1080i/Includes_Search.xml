@@ -7,6 +7,13 @@
         <param name="window">1105</param>
         <definition>
             <include>Search_Term_DoubleEncoder</include>
+            <!-- A numeric target consumes movement before the deferred Home switch. -->
+            <include content="Object_Hidden_Button">
+                <param name="id">7900</param>
+                <onfocus>SetProperty(RixFlix.HomeReturn.Go,1,Home)</onfocus>
+                <onback>7900</onback>
+            </include>
+
             <include>Hub_Window_Background</include>
             <include content="Home_Control">
                 <param name="window">$PARAM[window]</param>
@@ -283,21 +290,9 @@
             <onright condition="!Skin.HasSetting(HomeSwitcher.Vertical)">$INFO[Container(399).ListItem(1).Property(action)]</onright>
 
             <onup condition="!Skin.HasSetting(Search.DisableDiscover) + !Skin.HasSetting(Search.DisableCombined)">RunPlugin(plugin://plugin.video.themoviedb.helper/?info=user_discover$INFO[Window(Home).Property(TMDbHelper.UserDiscover.Folderpath.ParamString),&amp;,])</onup>
-            <ondown>601</ondown>
-            <!-- RixFlix: back to the list the nav bar's Search box was pressed on (see
-                 Custom_1105_Search.xml). Without an origin Kodi's own Back applies.
-                 The handler only ARMS the return; the rixflix_search_return timer
-                 (Timers.xml) performs the window switch on the next tick. Two Kodi
-                 facts force that split: CGUIWindow::OnMove executes a movement's
-                 built-ins and returns false unless the movement names a control - and
-                 a false lets the window's default Back (PreviousWindow) run too - while
-                 a ReplaceWindow inside the handler tears this window down before OnMove
-                 can look the named control up, so it returns false anyway (kodi.log
-                 2026-09-12 11:53 and 12:06: "PreviousWindow: Deactivate" 136 ms after
-                 the switch, popping the fresh list to Home). 3001 is the bar's hidden
-                 focus proxy, so the Back is consumed here with the window intact. -->
-            <onback condition="!String.IsEmpty(Window(Home).Property(RixFlix.SearchReturn.Path))">SetProperty(RixFlix.SearchReturn.Go,1,Home)</onback>
-            <onback condition="!String.IsEmpty(Window(Home).Property(RixFlix.SearchReturn.Path))">3001</onback>
+            <ondown condition="Integer.IsGreater(Container(502).NumItems,0)">502</ondown>
+            <ondown condition="Integer.IsEqual(Container(502).NumItems,0)">7900</ondown>
+            <onback>7900</onback>
 
             <texturefocus />
             <texturenofocus />
@@ -347,8 +342,7 @@
             <!-- <onup>3000</onup> -->
             <onup>ClearProperty(RefocusMenu)</onup>
             <onup>3001</onup>
-            <onback>SetProperty(RefocusMenu,True)</onback>
-            <onback>3001</onback>
+            <onback>7900</onback>
             <ondown condition="!Skin.HasSetting(Search.DisableCombined)">601</ondown>
             <ondown condition="Skin.HasSetting(Search.DisableCombined)">602</ondown>
             <!-- <width>700</width> -->

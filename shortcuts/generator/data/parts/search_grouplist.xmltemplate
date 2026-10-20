@@ -1,0 +1,5 @@
+<include content="Hub_Widgets_Grouplist">
+    <param name="ondown">7900</param>
+    {top_widgets}
+    {all_widgets}
+</include>

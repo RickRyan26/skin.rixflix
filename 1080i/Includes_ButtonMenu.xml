@@ -554,7 +554,7 @@
         <include content="ButtonMenu_LayoutGroup_Top">
             <include content="ButtonMenu_LayoutGroup_Single">
                 <param name="groupid">1</param>
-                <param name="onup">SetFocus(6000,2,absolute)</param>
+                <param name="onup">$PARAM[top_onup]</param>
                 <param name="ondown">7020</param>
 
                 <param name="button_one_include">$PARAM[button_01_include]</param>
@@ -585,7 +585,7 @@
         <include content="ButtonMenu_LayoutGroup_Top">
             <include content="ButtonMenu_LayoutGroup_Single">
                 <param name="groupid">1</param>
-                <param name="onup">SetFocus(6000,2,absolute)</param>
+                <param name="onup">$PARAM[top_onup]</param>
                 <param name="ondown">7020</param>
 
                 <param name="button_one_include">$PARAM[button_01_include]</param>
@@ -623,6 +623,8 @@
         <include content="ButtonMenu_LayoutGroup_Top">
             <include content="ButtonMenu_LayoutGroup_Double">
                 <param name="groupid">1</param>
+                <param name="a_onup">$PARAM[top_onup]</param>
+                <param name="b_onup">$PARAM[top_onup]</param>
                 <param name="a_ondown">7021</param>
                 <param name="b_ondown">7022</param>
 
@@ -664,8 +666,10 @@
 
     <include name="ButtonMenu_Layout">
         <param name="layout_include">ButtonMenu_Layout_Three</param>
+        <param name="top_onup">SetFocus(6000,2,absolute)</param>
         <definition>
             <include content="$PARAM[layout_include]">
+                <param name="top_onup">$PARAM[top_onup]</param>
                 <param name="button_01_include">OptionsTiles.01.Include</param>
                 <param name="button_01_label">$INFO[Skin.String(OptionsTiles.01.Label)]</param>
                 <param name="button_01_icon">$INFO[Skin.String(OptionsTiles.01.Icon)]</param>

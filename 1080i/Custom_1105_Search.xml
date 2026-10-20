@@ -4,12 +4,7 @@
     <onload condition="String.IsEmpty(Window(Home).Property(TMDbHelper.UserDiscover.FolderPath))">SetProperty(TMDbHelper.UserDiscover.FolderPath.Name,$LOCALIZE[467] $LOCALIZE[342],Home)</onload>
 
     <onload>ClearProperty(Background.ShowOverlay,Home)</onload>
-    <!-- RixFlix: Back returns to the list the nav bar's Search box was pressed on.
-         Kodi's window history pops to an EARLIER visit of this window
-         (CGUIWindowManager::AddToWindowHistory), so after any yellow-key search in the
-         session a plain Back would land on Home. opensearch.py records the origin in
-         these two Home properties; the edit control's onback consumes them; every exit
-         from this window clears them so a stale origin can never hijack a later Back. -->
+    <!-- Back and bottom Down return Home; discard historical list origins. -->
     <onunload>ClearProperty(RixFlix.SearchReturn.Go,Home)</onunload>
     <onunload>ClearProperty(RixFlix.SearchReturn.Window,Home)</onunload>
     <onunload>ClearProperty(RixFlix.SearchReturn.Path,Home)</onunload>
@@ -18,6 +13,7 @@
         <param name="window_id">1105</param>
     </include>
 
+    <onunload>ClearProperty(RixFlix.HomeReturn.Go,Home)</onunload>
     <controls>
         <include>Search</include>
     </controls>

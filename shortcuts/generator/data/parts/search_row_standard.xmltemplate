@@ -12,6 +12,7 @@
     <param name="grouplistid">602</param>
     <param name="refocus">SetFocus(302)</param>
 
+    <ondown>7900</ondown>
     <onfocus>ClearProperty(HomeSwitcher.IsVisible,Home)</onfocus>
     <onfocus>ClearProperty(InfoPanel.FullSwitch,Home)</onfocus>
 

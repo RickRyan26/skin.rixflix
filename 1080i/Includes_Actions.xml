@@ -143,14 +143,15 @@
         <param name="onprevious">$EXP[Exp_Navigation_OnPrevious]</param>
         <param name="onparent">$EXP[Exp_Navigation_OnParent]</param>
         <definition>
+            <onback condition="Window.IsActive(11105)">7900</onback>
 
             <!-- Previous: Return to First Item -->
-            <onback condition="$PARAM[enable] + $PARAM[onprevious] + !Integer.IsEqual(Container($PARAM[id]).CurrentItem,1)">$PARAM[grouplistid]</onback>
-            <onback condition="$PARAM[enable] + $PARAM[onprevious] + !Integer.IsEqual(Container($PARAM[id]).CurrentItem,1)">SetFocus($PARAM[id],0,absolute)</onback>
+            <onback condition="!Window.IsActive(11105) + $PARAM[enable] + $PARAM[onprevious] + !Integer.IsEqual(Container($PARAM[id]).CurrentItem,1)">$PARAM[grouplistid]</onback>
+            <onback condition="!Window.IsActive(11105) + $PARAM[enable] + $PARAM[onprevious] + !Integer.IsEqual(Container($PARAM[id]).CurrentItem,1)">SetFocus($PARAM[id],0,absolute)</onback>
 
             <!-- Parent: Return to Top Focus (Previous on First Item = Parent Back) -->
-            <onback condition="$PARAM[enable] + [[Integer.IsEqual(Container($PARAM[id]).CurrentItem,1) + $PARAM[onprevious]] | $PARAM[onparent]]">$PARAM[grouplistid]</onback>
-            <onback condition="$PARAM[enable] + [[Integer.IsEqual(Container($PARAM[id]).CurrentItem,1) + $PARAM[onprevious]] | $PARAM[onparent]]">AlarmClock(refocus2,$PARAM[refocus],00:00,silent)</onback>
+            <onback condition="!Window.IsActive(11105) + $PARAM[enable] + [[Integer.IsEqual(Container($PARAM[id]).CurrentItem,1) + $PARAM[onprevious]] | $PARAM[onparent]]">$PARAM[grouplistid]</onback>
+            <onback condition="!Window.IsActive(11105) + $PARAM[enable] + [[Integer.IsEqual(Container($PARAM[id]).CurrentItem,1) + $PARAM[onprevious]] | $PARAM[onparent]]">AlarmClock(refocus2,$PARAM[refocus],00:00,silent)</onback>
 
         </definition>
     </include>

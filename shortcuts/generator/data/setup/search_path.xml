@@ -1,6 +1,10 @@
 <contents>
     <rules name="widget_path">
         <rule>
+            <condition>{item_path}==DefaultSearch-All</condition>
+            <value>plugin://plugin.video.rixflix.providers/?mode=search&amp;amp;q=</value>
+        </rule>
+        <rule>
             <condition>{item_path}==DefaultSearch-MovieActors</condition>
             <value>plugin://script.skinvariables/?info=get_filter_dir&amp;amp;filter_key=title&amp;amp;filter_value=</value>
         </rule>
@@ -305,6 +309,10 @@
     </rules>
     <rules name="widget_target">
         <rule>
+            <condition>{item_path}==DefaultSearch-All</condition>
+            <value>videos</value>
+        </rule>
+        <rule>
             <condition>{item_path}==DefaultSearch-MovieActors</condition>
             <value>videos</value>
         </rule>
@@ -482,6 +490,10 @@
         </rule>
     </rules>
     <rules name="widget_search_variable">
+        <rule>
+            <condition>{item_path}==DefaultSearch-All</condition>
+            <value>Path_SearchTerm_SingleEncoded</value>
+        </rule>
         <rule>
             <condition>{item_path}==DefaultSearch-MovieActors</condition>
             <value>Path_SearchTerm_SingleEncoded</value>

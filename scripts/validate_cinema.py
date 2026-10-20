@@ -6,6 +6,7 @@ Grouplist pitch (Size = top + height, focus scroll): xbmc/guilib/GUIControlGroup
 Contrast: https://www.w3.org/WAI/WCAG22/Understanding/contrast-minimum.html
 """
 from pathlib import Path
+import json
 import xml.etree.ElementTree as ET
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -119,15 +120,24 @@ def check_home_rows(constants):
     # Rick 2026-10-18 16:35: rows never move for a preview; New Releases drops to the bottom
     # edge while focused, and the focused-row info (with plot and ends-at) stays up.
     assert not [a for a in grouplist.iter('animation') if 'Trailer' in (a.get('condition') or '')]
-    # 1.12.12: one reversible effect per transform. Both read WidgetContainer, so
-    # the opposite 440px/301px curves share a frame and an interrupted move retains
-    # its progress. Symmetric easing makes their sum monotonic in either direction.
-    focused = '[Integer.IsEqual(Window.Property(TMDbHelper.WidgetContainer),501) | Integer.IsEqual(Window.Property(TMDbHelper.WidgetContainer),502)]'
-    drops = [a for a in grouplist.findall('animation') if focused in (a.get('condition') or '')]
-    assert len(drops) == 1 and drops[0].get('end') == '0,home_premiere_drop', drops
-    spot = hubs.findall("include[@name='Hub_Spotlight']/definition/animation")
+    # 1.12.14: Home rows own one 139px effect, not the sum of independent
+    # ancestor440/child301 animation lifecycles. Spotlight visuals move separately.
+    assert not grouplist.findall('animation'), 'Home must not inherit the old row compensation'
+    motion = hubs.findall("include[@name='Hub_Home_Rows_Motion']/animation")
+    assert [a.get('end') for a in motion] == ['0,-139', '0,139', '0,-301']
+    assert motion[1].get('condition') == '$EXP[Exp_Hubs_Spotlight_SlideDown]'
+    assert all('WidgetContainer),' + str(i) in motion[2].get('condition') for i in (301, 501, 502))
+    spot = hubs.findall("include[@name='Hub_Spotlight_Motion']/animation")
     assert len(spot) == 1 and spot[0].get('end') == '0,440', spot
-    for a in drops + spot:
+    spotlight = hubs.find("include[@name='Hub_Spotlight']/definition")
+    assert not spotlight.findall('animation'), '440px must not be injected into Home group400'
+    assert spotlight.find('control/include').get('condition') == '$PARAM[isolated_motion]'
+    assert '<param name="home_motion">true</param>' in bumper
+    home = ET.parse(ROOT / '1080i/Home.xml').getroot()
+    assert home.find('.//param[@name="isolated_spotlight_motion"]').text == 'true'
+    ancestor = hubs.find('.//include[.="Hub_Window_Slide_OnSpotlight"]')
+    assert '![$PARAM[isolated_spotlight_motion]]' in ancestor.get('condition')
+    for a in motion[1:] + spot:
         assert (a.get('start'), a.get('time'), a.get('tween'), a.get('easing'), a.get('reversible')) == \
             ('0', '400', 'quadratic', 'inout', 'true'), a.attrib
     # Recently Added: the same landscape card, the standard row height (only the first row
@@ -255,6 +265,27 @@ def check():
     # Rick 2026-10-19: the progress ring sits inside the card's bottom-right corner.
     ring = ET.parse(ROOT / '1080i/Includes_Objects.xml').getroot().find("include[@name='Object_Indicator']/definition/control")
     assert ring.find('centerbottom') is None and int(ring.findtext('bottom')) >= 8 and int(ring.findtext('right')) >= 8
+    # Page edges return Home after consuming the movement key. Numeric focus
+    # proxies avoid tearing down a window while its OnMove handler still runs.
+    search_root = ET.parse(ROOT / '1080i/Includes_Search.xml').getroot()
+    edit = search_root.find("include[@name='Search_Bar_Edit']/control[@id='3000']")
+    assert edit.findtext('onback') == '7900'
+    assert {n.text for n in edit.findall('ondown')} == {'502', '7900'}
+    options = ET.parse(ROOT / '1080i/Custom_1170_Dialog_Options.xml').getroot()
+    opt = options.find('.//include[@content="DialogView"]')
+    assert params(opt)['onback'] == params(opt)['top_onup'] == '7900'
+    timer = ET.parse(ROOT / '1080i/Timers.xml').getroot().find("timer[name='rixflix_home_return']")
+    assert timer is not None and timer.findall('onstart')[-1].text == 'ActivateWindow(Home)'
+    assert any(n.text == 'Dialog.Close(1170,true)' for n in timer.findall('onstart'))
+    search_rows = json.loads((ROOT / 'shortcuts/skinvariables-shortcut-searchwidgets.json').read_text())
+    assert len(search_rows) == 1 and search_rows[0]['path'] == 'DefaultSearch-All'
+    assert search_rows[0]['widget_limit'] == '20'
+    search_rules = ET.parse(ROOT / 'shortcuts/generator/data/setup/search_path.xml').getroot()
+    rule = next(r for r in search_rules.find("rules[@name='widget_path']")
+                if r.findtext('condition') == '{item_path}==DefaultSearch-All')
+    assert rule.findtext('value') == 'plugin://plugin.video.rixflix.providers/?mode=search&amp;q='
+    search_template = (ROOT / 'shortcuts/generator/data/parts/search_row_standard.xmltemplate').read_text()
+    assert '<ondown>7900</ondown>' in search_template
     ratios = []
     style = params(template) | params(play)
     for ink, surface in (('ink', 'surface'), ('focus_ink', 'focus_surface')):

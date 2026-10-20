@@ -210,6 +210,7 @@
     <include name="DialogView">
         <param name="header">$LOCALIZE[33063][COLOR=dialog_fg_30] — [/COLOR]$INFO[System.Time]</param>
         <param name="onback">PreviousMenu</param>
+        <param name="top_onup">SetFocus(6000,2,absolute)</param>
         <param name="include_listitems">DialogView_Items</param>
         <param name="has_tray">!Skin.HasSetting(Options.DisableBottomTray)</param>
         <param name="visible">[!Window.IsActive(DialogSelect.xml)]</param>
@@ -271,14 +272,17 @@
                         <control type="group" id="7000">
                             <include>Size_Grouplist_Pad</include>
                             <include content="ButtonMenu_Layout" condition="Skin.String(OptionsTiles.Layout,$NUMBER[2])">
+                                <param name="top_onup">$PARAM[top_onup]</param>
                                 <param name="layout_include">ButtonMenu_Layout_Two</param>
                                 <param name="onback">$PARAM[onback]</param>
                             </include>
                             <include content="ButtonMenu_Layout" condition="Skin.String(OptionsTiles.Layout,$NUMBER[3])">
+                                <param name="top_onup">$PARAM[top_onup]</param>
                                 <param name="layout_include">ButtonMenu_Layout_Three</param>
                                 <param name="onback">$PARAM[onback]</param>
                             </include>
                             <include content="ButtonMenu_Layout" condition="Skin.String(OptionsTiles.Layout,$NUMBER[4])">
+                                <param name="top_onup">$PARAM[top_onup]</param>
                                 <param name="layout_include">ButtonMenu_Layout_Four</param>
                                 <param name="onback">$PARAM[onback]</param>
                             </include>

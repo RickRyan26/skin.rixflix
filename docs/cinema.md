@@ -1,5 +1,39 @@
 # Cinema presentation — 1.10.0
 
+## 1.12.14: isolated Home motion and page-edge navigation
+
+Rick retested 1.12.13 and still saw jitter and a brief stall. The previous 24
+fast direction actions only established focus delivery; they did not establish
+smooth rendered movement or sustained preview stability.
+
+Home now isolates the spotlight's 440px animation inside its visual group. It
+cannot move ancestor 400 and all of the rows beneath it. Home grouplist 602 owns
+one 139px reversible spotlight transition, with a static -139px baseline and a
+separate -301px offset used only for lower poster rows. The optional ancestor
+240px slide is also compile-excluded for Home. Settled row origins remain
+940/801/500 and landscape card bottoms remain at 1060. No row height, viewport,
+content or visibility changes on the spotlight/New Releases boundary. Kodi's
+first focusable child still scrolls to offset zero. The validator enforces motion
+ownership rather than matching two independent curves.
+
+Search uses one Results row containing local movies and series, capped at 20
+combined items. DefaultSearch-All targets the Rixflix mixed provider with the
+committed edit text encoded once. The Rixflix provider and installed shortcut
+configuration must be deployed with this version; hiding the TV row would lose
+series results and is not the implementation.
+
+Search Back and bottom Down return Home. Options (1170, reached by Down off Home)
+returns Home on Back and Up from its top tiles, for all supported tile layouts.
+Those routes focus eligible proxy 7900, which arms a timer; the timer closes the
+Options dialog when necessary and activates Home after OnMove consumed the key.
+Keyboard and inner-dialog Back remain owned by their dialogs. Switching windows
+directly inside OnMove would resurrect the earlier teardown/fallthrough bug.
+
+Rick explicitly withheld TV access while using it. Only offline source checks
+were run for this revision; rendered jitter and live page edges remain unverified.
+The Rixflix activation pin/runtime changes must remain unlanded until he permits
+TV work, because its convergence timer would otherwise deploy them automatically.
+
 The Home actions are full 80px surfaces with consistent crimson focus, warm white
 type and opaque charcoal secondary actions. Play retains a white resting surface.
 All three buttons are direct children of the action grouplist, so the whole visible
