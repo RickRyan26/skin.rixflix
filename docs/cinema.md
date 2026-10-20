@@ -1,5 +1,17 @@
 # Cinema presentation — 1.10.0
 
+## 1.12.18: everything bottom-right sits on the card
+
+Rick, 2026-10-20 16:15 (photo while Die My Love started): the loading spinner and the movie
+info to its left read straight over the posters. 1.12.11 had put the opaque rounded card
+(`rix_cinema_surface`, `common/box.png`, 24/14px margins) only under *labelled* toasts in
+`Furniture_Busy_Main` (DialogExtendedProgressBar, e.g. the addon updater; DialogNotification).
+What shows at a movie start on Home is a different pair: `Furniture_Player`, the Now Playing
+footer (title, sub-label, play/pause icon in a progress ring, visible on `Player.HasMedia`), and
+DialogBusy's RIX spinner (`haslabel=false`, so no card). Now `Furniture_Player` draws the same
+card behind its whole 720px band, and a label-less busy dialog draws a 138px card around its
+100px ring. `validate_cinema.py` asserts both.
+
 ## 1.12.17: rows scroll ease-out again
 
 Rick, 2026-10-20 on 1.12.16: "now every row has jitters on row change and it's even more

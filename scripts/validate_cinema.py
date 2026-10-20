@@ -178,6 +178,17 @@ def check_home_rows(constants):
     assert (panel['visible_plot'], panel['visible_meta']) == ('true', 'true'), 'every row shows the plot'
     furniture = ET.parse(ROOT / '1080i/Includes_Furniture.xml').getroot()
     assert '!$EXP[Exp_RixFlix_PreviewPlaying]' in furniture.find("include[@name='Furniture_Player']/control").findtext('visible')
+    # 1.12.18: everything in the bottom-right corner sits on the opaque rounded card: the
+    # Now Playing footer, labelled toasts, and a label-less busy spinner (its own small card).
+    def cards(node):
+        return [i for i in node.iter('control') if i.get('type') == 'image'
+                and (i.find('texture') is not None) and i.find('texture').text == 'common/box.png'
+                and i.find('texture').get('colordiffuse') == 'rix_cinema_surface']
+    player_card = cards(furniture.find("include[@name='Furniture_Player']/control"))
+    assert player_card and player_card[0] is furniture.find("include[@name='Furniture_Player']/control/control"), \
+        'Now Playing card must sit behind the title and ring'
+    busy = cards(furniture.find("include[@name='Furniture_Busy_Main']"))
+    assert sorted(c.findtext('visible') for c in busy) == ['![$PARAM[haslabel]]', '$PARAM[haslabel]'], busy
     # Home previews play in a right-anchored box larger than the fanart, never full-frame.
     background = ET.parse(ROOT / '1080i/Includes_Background.xml').getroot()
     video = background.find("include[@name='Background_Video']")

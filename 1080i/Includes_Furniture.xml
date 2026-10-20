@@ -124,6 +124,16 @@
             <width>720</width>
             <right>-20</right>
             <visible>Player.HasMedia + !$EXP[Exp_RixFlix_PreviewPlaying]</visible>
+            <!-- Rick 2026-10-20: the Now Playing title, sub-label and progress ring (and the busy
+                 spinner that opens over them while a movie starts) read over posters with no
+                 backing. Same opaque rounded card as the bottom-right toasts. -->
+            <control type="image">
+                <left>-24</left>
+                <right>-24</right>
+                <top>-14</top>
+                <bottom>-14</bottom>
+                <texture colordiffuse="rix_cinema_surface" border="20">common/box.png</texture>
+            </control>
             <control type="group">
                 <right>0</right>
                 <visible>!Window.IsActive(DialogVolumeBar.xml)</visible>
@@ -518,6 +528,17 @@
                 <visible>$PARAM[haslabel]</visible>
                 <left>-24</left>
                 <right>-24</right>
+                <top>-14</top>
+                <bottom>-14</bottom>
+                <texture colordiffuse="rix_cinema_surface" border="20">common/box.png</texture>
+            </control>
+            <!-- Rick 2026-10-20: everything in the bottom-right corner sits in the card. A
+                 label-less busy spinner (DialogBusy) gets one sized to its 100px ring
+                 (centred 40px from the right edge) plus the same 24/14px margins. -->
+            <control type="image">
+                <visible>![$PARAM[haslabel]]</visible>
+                <right>-24</right>
+                <width>138</width>
                 <top>-14</top>
                 <bottom>-14</bottom>
                 <texture colordiffuse="rix_cinema_surface" border="20">common/box.png</texture>
