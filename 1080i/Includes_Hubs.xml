@@ -310,17 +310,11 @@
         <definition>
             <control type="grouplist" id="602">
                 <animation effect="slide" start="0" end="0,-440" condition="true">Conditional</animation>
-                <!-- Rick 2026-10-18 16:35: New Releases sits nearly on the bottom edge so the
-                     preview above it has room; rows never move for a playing preview.
-                     1.12.11: Recently Added (502) gets the same card and the same drop.
-                     Spotlight -> 501 runs this drop together with group 400's 440px
-                     Exp_Hubs_Spotlight_SlideDown slide. 1.12.10 used 300ms cubic in-out against
-                     that 400ms quadratic, so the rows dipped and climbed back (Rick: "janky
-                     bounce"). Same time, tween and easing, in two one-way animations like 400's,
-                     make the sum monotonic in both directions. A reversible animation would
-                     replay the curve mirrored on the way back up and bounce again. -->
-                <animation effect="slide" start="0" end="0,home_premiere_drop" time="400" tween="quadratic" reversible="false" condition="Window.IsActive(home) + [Control.HasFocus(501) | Control.HasFocus(502)]">Conditional</animation>
-                <animation effect="slide" start="0,home_premiere_drop" end="0" time="400" tween="quadratic" reversible="false" condition="!Window.IsActive(home) | ![Control.HasFocus(501) | Control.HasFocus(502)]">Conditional</animation>
+                <!-- Spotlight and the landscape-row drop must share one property clock.
+                     Each uses a single reversible, symmetric curve: rapid Up/Down reverses
+                     from its current position instead of resetting two one-way effects.
+                     During 301 <-> 501 the net travel is only 440 - 301 = 139px. -->
+                <animation effect="slide" start="0" end="0,home_premiere_drop" time="400" tween="quadratic" easing="inout" reversible="true" condition="Window.IsActive(home) + [Integer.IsEqual(Window.Property(TMDbHelper.WidgetContainer),501) | Integer.IsEqual(Window.Property(TMDbHelper.WidgetContainer),502)]">Conditional</animation>
 
                 <onup condition="!Control.IsVisible(301) + Skin.HasSetting(HomeSwitcher.Vertical)">SetProperty(Bumper.Direction,Up,Home)</onup>
                 <onup condition="!Control.IsVisible(301) + Skin.HasSetting(HomeSwitcher.Vertical)">ActivateWindow(1180)</onup>
@@ -427,8 +421,7 @@
         <param name="visible">True</param>
         <definition>
 
-            <animation effect="slide" start="0" end="0,440" time="400" tween="quadratic" reversible="false" condition="$EXP[Exp_Hubs_Spotlight_SlideDown]">Conditional</animation>
-            <animation effect="slide" end="0" start="0,440" time="400" tween="quadratic" reversible="false" condition="![$EXP[Exp_Hubs_Spotlight_SlideDown]]">Conditional</animation>
+            <animation effect="slide" start="0" end="0,440" time="400" tween="quadratic" easing="inout" reversible="true" condition="$EXP[Exp_Hubs_Spotlight_SlideDown]">Conditional</animation>
 
             <control type="group">
                 <top>260</top>

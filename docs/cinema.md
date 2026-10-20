@@ -170,12 +170,21 @@ Continue Movies stays below the screen. One skin timer serves both rows, keyed o
 `Container.ListItem` (the focused list on Home). Two per-row timers race: moving
 502 → 501 runs 501's onstart, then 502's onstop clears the selection.
 
-**No bounce.** Spotlight → 501 runs the row drop together with group 400's 440px
-`Exp_Hubs_Spotlight_SlideDown` slide. 1.12.10 paired a 300ms cubic in-out drop with that
-400ms quadratic slide. The sum dipped and climbed back (Rick: "janky bounce"). The drop
-now uses the same time and tween, as two one-way (`reversible="false"`) animations like
-400's. A reversible animation replays its curve mirrored on the way back and bounces
-again.
+**Spotlight/row motion (1.12.12).** The 1.12.11 pair of non-reversible animations
+still snapped when Up/Down reversed before its 400ms move completed. Kodi's
+`CAnimation::UpdateCondition` resets a non-reversible effect as soon as its condition
+becomes false; the opposite effect starts from its literal endpoint. Matching their
+curves did not preserve the partially travelled position.
+
+Both group 400's 440px spotlight slide and group 602's 301px landscape-row drop now
+use one reversible 400ms quadratic `inout` effect each. Kodi's `CAnimation::Animate`
+retains the current animation amount when reversing; it does not restart at an endpoint.
+The symmetric easing makes the opposing curves complements, so their sum travels
+monotonically by 139px between spotlight and New Releases in either direction. Both
+conditions read `TMDbHelper.WidgetContainer`, which the focused control publishes:
+using `Control.HasFocus` for one and the property for the other could start them on
+different frames. Recently Added retains the same drop, and preview player state
+still cannot move any row. Card sizes and all settled bottom edges are unchanged.
 
 **No busy flash.** RC1 raises DialogBusy on every VideoPlayer open
 (`CGUIDialogBusy::WaitOnEvent`), so each preview start flashed the bottom-right spinner.

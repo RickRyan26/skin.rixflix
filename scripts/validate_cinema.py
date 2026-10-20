@@ -119,17 +119,17 @@ def check_home_rows(constants):
     # Rick 2026-10-18 16:35: rows never move for a preview; New Releases drops to the bottom
     # edge while focused, and the focused-row info (with plot and ends-at) stays up.
     assert not [a for a in grouplist.iter('animation') if 'Trailer' in (a.get('condition') or '')]
-    # 1.12.11: New Releases AND Recently Added drop. The drop runs alongside group 400's
-    # 440px spotlight slide (Spotlight -> 501). Different curves summed to a visible bounce
-    # (Rick 2026-10-18 23:43), so the drop matches that slide's time and tween, one-way each.
-    focused = '[Control.HasFocus(501) | Control.HasFocus(502)]'
+    # 1.12.12: one reversible effect per transform. Both read WidgetContainer, so
+    # the opposite 440px/301px curves share a frame and an interrupted move retains
+    # its progress. Symmetric easing makes their sum monotonic in either direction.
+    focused = '[Integer.IsEqual(Window.Property(TMDbHelper.WidgetContainer),501) | Integer.IsEqual(Window.Property(TMDbHelper.WidgetContainer),502)]'
     drops = [a for a in grouplist.findall('animation') if focused in (a.get('condition') or '')]
-    assert [a.get('end') for a in drops] == ['0,home_premiere_drop', '0'], drops
-    spot = [a for a in hubs.findall("include[@name='Hub_Spotlight']/definition/animation")]
-    assert spot and all((a.get('time'), a.get('tween')) == (spot[0].get('time'), spot[0].get('tween')) for a in spot)
-    for a in drops:
-        assert (a.get('time'), a.get('tween'), a.get('easing'), a.get('reversible')) == \
-            (spot[0].get('time'), spot[0].get('tween'), spot[0].get('easing'), 'false'), a.attrib
+    assert len(drops) == 1 and drops[0].get('end') == '0,home_premiere_drop', drops
+    spot = hubs.findall("include[@name='Hub_Spotlight']/definition/animation")
+    assert len(spot) == 1 and spot[0].get('end') == '0,440', spot
+    for a in drops + spot:
+        assert (a.get('start'), a.get('time'), a.get('tween'), a.get('easing'), a.get('reversible')) == \
+            ('0', '400', 'quadratic', 'inout', 'true'), a.attrib
     # Recently Added: the same landscape card, the standard row height (only the first row
     # may be short: a short second row lands 128px differently by direction).
     assert rule('widget_home_include', 'PremiereFull') == 'List_Premiere_Row'
