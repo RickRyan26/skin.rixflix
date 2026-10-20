@@ -1,6 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <window>
     <zorder>1000</zorder>
+    <!-- 1.12.19: Kodi's start wait (GUI_MSG_PLAYBACK_STARTED -> CGUIDialogBusy::WaitOnEvent)
+         opens this MODAL dialog for every Home hover preview until AV start, and a modal
+         takes every action first: a Up/Down/Left/Right or OK pressed in that ~0.2-0.7 s was
+         lost (Rick 2026-10-20 16:15). The focused hidden button hands the press to Home
+         while an owned preview sits under the dialog; Action(<a>,home) is TMSG_GUI_ACTION to
+         that window only, run synchronously in the busy loop. No onback: Back still reaches
+         CGUIDialogBusy::OnBack (the resident's dismissal and the keymap's forwarder). -->
+    <defaultcontrol always="true">9100</defaultcontrol>
     <controls>
 
         <include content="Furniture_Busy">
@@ -15,6 +23,18 @@
 
         <control type="progress" id="10">
             <include>Object_Hidden_Button_Definition</include>
+        </control>
+
+        <control type="button" id="9100">
+            <include>Object_Hidden_Button_Definition</include>
+            <onup condition="$EXP[Exp_RixFlix_PreviewUnderBusy]">Action(Up,home)</onup>
+            <ondown condition="$EXP[Exp_RixFlix_PreviewUnderBusy]">Action(Down,home)</ondown>
+            <onleft condition="$EXP[Exp_RixFlix_PreviewUnderBusy]">Action(Left,home)</onleft>
+            <onright condition="$EXP[Exp_RixFlix_PreviewUnderBusy]">Action(Right,home)</onright>
+            <!-- Only while the preview is still the player: a Select stops it first (FIFO
+                 before its Action(Select)), so a second OK into a pending movie play's busy
+                 dialog stays swallowed instead of starting the title twice. -->
+            <onclick condition="$EXP[Exp_RixFlix_PreviewUnderBusy] + $EXP[Exp_RixFlix_PreviewPlaying]">Action(Select,home)</onclick>
         </control>
 
     </controls>

@@ -286,6 +286,18 @@ def check():
     nav = [g for g in header.findall('control') if g.findtext('visible') == '!Window.IsVisible(Home)']
     assert len(nav) == 1, 'the Search / Home / Settings bar hides on Home'
     assert any(i.text == 'Home_Switcher_Right_Buttons' for i in nav[0].iter('include')), 'gear hides with the bar'
+    # 1.12.19: a press during a preview's start-wait busy dialog reaches Home (Rick
+    # 2026-10-20 16:15). The focused button forwards it; it must never catch Back.
+    busy_dialog = ET.parse(ROOT / '1080i/DialogBusy.xml').getroot()
+    forward = busy_dialog.find("controls/control[@id='9100']")
+    assert busy_dialog.findtext('defaultcontrol') == '9100' and forward.get('type') == 'button'
+    for tag, action in (('onup', 'Up'), ('ondown', 'Down'), ('onleft', 'Left'),
+                        ('onright', 'Right'), ('onclick', 'Select')):
+        nodes = forward.findall(tag)
+        assert len(nodes) == 1 and nodes[0].text == f'Action({action},home)', tag
+        assert '$EXP[Exp_RixFlix_PreviewUnderBusy]' in nodes[0].get('condition', ''), tag
+    assert '$EXP[Exp_RixFlix_PreviewPlaying]' in forward.find('onclick').get('condition')
+    assert forward.find('onback') is None, 'Back must reach CGUIDialogBusy::OnBack'
     # The bottom-right toast is readable over posters: an opaque card under its text.
     busy = ET.parse(ROOT / '1080i/Includes_Furniture.xml').getroot().find("include[@name='Furniture_Busy_Main']/definition")
     card = busy.find("control[@type='image']")

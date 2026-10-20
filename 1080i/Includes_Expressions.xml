@@ -80,6 +80,8 @@
          focus change flashed the bottom-right spinner (Rick 2026-10-18 22:40). Real playback
          cancels the preview first, so it keeps its spinner. -->
     <expression name="Exp_RixFlix_PreviewStarting">[Window.IsActive(home) + !String.IsEmpty(Window(Home).Property(RixFlix.LocalTrailerActive)) + String.IsEmpty(Window(Home).Property(RixFlix.LocalTrailerCancel))]</expression>
+    <!-- An owned hover preview (opening, playing or cancelled) under a modal over Home: DialogBusy forwards presses. -->
+    <expression name="Exp_RixFlix_PreviewUnderBusy">[Window.IsActive(home) + !String.IsEmpty(Window(Home).Property(RixFlix.LocalTrailerActive))]</expression>
     <expression name="Exp_RixFlix_PreviewPlaying">[Player.HasVideo + [String.Contains(Player.Filenameandpath,/rixflix-trailers/) | String.Contains(Player.Filenameandpath,/.rixflix/trailers/) | String.IsEqual(Window(Home).Property(RixFlix.LocalTrailerPlaylist),Player.Filenameandpath) | String.IsEqual(Window(Home).Property(RixFlix.AutoplayTrailerResolved),Player.Filenameandpath)]]</expression>
     <expression name="Exp_RixFlix_NoForegroundMedia">[!Player.HasMedia | $EXP[Exp_RixFlix_AutoplayTrailer]]</expression>
 
