@@ -21,7 +21,7 @@
     <param name="widgetfade_include">{widget_widgetfade_include}</param>
     <!-- Rows below the focused one stay at full strength (more poster on screen);
          they still dim behind the spotlight's Play button. -->
-    <param name="widgetfade_disable">!Integer.IsEqual(Window.Property(TMDBHelper.WidgetContainer),301)</param>
+    <param name="widgetfade_disable">![$EXP[Exp_Hubs_Spotlight_SlideDown]]</param>
     <param name="widgetconstants_affix">{widgetconstants_affix}</param>
 
     <!-- Rows above the focused one fade out as the grouplist scrolls them away. The clip

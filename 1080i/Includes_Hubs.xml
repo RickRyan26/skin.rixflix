@@ -239,7 +239,7 @@
         </definition>
     </include>
 
-    <expression name="Hub_Spotlight_Visible_Expression">[Integer.IsEqual(Window.Property(TMDBHelper.WidgetContainer),301) + [!Integer.IsEqual(Container(301).NumItems,0) | Container(301).IsUpdating]]</expression>
+    <expression name="Hub_Spotlight_Visible_Expression">[$EXP[Exp_Hubs_Spotlight_SlideDown] + [!Integer.IsEqual(Container(301).NumItems,0) | Container(301).IsUpdating]]</expression>
 
     <include name="Hub_Wall_Info">
         <control type="group">

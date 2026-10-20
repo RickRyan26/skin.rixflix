@@ -126,6 +126,12 @@ def check_home_rows(constants):
     motion = hubs.findall("include[@name='Hub_Home_Rows_Motion']/animation")
     assert [a.get('end') for a in motion] == ['0,-139', '0,139', '0,-301']
     assert motion[1].get('condition') == '$EXP[Exp_Hubs_Spotlight_SlideDown]'
+    # 1.12.16: spotlight state follows focus first; the queued WidgetContainer only off 310/301/602.
+    exprs = ET.parse(ROOT / '1080i/Includes_Expressions.xml').getroot()
+    assert exprs.find("expression[@name='Exp_Hubs_Spotlight_SlideDown']").text.startswith(
+        '[ControlGroup(310).HasFocus | Control.HasFocus(301) | [!ControlGroup(602).HasFocus + ')
+    assert hubs.find("expression[@name='Hub_Spotlight_Visible_Expression']").text.startswith('[$EXP[Exp_Hubs_Spotlight_SlideDown] + ')
+    assert '<param name="widgetfade_disable">![$EXP[Exp_Hubs_Spotlight_SlideDown]]</param>' in template
     assert all('WidgetContainer),' + str(i) in motion[2].get('condition') for i in (301, 501, 502))
     # 1.12.15: inside 602 the lift keys on focus (same frame as the scroll), not the queued property.
     assert motion[2].get('condition').startswith(

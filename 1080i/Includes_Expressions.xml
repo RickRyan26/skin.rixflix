@@ -60,7 +60,13 @@
 
     <expression name="Exp_Hubs_Spotlight_HasItems">[!Integer.IsEqual(Container(301).NumItems,0) | Container(301).IsUpdating]</expression>
 
-    <expression name="Exp_Hubs_Spotlight_SlideDown">[Integer.IsEqual(Window.Property(TMDBHelper.WidgetContainer),301)]</expression>
+    <!-- 1.12.16: the spotlight state follows focus between the spotlight (310 / 301) and the
+         rows (602). Card focus changes on the keypress frame, but WidgetContainer is set by a
+         queued onfocus message (GUIControlFactory: focus actions use thread-message mode),
+         so a property-only state let the focused card light up before the 139/440px moves,
+         the backdrop and the row dimming caught up. Elsewhere (a dialog, another window's
+         hub) the property still decides. -->
+    <expression name="Exp_Hubs_Spotlight_SlideDown">[ControlGroup(310).HasFocus | Control.HasFocus(301) | [!ControlGroup(602).HasFocus + Integer.IsEqual(Window.Property(TMDBHelper.WidgetContainer),301)]]</expression>
     <expression name="Exp_Hubs_Spotlight_ShowButtons">[ControlGroup(310).HasFocus()]</expression>
 
     <!-- Background trailer playback must not turn Back into "open fullscreen player". -->

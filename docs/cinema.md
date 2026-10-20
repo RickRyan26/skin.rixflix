@@ -1,5 +1,28 @@
 # Cinema presentation — 1.10.0
 
+## 1.12.16: the spotlight state follows focus
+
+Spotlight → New Releases had no scroll to blame (Kodi scrolls the first focusable row to
+0, where it already is). The jitter was a split frame. `ondown` navigation moves focus
+synchronously, so the 501 card highlights and the row un-dims on the keypress frame. But
+`Exp_Hubs_Spotlight_SlideDown`, which drives the 139px row move, the 440px spotlight move,
+the spotlight's visibility and the other rows' 30% dim, read only `WidgetContainer`. Row
+`onfocus` sets that through a queued thread message (`GUIControlFactory.cpp`:
+`focusActions.EnableSendThreadMessageMode()`), one or more frames later, and later still
+when the GUI thread is busy. The expression is now `ControlGroup(310).HasFocus |
+Control.HasFocus(301) | [!ControlGroup(602).HasFocus + property==301]`. Inside the
+spotlight or the rows, focus decides. Anywhere else (a dialog over Home, hidden refocus
+buttons 302/304, other hub windows) the property still decides. `Hub_Spotlight_Visible_Expression`
+and the row template's `widgetfade_disable` reference it, so everything flips together.
+
+**Rule for Home motion:** never key a moving or fading element on `WidgetContainer` alone
+when the move is caused by focus. Pair it with the focus test, or that element lags the
+focus change by the message queue.
+
+Known leftover: Back from a row's first item goes 602 → 302, whose `Hub_Action_Reset` focuses
+501 for a frame before 301. That can nudge the spotlight move both ways once. It is
+unchanged from before and outside the reported transition.
+
 ## 1.12.15: one motion at the landscape/poster boundary; landscape search
 
 Rick, 2026-10-20 on 1.12.14: rows still jitter entering Recently Added from below and
