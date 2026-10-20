@@ -1,5 +1,29 @@
 # Cinema presentation — 1.10.0
 
+## 1.12.17: rows scroll ease-out again
+
+Rick, 2026-10-20 on 1.12.16: "now every row has jitters on row change and it's even more
+extreme." On 1.12.14 he had reported only the two landscape/poster boundaries, so ordinary
+rows were fine on the grouplist default (400ms quadratic, Kodi's default ease-out). 1.12.15
+moved every Home scroll to in-out to match the 301px lift: each row change then started at
+zero speed, crawled for the first ~100ms while the focused card had already lit up, and
+rushed through the middle. It read as lag then a jolt on every row. The fix goes the other
+way: the scroll keeps the default, and the one move that runs with it (the 301px lift,
+Recently Added <-> Continue Movies) eases out on the same 400ms. The lift keeps its 1.12.15
+focus key, so the two still start on the same frame. The 139px and 440px spotlight moves stay
+in-out: no scroll runs with them (row 501 is already at offset 0).
+
+**Rule:** curves that must match are matched to the grouplist scroll, never the other way.
+A scroll curve applies to every row change; an animation curve applies to its one transition.
+
+The same report had a second, separate cause on rows 501/502, in Rixflix
+(`context.rixflix.gotoshow/local_trailer.py`, 2026-10-20). Leaving a card with a playing hover
+preview stopped the player at once, and Kodi's `CVideoPlayer::CloseFile` runs on the GUI
+thread: the log showed `waiting for threads to exit` from 33.999 to 34.216 (≈220ms, mostly
+`CAMLCodec::CloseDecoder`), ~40ms into the 400ms scroll. The resident now pauses at the leave
+(hides the video via `Player.Paused` in `Exp_Video_IsNotPlaying`; silences audio) and sends
+Stop only once focus has been still for the length of a row motion.
+
 ## 1.12.16: the spotlight state follows focus
 
 Spotlight → New Releases had no scroll to blame (Kodi scrolls the first focusable row to
@@ -36,7 +60,8 @@ scroll plus the 301px lift reversing. Two things made that two motions:
   which changes with the focus message itself. Outside 602 (spotlight, a dialog over Home)
   it still reads the property, so nothing moves when focus leaves the grouplist.
 - **Different curves.** The grouplist default `scrolltime` is quadratic with Kodi's
-  default ease-out; the lift and the 139px spotlight move are quadratic in-out. Home's 602
+  default ease-out; the lift and the 139px spotlight move are quadratic in-out. (Reverted
+  in 1.12.17: see above. The lift eases out instead.) Home's 602
   now scrolls 400ms quadratic in-out (`Hub_Home_Rows_Scroll`; `GetScroller` reads the first
   `<scrolltime>`, and includes resolve ahead of the appended default), so a scroll that
   coincides with either move is one 697px curve, not a fast scroll and a trailing drift.

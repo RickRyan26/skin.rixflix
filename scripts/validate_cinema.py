@@ -136,9 +136,15 @@ def check_home_rows(constants):
     # 1.12.15: inside 602 the lift keys on focus (same frame as the scroll), not the queued property.
     assert motion[2].get('condition').startswith(
         '[ControlGroup(602).HasFocus + !Control.HasFocus(501) + !Control.HasFocus(502)] | [!ControlGroup(602).HasFocus + ')
-    scroll = hubs.find("include[@name='Hub_Home_Rows_Scroll']/scrolltime")
-    assert (scroll.text, scroll.get('tween'), scroll.get('easing')) == ('400', 'quadratic', 'inout'), scroll.attrib
-    assert hubs.find(".//control[@id='602']/include[.='Hub_Home_Rows_Scroll']").get('condition') == '$PARAM[home_motion]'
+    # 1.12.17: Home 602 scrolls on the grouplist default (400ms quadratic, Kodi's default ease
+    # out) and the lift that coincides with it eases out too. An in-out scroll (1.12.15) made
+    # every row change a slow start then a rush.
+    assert hubs.find("include[@name='Hub_Home_Rows_Scroll']") is None
+    assert hubs.find(".//control[@id='602']/scrolltime") is None
+    defaults = ET.parse(ROOT / '1080i/Includes_Defaults.xml').getroot()
+    scroll = defaults.find("default[@type='grouplist']/scrolltime")
+    assert (scroll.text, scroll.get('tween'), scroll.get('easing')) == ('400', 'quadratic', None), scroll.attrib
+    assert (motion[2].get('time'), motion[2].get('tween'), motion[2].get('easing')) == ('400', 'quadratic', 'out')
     spot = hubs.findall("include[@name='Hub_Spotlight_Motion']/animation")
     assert len(spot) == 1 and spot[0].get('end') == '0,440', spot
     spotlight = hubs.find("include[@name='Hub_Spotlight']/definition")
@@ -149,7 +155,7 @@ def check_home_rows(constants):
     assert home.find('.//param[@name="isolated_spotlight_motion"]').text == 'true'
     ancestor = hubs.find('.//include[.="Hub_Window_Slide_OnSpotlight"]')
     assert '![$PARAM[isolated_spotlight_motion]]' in ancestor.get('condition')
-    for a in motion[1:] + spot:
+    for a in motion[1:2] + spot:
         assert (a.get('start'), a.get('time'), a.get('tween'), a.get('easing'), a.get('reversible')) == \
             ('0', '400', 'quadratic', 'inout', 'true'), a.attrib
     # Recently Added: the same landscape card, the standard row height (only the first row

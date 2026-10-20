@@ -312,19 +312,12 @@
     <include name="Hub_Home_Rows_Motion">
         <animation effect="slide" start="0" end="0,-139" condition="true">Conditional</animation>
         <animation effect="slide" start="0" end="0,139" time="400" tween="quadratic" easing="inout" reversible="true" condition="$EXP[Exp_Hubs_Spotlight_SlideDown]">Conditional</animation>
-        <!-- 1.12.15: the 301px poster-row lift runs on the grouplist scroll's own frame and
-             curve. It used to key on WidgetContainer, which the row's onfocus sets through a
-             queued GUI message (a frame or two after GUI_MSG_FOCUSED starts the scroll), and
-             the scroll eased quadratic-out while this eased in-out. Up into Recently Added was
-             therefore two motions, 396px then 301px, felt as jitter. Inside 602, focus decides
-             it synchronously; outside (spotlight, a dialog over Home) the property keeps it. -->
-        <animation effect="slide" start="0" end="0,-301" time="400" tween="quadratic" easing="inout" reversible="true" condition="[ControlGroup(602).HasFocus + !Control.HasFocus(501) + !Control.HasFocus(502)] | [!ControlGroup(602).HasFocus + !Integer.IsEqual(Window.Property(TMDbHelper.WidgetContainer),301) + !Integer.IsEqual(Window.Property(TMDbHelper.WidgetContainer),501) + !Integer.IsEqual(Window.Property(TMDbHelper.WidgetContainer),502)]">Conditional</animation>
-    </include>
-
-    <!-- Same 400ms quadratic in-out as the row lift and the 139px spotlight move, so a scroll
-         that coincides with either is one curve (the grouplist default eases out). -->
-    <include name="Hub_Home_Rows_Scroll">
-        <scrolltime tween="quadratic" easing="inout">400</scrolltime>
+        <!-- 1.12.15: the 301px poster-row lift keys on focus inside 602, so it starts on the
+             grouplist scroll's own frame (WidgetContainer arrives a frame or two later through
+             onfocus's queued message); outside 602 (spotlight, a dialog over Home) the property
+             keeps it. 1.12.17: it eases out like the scroll. 1.12.15 instead moved the scroll to
+             in-out to match this, and every row change became a slow start then a rush. -->
+        <animation effect="slide" start="0" end="0,-301" time="400" tween="quadratic" easing="out" reversible="true" condition="[ControlGroup(602).HasFocus + !Control.HasFocus(501) + !Control.HasFocus(502)] | [!ControlGroup(602).HasFocus + !Integer.IsEqual(Window.Property(TMDbHelper.WidgetContainer),301) + !Integer.IsEqual(Window.Property(TMDbHelper.WidgetContainer),501) + !Integer.IsEqual(Window.Property(TMDbHelper.WidgetContainer),502)]">Conditional</animation>
     </include>
 
     <include name="Hub_Widgets_Legacy_Motion">
@@ -339,7 +332,6 @@
             <control type="grouplist" id="602">
                 <include condition="$PARAM[home_motion]">Hub_Home_Rows_Motion</include>
                 <include condition="![$PARAM[home_motion]]">Hub_Widgets_Legacy_Motion</include>
-                <include condition="$PARAM[home_motion]">Hub_Home_Rows_Scroll</include>
 
                 <onup condition="!Control.IsVisible(301) + Skin.HasSetting(HomeSwitcher.Vertical)">SetProperty(Bumper.Direction,Up,Home)</onup>
                 <onup condition="!Control.IsVisible(301) + Skin.HasSetting(HomeSwitcher.Vertical)">ActivateWindow(1180)</onup>
