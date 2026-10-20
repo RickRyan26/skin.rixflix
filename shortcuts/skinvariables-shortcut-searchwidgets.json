@@ -4,7 +4,7 @@
         "icon": "special://skin/extras/icons/search.png",
         "path": "DefaultSearch-All",
         "target": "videos",
-        "widget_style": "Poster",
+        "widget_style": "Landscape",
         "widget_limit": "20"
     }
 ]

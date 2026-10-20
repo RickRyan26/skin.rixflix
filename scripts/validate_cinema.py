@@ -127,6 +127,12 @@ def check_home_rows(constants):
     assert [a.get('end') for a in motion] == ['0,-139', '0,139', '0,-301']
     assert motion[1].get('condition') == '$EXP[Exp_Hubs_Spotlight_SlideDown]'
     assert all('WidgetContainer),' + str(i) in motion[2].get('condition') for i in (301, 501, 502))
+    # 1.12.15: inside 602 the lift keys on focus (same frame as the scroll), not the queued property.
+    assert motion[2].get('condition').startswith(
+        '[ControlGroup(602).HasFocus + !Control.HasFocus(501) + !Control.HasFocus(502)] | [!ControlGroup(602).HasFocus + ')
+    scroll = hubs.find("include[@name='Hub_Home_Rows_Scroll']/scrolltime")
+    assert (scroll.text, scroll.get('tween'), scroll.get('easing')) == ('400', 'quadratic', 'inout'), scroll.attrib
+    assert hubs.find(".//control[@id='602']/include[.='Hub_Home_Rows_Scroll']").get('condition') == '$PARAM[home_motion]'
     spot = hubs.findall("include[@name='Hub_Spotlight_Motion']/animation")
     assert len(spot) == 1 and spot[0].get('end') == '0,440', spot
     spotlight = hubs.find("include[@name='Hub_Spotlight']/definition")
@@ -280,6 +286,8 @@ def check():
     search_rows = json.loads((ROOT / 'shortcuts/skinvariables-shortcut-searchwidgets.json').read_text())
     assert len(search_rows) == 1 and search_rows[0]['path'] == 'DefaultSearch-All'
     assert search_rows[0]['widget_limit'] == '20'
+    # Rick 2026-10-20: horizontal results, so tall posters stop covering the row beneath.
+    assert search_rows[0]['widget_style'] == 'Landscape'
     search_rules = ET.parse(ROOT / 'shortcuts/generator/data/setup/search_path.xml').getroot()
     rule = next(r for r in search_rules.find("rules[@name='widget_path']")
                 if r.findtext('condition') == '{item_path}==DefaultSearch-All')

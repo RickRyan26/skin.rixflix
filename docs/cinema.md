@@ -1,5 +1,35 @@
 # Cinema presentation — 1.10.0
 
+## 1.12.15: one motion at the landscape/poster boundary; landscape search
+
+Rick, 2026-10-20 on 1.12.14: rows still jitter entering Recently Added from below and
+New Releases from above. Lower poster rows sit 301px higher in the viewport than the
+landscape rows (`Hub_Home_Rows_Motion`), so Up from Continue Movies is a 396px grouplist
+scroll plus the 301px lift reversing. Two things made that two motions:
+- **Different frames.** The scroll starts on `GUI_MSG_FOCUSED`
+  (`CGUIControlGroupList::OnMessage`). The lift keyed on `TMDbHelper.WidgetContainer`,
+  which the row's `onfocus` sets through a queued GUI message (`CGUIAction::ExecuteActions`),
+  so it began a frame or two later. Inside 602 the lift now keys on `Control.HasFocus`,
+  which changes with the focus message itself. Outside 602 (spotlight, a dialog over Home)
+  it still reads the property, so nothing moves when focus leaves the grouplist.
+- **Different curves.** The grouplist default `scrolltime` is quadratic with Kodi's
+  default ease-out; the lift and the 139px spotlight move are quadratic in-out. Home's 602
+  now scrolls 400ms quadratic in-out (`Hub_Home_Rows_Scroll`; `GetScroller` reads the first
+  `<scrolltime>`, and includes resolve ahead of the appended default), so a scroll that
+  coincides with either move is one 697px curve, not a fast scroll and a trailing drift.
+
+Rejected: moving the 301px into the landscape rows themselves (a per-row offset plus a
+301px spacer). Settled frames match, but the grouplist clip is 16px above the focused cards
+only because the whole list moves; a fixed viewport origin exposes the faded previous row
+through a 301px band above Recently Added.
+
+Search results use the `Landscape` style (`List_Landscape_Row`), so 2:3 posters no longer
+hang over what sits beneath the row.
+
+Rendered smoothness is not provable offline; the AM9 check is Rick's eye on the two
+boundaries. `validate_cinema.py` asserts the focus-keyed lift, the in-out scroll and the
+landscape search style.
+
 ## 1.12.14: isolated Home motion and page-edge navigation
 
 Rick retested 1.12.13 and still saw jitter and a brief stall. The previous 24
