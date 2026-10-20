@@ -298,6 +298,13 @@ def check():
         assert '$EXP[Exp_RixFlix_PreviewUnderBusy]' in nodes[0].get('condition', ''), tag
     assert '$EXP[Exp_RixFlix_PreviewPlaying]' in forward.find('onclick').get('condition')
     assert forward.find('onback') is None, 'Back must reach CGUIDialogBusy::OnBack'
+    # 1.12.20: caching never opens the timeline (Die My Love, theater 2026-10-20 16:14:
+    # each caching flap popped DialogSeekBar in and out). A delayed badge stands in.
+    seekbar = ET.parse(ROOT / '1080i/DialogSeekBar.xml').getroot()
+    assert not any('Player.Caching' in v.text for v in seekbar.findall('visible')), 'seekbar on caching'
+    fullscreen = ET.parse(ROOT / '1080i/VideoFullScreen.xml').getroot()
+    badge = [g for g in fullscreen.findall('controls/control') if 'Player.Caching' in (g.findtext('visible') or '')]
+    assert len(badge) == 1 and int(badge[0].find("animation[.='Visible']").get('delay')) >= 1000, 'caching badge delay'
     # The bottom-right toast is readable over posters: an opaque card under its text.
     busy = ET.parse(ROOT / '1080i/Includes_Furniture.xml').getroot().find("include[@name='Furniture_Busy_Main']/definition")
     card = busy.find("control[@type='image']")

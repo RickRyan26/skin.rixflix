@@ -26,5 +26,28 @@
                 <font>font_mini</font>
             </include>
         </control>
+        <!-- RIXFLIX: a starved stream shows this badge, never the timeline. Kodi flips
+             Player.Caching every time the demux queue drains and refills, about once a
+             second on a stream arriving just under its bitrate (Die My Love remux, theater,
+             2026-10-20 16:14). Driving DialogSeekBar from it popped the timeline in and out
+             in a loop. The delay keeps a flap shorter than 1.5 s invisible; a real buffer
+             wait fades in here. Pause/seek/OSD still open the seekbar, whose label already
+             reads Caching n%. -->
+        <control type="group">
+            <visible>Player.Caching + !Window.IsVisible(DialogSeekBar.xml) + !Window.IsActive(videoosd)</visible>
+            <animation effect="fade" start="0" end="100" time="300" delay="1500">Visible</animation>
+            <animation effect="fade" start="100" end="0" time="200">Hidden</animation>
+            <right>80</right>
+            <top>60</top>
+            <width>400</width>
+            <height>60</height>
+            <control type="label">
+                <align>right</align>
+                <aligny>center</aligny>
+                <font>font_tiny</font>
+                <textcolor>panel_fg_70</textcolor>
+                <label>$LOCALIZE[439] $INFO[Player.CacheLevel,,%]</label>
+            </control>
+        </control>
     </controls>
 </window>
