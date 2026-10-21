@@ -1,5 +1,16 @@
 # Cinema presentation — 1.10.0
 
+
+## 1.12.25: the seek bar stays up through a network seek
+
+Rick, 2026-10-20 22:48: fast forward and rewind are the jankiest piece left. The theater debug
+log of eight seeks on 6 Underground showed `DialogSeekBar` closing about 2.8 s after the
+press, while the demuxer was still refilling (a cache miss costs the server's first byte,
+0.6-3.6 s, plus 1-1.5 s of demux seek and decoder resync). Kodi then re-opened the bar the
+moment the seek completed. The bar's `Player.HasPerformedSeek(2)` is now `(3)`, the same as
+the chapter label already used, and so is the seek-offset label at `Includes_Labels.xml`
+~1004. The bar no longer flickers off and back on during a refill. The full measurements
+are in Rixflix `docs/home-theater.md` ("Seek refill anatomy").
 ## 1.12.24: a motion debug strip on Home, for the probe only
 
 Spotlight <-> New Releases still jittered on 1.12.23. A burst strip (one key, then ten

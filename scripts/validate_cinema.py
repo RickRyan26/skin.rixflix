@@ -341,6 +341,9 @@ def check():
     assert rule.findtext('value') == 'plugin://plugin.video.rixflix.providers/?mode=search&amp;q='
     search_template = (ROOT / 'shortcuts/generator/data/parts/search_row_standard.xmltemplate').read_text()
     assert '<ondown>7900</ondown>' in search_template
+    # 1.12.25: the seek bar outlives a network seek's 2.0-2.8 s refill (no hide/re-show).
+    seekbar = (ROOT / '1080i/DialogSeekBar.xml').read_text()
+    assert 'Player.HasPerformedSeek(3)' in seekbar and 'HasPerformedSeek(2)' not in seekbar
     # 1.12.23: the VideoOSD timeline is a button - Up closes the OSD, Select toggles pause.
     timeline = ET.parse(ROOT / '1080i/VideoOSD.xml').getroot().find(".//control[@id='8200']")
     assert timeline.get('type') == 'button', timeline.get('type')
