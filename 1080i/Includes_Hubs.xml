@@ -433,7 +433,7 @@
         <control type="group">
             <top>280</top>
             <visible>!$EXP[Exp_InfoDialogs]</visible>
-            <visible>$EXP[Hub_Spotlight_Visible_Expression]</visible>
+            <visible>$EXP[Hub_Spotlight_Visible_Expression] | !String.IsEmpty(Window(Home).Property(RixFlix.MotionSpotlightStatic))</visible>
             <animation effect="slide" end="0" start="0,-200" time="400" tween="cubic" easing="out" reversible="false" condition="!Control.HasFocus(300)">Visible</animation>
             <animation effect="slide" start="0" end="0,-200" time="400" tween="cubic" easing="out" reversible="false">Hidden</animation>
             <include>Info_Panel_Dimensions</include>
@@ -514,7 +514,7 @@
                 <include condition="$PARAM[isolated_motion]">Hub_Spotlight_Motion</include>
                 <top>260</top>
                 <height>hub_spotlight_h</height>
-                <visible>$EXP[Hub_Spotlight_Visible_Expression]</visible>
+                <visible>$EXP[Hub_Spotlight_Visible_Expression] | !String.IsEmpty(Window(Home).Property(RixFlix.MotionSpotlightStatic))</visible>
                 <include>Home_Info_Animation</include>
                 <!-- Rick, 2026-10-18: the spotlight is the trailer's stage. Only Play; Left/Right
                      walk the random wraplist (301), so Left brings back the previous title. -->

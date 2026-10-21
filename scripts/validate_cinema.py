@@ -356,6 +356,11 @@ def check():
     assert any(i.text == 'Home_Motion_Debug' for i in home.iter('include'))
     debug = hubs.find("include[@name='Home_Motion_Debug']/control")
     assert debug.findtext('visible') == '!String.IsEmpty(Window(Home).Property(RixFlix.MotionDebug))'
+    # 1.12.27: the probe's A/B switches are inert unless their Home property is set.
+    background = (ROOT / '1080i/Includes_Background.xml').read_text()
+    assert '<visible>String.IsEmpty(Window(Home).Property(RixFlix.MotionNoArt))</visible>' in background
+    assert (ROOT / '1080i/Includes_Hubs.xml').read_text().count(
+        '| !String.IsEmpty(Window(Home).Property(RixFlix.MotionSpotlightStatic))</visible>') == 2
     ratios = []
     style = params(template) | params(play)
     # Rick 2026-10-20 21:13: the spotlight Play is white with black text when focused.

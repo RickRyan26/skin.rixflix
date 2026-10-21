@@ -11,6 +11,17 @@ moment the seek completed. The bar's `Player.HasPerformedSeek(2)` is now `(3)`, 
 the chapter label already used, and so is the seek-offset label at `Includes_Labels.xml`
 ~1004. The bar no longer flickers off and back on during a refill. The full measurements
 are in Rixflix `docs/home-theater.md` ("Seek refill anatomy").
+## 1.12.27: A/B switches for the motion strip
+
+The 1.12.26 cells showed no input change in the backward frame, and a control burst on
+501 -> 502 in the same run was monotonic, so the reversal is real and belongs to this move
+(Rixflix `docs/home-theater.md`, "Burst strips and the debug cells"). The two things only
+this move does at that frame each get a switch the probe can flip at runtime:
+`Window(Home).Property(RixFlix.MotionNoArt)` hides the background art control (an image
+that isn't processed loads no texture), and `RixFlix.MotionSpotlightStatic` keeps the
+spotlight group and its info visible on the rows. With neither set, nothing changes.
+`validate_cinema.py` asserts both gates.
+
 ## 1.12.26: a second line of motion debug cells
 
 The 1.12.24 cells (receipt `19d05f526bf66e0f`, 1.12.25) held steady through the backward

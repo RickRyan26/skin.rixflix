@@ -36,6 +36,8 @@
                 <animation effect="fade" start="100" end="0" reversible="false" time="300" condition="$EXP[Exp_BackgroundArtwork_IsHidden]">Conditional</animation>
                 <animation effect="fade" start="0" end="100" reversible="false" delay="300" time="background_fadetime" condition="!$EXP[Exp_BackgroundArtwork_IsHidden]">Conditional</animation>
                 <include>Background_NotVideo</include>
+                <!-- Motion strip A/B (Rixflix am9/rixflix-home-motion-strip.py): no art, so no decode/upload mid-move. -->
+                <visible>String.IsEmpty(Window(Home).Property(RixFlix.MotionNoArt))</visible>
             </control>
         </definition>
     </include>
