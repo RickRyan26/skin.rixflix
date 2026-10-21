@@ -362,6 +362,18 @@
             <include content="Home_Motion_Debug_Cell"><param name="left">960</param><param name="label">WC501</param><param name="condition">Integer.IsEqual(Window.Property(TMDBHelper.WidgetContainer),501)</param></include>
             <include content="Home_Motion_Debug_Cell"><param name="left">1120</param><param name="label">Modal</param><param name="condition">System.HasActiveModalDialog</param></include>
             <include content="Home_Motion_Debug_Cell"><param name="left">1280</param><param name="label">Home</param><param name="condition">Window.IsActive(home)</param></include>
+            <control type="group">
+                <top>130</top>
+                <include content="Home_Motion_Debug_Cell"><param name="left">0</param><param name="label">SpotVis</param><param name="condition">$EXP[Hub_Spotlight_Visible_Expression]</param></include>
+                <include content="Home_Motion_Debug_Cell"><param name="left">160</param><param name="label">N301</param><param name="condition">!Integer.IsEqual(Container(301).NumItems,0)</param></include>
+                <include content="Home_Motion_Debug_Cell"><param name="left">320</param><param name="label">U301</param><param name="condition">Container(301).IsUpdating</param></include>
+                <include content="Home_Motion_Debug_Cell"><param name="left">480</param><param name="label">V310</param><param name="condition">Control.IsVisible(310)</param></include>
+                <include content="Home_Motion_Debug_Cell"><param name="left">640</param><param name="label">V501</param><param name="condition">Control.IsVisible(501)</param></include>
+                <include content="Home_Motion_Debug_Cell"><param name="left">800</param><param name="label">U501</param><param name="condition">Container(501).IsUpdating</param></include>
+                <include content="Home_Motion_Debug_Cell"><param name="left">960</param><param name="label">N501</param><param name="condition">!Integer.IsEqual(Container(501).NumItems,0)</param></include>
+                <include content="Home_Motion_Debug_Cell"><param name="left">1120</param><param name="label">Lift</param><param name="condition">[ControlGroup(602).HasFocus + !Control.HasFocus(501) + !Control.HasFocus(502)] | [!ControlGroup(602).HasFocus + !Integer.IsEqual(Window.Property(TMDbHelper.WidgetContainer),301) + !Integer.IsEqual(Window.Property(TMDbHelper.WidgetContainer),501) + !Integer.IsEqual(Window.Property(TMDbHelper.WidgetContainer),502)]</param></include>
+                <include content="Home_Motion_Debug_Cell"><param name="left">1280</param><param name="label">SlideInfo</param><param name="condition">$EXP[Exp_Hubs_SlideInfo]</param></include>
+            </control>
             <control type="label">
                 <left>1440</left>
                 <width>460</width>

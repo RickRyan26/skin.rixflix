@@ -11,6 +11,16 @@ moment the seek completed. The bar's `Player.HasPerformedSeek(2)` is now `(3)`, 
 the chapter label already used, and so is the seek-offset label at `Includes_Labels.xml`
 ~1004. The bar no longer flickers off and back on during a refill. The full measurements
 are in Rixflix `docs/home-theater.md` ("Seek refill anatomy").
+## 1.12.26: a second line of motion debug cells
+
+The 1.12.24 cells (receipt `19d05f526bf66e0f`, 1.12.25) held steady through the backward
+frame, and `SlideDown`, focus and WidgetContainer never flipped. Yet the rows *and* the
+spotlight info both stepped back one frame, while the background crossfade, which runs on
+an accumulated delta, kept advancing. The second line draws the next-order inputs:
+the spotlight's visibility expression, 301/501 `NumItems`/`IsUpdating`, the visibility of
+310 and 501, the 301px lift condition and `Exp_Hubs_SlideInfo`. It sits at y130 under the
+same `RixFlix.MotionDebug` gate.
+
 ## 1.12.24: a motion debug strip on Home, for the probe only
 
 Spotlight <-> New Releases still jittered on 1.12.23. A burst strip (one key, then ten
