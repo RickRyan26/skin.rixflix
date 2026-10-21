@@ -11,6 +11,17 @@ moment the seek completed. The bar's `Player.HasPerformedSeek(2)` is now `(3)`, 
 the chapter label already used, and so is the seek-offset label at `Includes_Labels.xml`
 ~1004. The bar no longer flickers off and back on during a refill. The full measurements
 are in Rixflix `docs/home-theater.md` ("Seek refill anatomy").
+## 1.12.31: the SlideDown slide at window level
+
+The 1.12.30 probes inside group 400, group 500 and the Info panels' parent all stayed on
+time in the backward frame (theater receipt ae4a448f6137277f, Up 823, 840, 910, **824**,
+912), so no ancestor subtree is stale and the probes are gone. What the rows and Play
+share, and the latch bars don't, is the slide itself: reversible, quadratic in-out, 400 ms,
+on `SlideDown`. Three copies of it now run horizontally at window level (1390 px, ten
+times the rows' 139): on `SlideDown` with in-out quadratic, on `SlideDown` with linear,
+and on `ControlGroup(310).HasFocus` with in-out quadratic. Whichever one steps back with
+the rows separates the condition from the tween.
+
 ## 1.12.30: subtree probes for a stale transform
 
 The 1.12.29 pair kept the backward frame (theater receipt 8c21a2ee37ae2f27), so the

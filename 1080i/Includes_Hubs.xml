@@ -396,7 +396,7 @@
                 <top>260</top>
                 <control type="image">
                     <width>1700</width>
-                    <height>360</height>
+                    <height>450</height>
                     <texture colordiffuse="FF000000">common/white.png</texture>
                 </control>
                 <include content="Home_Motion_Debug_Latch"><param name="top">0</param><param name="condition">Control.HasFocus(501)</param></include>
@@ -411,23 +411,22 @@
                 <include content="Home_Motion_Debug_Latch"><param name="top">270</param><param name="condition">Integer.IsEqual(Window.Property(TMDBHelper.WidgetContainer),301)</param></include>
                 <include content="Home_Motion_Debug_Latch"><param name="top">300</param><param name="condition">!Integer.IsEqual(Window.Property(TMDBHelper.WidgetContainer),301)</param></include>
                 <include content="Home_Motion_Debug_Latch"><param name="top">330</param><param name="condition">Control.HasFocus(311)</param></include>
+                <!-- 1.12.31: the SlideDown slide itself, horizontally, at window level: rows 360
+                     (SlideDown, in-out quadratic), 390 (SlideDown, linear), 420 (ControlGroup(310)
+                     focus, in-out quadratic). Whichever steps back with the rows names the cause. -->
+                <include content="Home_Motion_Debug_Tween"><param name="top">360</param><param name="condition">$EXP[Exp_Hubs_Spotlight_SlideDown]</param><param name="tween">quadratic</param></include>
+                <include content="Home_Motion_Debug_Tween"><param name="top">390</param><param name="condition">$EXP[Exp_Hubs_Spotlight_SlideDown]</param><param name="tween">linear</param></include>
+                <include content="Home_Motion_Debug_Tween"><param name="top">420</param><param name="condition">ControlGroup(310).HasFocus</param><param name="tween">quadratic</param></include>
             </control>
         </control>
     </include>
-    <!-- 1.12.30 subtree probes: the 1.12.28 latch bar placed inside a Hub_Window subtree
-         (group 400 at y650, group 500 at y700, the Info panels' parent at y750; Down then
-         Up condition 20px apart). In the backward frame, a probe that trails the window-level
-         bars marks its subtree as rendered from a stale transform. Pure green, so the probe
-         reads it by colour over any art. -->
-    <include name="Home_Motion_Debug_Probe">
+    <include name="Home_Motion_Debug_Tween">
         <control type="image">
             <top>$PARAM[top]</top>
-            <left>20</left>
             <width>40</width>
-            <height>12</height>
-            <texture colordiffuse="FF00FF00">common/white.png</texture>
-            <visible>!String.IsEmpty(Window(Home).Property(RixFlix.MotionDebug))</visible>
-            <animation effect="slide" start="0" end="1600,0" time="4000" reversible="false" condition="$PARAM[condition]">Conditional</animation>
+            <height>20</height>
+            <texture colordiffuse="FFFFFFFF">common/white.png</texture>
+            <animation effect="slide" start="0" end="1390,0" time="400" tween="$PARAM[tween]" easing="inout" reversible="true" condition="$PARAM[condition]">Conditional</animation>
         </control>
     </include>
     <include name="Home_Motion_Debug_Latch">
@@ -921,8 +920,6 @@
                         <control type="group" id="400">
                             <include>Animation_View_WindowChange</include>
 
-                            <include content="Home_Motion_Debug_Probe"><param name="top">650</param><param name="condition">Control.HasFocus(501)</param></include>
-                            <include content="Home_Motion_Debug_Probe"><param name="top">670</param><param name="condition">ControlGroup(310).HasFocus</param></include>
                             <!-- Spotlight -->
                             <include content="Hub_Spotlight" condition="$PARAM[spotlight]">
                                 <param name="window">$PARAM[window]</param>
@@ -931,8 +928,6 @@
 
                             <!-- Widgets Groups -->
                             <control type="group" id="500">
-                                <include content="Home_Motion_Debug_Probe"><param name="top">700</param><param name="condition">Control.HasFocus(501)</param></include>
-                                <include content="Home_Motion_Debug_Probe"><param name="top">720</param><param name="condition">ControlGroup(310).HasFocus</param></include>
                                 <include content="Hub_Combined_Widgets_Grouplist" condition="String.IsEqual(Skin.String(HomeSwitcher.$PARAM[window].Mode),Wall)">
                                     <include condition="String.IsEqual(Skin.String(HomeSwitcher.$PARAM[window].Mode),Wall)">skinvariables-$PARAM[window]widgets-wall</include>
                                 </include>
@@ -953,8 +948,6 @@
                             </control>
                         </control>
 
-                        <include content="Home_Motion_Debug_Probe"><param name="top">750</param><param name="condition">Control.HasFocus(501)</param></include>
-                        <include content="Home_Motion_Debug_Probe"><param name="top">770</param><param name="condition">ControlGroup(310).HasFocus</param></include>
                         <!-- Info Panels -->
                         <include condition="String.IsEqual(Skin.String(HomeSwitcher.$PARAM[window].Mode),Wall)">skinvariables-$PARAM[window]widgets-wall-info</include>
                         <include condition="String.IsEqual(Skin.String(HomeSwitcher.$PARAM[window].Mode),Combined) | String.IsEqual(Skin.String(HomeSwitcher.$PARAM[window].Mode),Standard)">skinvariables-$PARAM[window]widgets-combined-info</include>
