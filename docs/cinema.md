@@ -1,5 +1,16 @@
 # Cinema presentation — 1.10.0
 
+## 1.12.23: the OSD timeline behaves like Netflix
+
+Rick, 2026-10-20 21:17: with the timeline focused, Up should return to the video without the
+timeline and Select should toggle play/pause. VideoOSD's timeline (8200) was a `slider`; Kodi's
+slider returns true on Select without acting and has no `onclick` (GUISliderControl.cpp,
+`ACTION_SELECT_ITEM`), and Up had no target. 8200 is now an invisible button: Select
+`PlayerControl(Play)`, Up `Dialog.Close(videoosd)`, Down the buttons, Left/Right
+`Action(StepBack|StepForward)`. Those are the keymap's 10 s steps, so a burst is one network
+seek after `videoplayer.seekdelay`; the slider sought a percentage on every press. The progress
+bars above still show on `Control.HasFocus(8200)`. MusicOSD keeps its slider.
+
 ## 1.12.22: the spotlight Play is white
 
 Rick, 2026-10-20 21:13: the random row's Play button should be white with black text, not red

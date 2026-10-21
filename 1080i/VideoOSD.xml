@@ -212,12 +212,20 @@
                         <visible>Control.HasFocus(8200)</visible>
                         <visible>Pvr.IsPlayingTv</visible>
                     </control>
-                    <control type="slider" id="8200">
-                        <info>Player.Progress</info>
-                        <action>seek</action>
-                        <texturesliderbar />
-                        <textureslidernib />
-                        <textureslidernibfocus />
+                    <!-- Rick 2026-10-20 21:17, the Netflix timeline: Up returns to the picture and
+                         Select toggles pause. Kodi's slider swallows Select and has no onclick
+                         (GUISliderControl::OnAction), so the timeline is an invisible button over
+                         the progress bars above. Left/Right are the 10 s StepBack/StepForward of
+                         the keymap: CSeekHandler commits one network seek per burst, where the
+                         slider's percent steps sought on every press. -->
+                    <control type="button" id="8200">
+                        <texturefocus />
+                        <texturenofocus />
+                        <label />
+                        <onleft>Action(StepBack)</onleft>
+                        <onright>Action(StepForward)</onright>
+                        <onclick>PlayerControl(Play)</onclick>
+                        <onup>Dialog.Close(videoosd)</onup>
                         <ondown>6091</ondown>
                     </control>
                 </control>

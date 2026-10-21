@@ -341,6 +341,13 @@ def check():
     assert rule.findtext('value') == 'plugin://plugin.video.rixflix.providers/?mode=search&amp;q='
     search_template = (ROOT / 'shortcuts/generator/data/parts/search_row_standard.xmltemplate').read_text()
     assert '<ondown>7900</ondown>' in search_template
+    # 1.12.23: the VideoOSD timeline is a button - Up closes the OSD, Select toggles pause.
+    timeline = ET.parse(ROOT / '1080i/VideoOSD.xml').getroot().find(".//control[@id='8200']")
+    assert timeline.get('type') == 'button', timeline.get('type')
+    assert (timeline.findtext('onup'), timeline.findtext('onclick')) == (
+        'Dialog.Close(videoosd)', 'PlayerControl(Play)')
+    assert (timeline.findtext('onleft'), timeline.findtext('onright')) == (
+        'Action(StepBack)', 'Action(StepForward)')
     ratios = []
     style = params(template) | params(play)
     # Rick 2026-10-20 21:13: the spotlight Play is white with black text when focused.
