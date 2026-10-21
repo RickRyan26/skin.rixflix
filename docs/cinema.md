@@ -1,5 +1,12 @@
 # Cinema presentation — 1.10.0
 
+## 1.12.22: the spotlight Play is white
+
+Rick, 2026-10-20 21:13: the random row's Play button should be white with black text, not red
+with white text. Control 311 now focuses to `rix_cinema_paper` with `rix_cinema_ink` text (the
+same pair it shows unfocused; the spotlight is hidden whenever focus leaves it, so no state
+needs to tell them apart). `validate_cinema.py` asserts the pair and its contrast.
+
 ## 1.12.21: no Now Playing card over playing video
 
 Rick, 2026-10-20 19:39 (photo, Fall 2 playing behind Home): the card shouldn't show while video

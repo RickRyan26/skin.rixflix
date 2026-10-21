@@ -508,8 +508,9 @@
                         <param name="width">240</param>
                         <param name="surface">rix_cinema_paper</param>
                         <param name="ink">rix_cinema_ink</param>
-                        <param name="focus_surface">rix_cinema_accent</param>
-                        <param name="focus_ink">rix_cinema_paper</param>
+                        <!-- Rick 2026-10-20 21:13: white with black text, not red with white. -->
+                        <param name="focus_surface">rix_cinema_paper</param>
+                        <param name="focus_ink">rix_cinema_ink</param>
                         <onclick condition="$EXP[Exp_RixFlix_AutoplayTrailer] + [String.IsEqual(Window(Home).Property(RixFlix.AutoplayTrailerResolved),Player.Filenameandpath) | String.IsEqual(Window(Home).Property(RixFlix.LocalTrailerPlaylist),Player.Filenameandpath)]">PlayerControl(Stop)</onclick>
                         <onclick condition="$EXP[Exp_RixFlix_AutoplayTrailer]">ClearProperty(RixFlix.AutoplayTrailerResolved,Home)</onclick>
                         <onclick condition="$EXP[Exp_RixFlix_AutoplayTrailer]">ClearProperty(RixFlix.AutoplayTrailer,Home)</onclick>

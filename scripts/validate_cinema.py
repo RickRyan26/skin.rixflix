@@ -343,6 +343,8 @@ def check():
     assert '<ondown>7900</ondown>' in search_template
     ratios = []
     style = params(template) | params(play)
+    # Rick 2026-10-20 21:13: the spotlight Play is white with black text when focused.
+    assert (style['focus_surface'], style['focus_ink']) == ('rix_cinema_paper', 'rix_cinema_ink'), style
     for ink, surface in (('ink', 'surface'), ('focus_ink', 'focus_surface')):
         light, dark = sorted((luminance(colors[style[ink]]), luminance(colors[style[surface]])), reverse=True)
         ratio = (light + 0.05) / (dark + 0.05)
