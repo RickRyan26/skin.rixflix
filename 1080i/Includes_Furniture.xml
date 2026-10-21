@@ -124,6 +124,10 @@
             <width>720</width>
             <right>-20</right>
             <visible>Player.HasMedia + !$EXP[Exp_RixFlix_PreviewPlaying]</visible>
+            <!-- Rick 2026-10-20 19:39: no card while the video (or visualisation) plays behind
+                 the window - the picture already says what is playing. Same condition the
+                 background uses to draw it, so the card returns on pause or with video off. -->
+            <visible>$EXP[Exp_Video_IsNotPlaying]</visible>
             <!-- Rick 2026-10-20: the Now Playing title, sub-label and progress ring (and the busy
                  spinner that opens over them while a movie starts) read over posters with no
                  backing. Same opaque rounded card as the bottom-right toasts. -->
@@ -160,7 +164,10 @@
                     </control>
                 </control>
             </control>
+            <!-- Rick 2026-10-20 19:39: the text uses the card's width; the toasts' 320px divider
+                 left the sub-label under 300px and cut it mid-name. -->
             <include content="Furniture_Busy_FloatingText">
+                <param name="divider_visible">false</param>
                 <param name="mainlabel">$VAR[Label_NowPlayingTitle]</param>
                 <param name="minilabel">$VAR[Label_NowPlayingSubLabel]</param>
             </include>
@@ -418,6 +425,7 @@
     <include name="Furniture_Busy_FloatingText">
         <param name="visible">true</param>
         <param name="percentage_visible">false</param>
+        <param name="divider_visible">true</param>
         <definition>
             <control type="group">
                 <top>25</top>
@@ -427,7 +435,7 @@
                     <orientation>horizontal</orientation>
                     <align>right</align>
                     <itemgap>8</itemgap>
-                    <include content="View_Line_Divider">
+                    <include content="View_Line_Divider" condition="$PARAM[divider_visible]">
                         <param name="align">right</param>
                         <param name="width">320</param>
                     </include>

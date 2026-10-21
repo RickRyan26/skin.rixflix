@@ -187,6 +187,11 @@ def check_home_rows(constants):
     player_card = cards(furniture.find("include[@name='Furniture_Player']/control"))
     assert player_card and player_card[0] is furniture.find("include[@name='Furniture_Player']/control/control"), \
         'Now Playing card must sit behind the title and ring'
+    # 1.12.21: no Now Playing card while the video plays behind; its text skips the divider.
+    player = furniture.find("include[@name='Furniture_Player']/control")
+    assert '$EXP[Exp_Video_IsNotPlaying]' in [v.text for v in player.findall('visible')]
+    floating = [i for i in player.iter('include') if i.get('content') == 'Furniture_Busy_FloatingText']
+    assert [i.findtext("param[@name='divider_visible']") for i in floating] == ['false'], floating
     busy = cards(furniture.find("include[@name='Furniture_Busy_Main']"))
     assert sorted(c.findtext('visible') for c in busy) == ['![$PARAM[haslabel]]', '$PARAM[haslabel]'], busy
     # Home previews play in a right-anchored box larger than the fanart, never full-frame.

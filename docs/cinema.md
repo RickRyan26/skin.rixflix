@@ -1,5 +1,15 @@
 # Cinema presentation — 1.10.0
 
+## 1.12.21: no Now Playing card over playing video
+
+Rick, 2026-10-20 19:39 (photo, Fall 2 playing behind Home): the card shouldn't show while video
+plays in the background, and its text shouldn't cut off so early. `Furniture_Player` now also
+needs `$EXP[Exp_Video_IsNotPlaying]`, the condition the background uses to draw the
+videowindow/visualisation, so the card returns on pause or with background video disabled. Its
+`Furniture_Busy_FloatingText` passes `divider_visible=false`: the toasts' 320px divider shared a
+620px grouplist with the sub-label, leaving it under 300px. The DialogBusy spinner card at a
+movie start is unchanged.
+
 ## 1.12.18: everything bottom-right sits on the card
 
 Rick, 2026-10-20 16:15 (photo while Die My Love started): the loading spinner and the movie
