@@ -309,12 +309,15 @@
 
     <!-- Home rows own their whole 301 <-> 501 movement. The former parent 440px
          slide and opposite 301px row drop had independent animation lifecycles. -->
+    <!-- 1.12.32: both SlideDown slides (rows +139 here, spotlight +440 in Hub_Spotlight_Motion)
+         ease in-out with tween="sine". Kodi's QuadTweener EASE_INOUT (guilib/Tween.h) is
+         broken: the first half returns change*t^2 with no /2, so it reaches the end at the
+         midpoint, and the second half restarts from start. At 200 ms the slide snaps back to
+         where it began, which was the Play <-> New Releases jitter. Never use quadratic
+         in-out; sine and cubic in-out are correct. -->
     <include name="Hub_Home_Rows_Motion">
         <animation effect="slide" start="0" end="0,-139" condition="true">Conditional</animation>
-        <animation effect="slide" start="0" end="0,139" time="400" tween="quadratic" easing="inout" reversible="true" condition="$EXP[Exp_Hubs_Spotlight_SlideDown] + String.IsEmpty(Window(Home).Property(RixFlix.MotionPair))">Conditional</animation>
-        <!-- 1.12.29 A/B (probe only): the same slide as a non-reversible pair. -->
-        <animation effect="slide" start="0" end="0,139" time="400" tween="quadratic" easing="inout" reversible="false" condition="$EXP[Exp_Hubs_Spotlight_SlideDown] + !String.IsEmpty(Window(Home).Property(RixFlix.MotionPair))">Conditional</animation>
-        <animation effect="slide" start="0,139" end="0" time="400" tween="quadratic" easing="inout" reversible="false" condition="![$EXP[Exp_Hubs_Spotlight_SlideDown]] + !String.IsEmpty(Window(Home).Property(RixFlix.MotionPair))">Conditional</animation>
+        <animation effect="slide" start="0" end="0,139" time="400" tween="sine" easing="inout" reversible="true" condition="$EXP[Exp_Hubs_Spotlight_SlideDown]">Conditional</animation>
         <!-- 1.12.15: the 301px poster-row lift keys on focus inside 602, so it starts on the
              grouplist scroll's own frame (WidgetContainer arrives a frame or two later through
              onfocus's queued message); outside 602 (spotlight, a dialog over Home) the property
@@ -396,7 +399,7 @@
                 <top>260</top>
                 <control type="image">
                     <width>1700</width>
-                    <height>450</height>
+                    <height>360</height>
                     <texture colordiffuse="FF000000">common/white.png</texture>
                 </control>
                 <include content="Home_Motion_Debug_Latch"><param name="top">0</param><param name="condition">Control.HasFocus(501)</param></include>
@@ -411,22 +414,7 @@
                 <include content="Home_Motion_Debug_Latch"><param name="top">270</param><param name="condition">Integer.IsEqual(Window.Property(TMDBHelper.WidgetContainer),301)</param></include>
                 <include content="Home_Motion_Debug_Latch"><param name="top">300</param><param name="condition">!Integer.IsEqual(Window.Property(TMDBHelper.WidgetContainer),301)</param></include>
                 <include content="Home_Motion_Debug_Latch"><param name="top">330</param><param name="condition">Control.HasFocus(311)</param></include>
-                <!-- 1.12.31: the SlideDown slide itself, horizontally, at window level: rows 360
-                     (SlideDown, in-out quadratic), 390 (SlideDown, linear), 420 (ControlGroup(310)
-                     focus, in-out quadratic). Whichever steps back with the rows names the cause. -->
-                <include content="Home_Motion_Debug_Tween"><param name="top">360</param><param name="condition">$EXP[Exp_Hubs_Spotlight_SlideDown]</param><param name="tween">quadratic</param></include>
-                <include content="Home_Motion_Debug_Tween"><param name="top">390</param><param name="condition">$EXP[Exp_Hubs_Spotlight_SlideDown]</param><param name="tween">linear</param></include>
-                <include content="Home_Motion_Debug_Tween"><param name="top">420</param><param name="condition">ControlGroup(310).HasFocus</param><param name="tween">quadratic</param></include>
             </control>
-        </control>
-    </include>
-    <include name="Home_Motion_Debug_Tween">
-        <control type="image">
-            <top>$PARAM[top]</top>
-            <width>40</width>
-            <height>20</height>
-            <texture colordiffuse="FFFFFFFF">common/white.png</texture>
-            <animation effect="slide" start="0" end="1390,0" time="400" tween="$PARAM[tween]" easing="inout" reversible="true" condition="$PARAM[condition]">Conditional</animation>
         </control>
     </include>
     <include name="Home_Motion_Debug_Latch">
@@ -487,7 +475,7 @@
         <control type="group">
             <top>280</top>
             <visible>!$EXP[Exp_InfoDialogs]</visible>
-            <visible>$EXP[Hub_Spotlight_Visible_Expression] | !String.IsEmpty(Window(Home).Property(RixFlix.MotionSpotlightStatic))</visible>
+            <visible>$EXP[Hub_Spotlight_Visible_Expression]</visible>
             <animation effect="slide" end="0" start="0,-200" time="400" tween="cubic" easing="out" reversible="false" condition="!Control.HasFocus(300)">Visible</animation>
             <animation effect="slide" start="0" end="0,-200" time="400" tween="cubic" easing="out" reversible="false">Hidden</animation>
             <include>Info_Panel_Dimensions</include>
@@ -553,10 +541,7 @@
     </include>
 
     <include name="Hub_Spotlight_Motion">
-        <animation effect="slide" start="0" end="0,440" time="400" tween="quadratic" easing="inout" reversible="true" condition="$EXP[Exp_Hubs_Spotlight_SlideDown] + String.IsEmpty(Window(Home).Property(RixFlix.MotionPair))">Conditional</animation>
-        <!-- 1.12.29 A/B (probe only): the same slide as a non-reversible pair. -->
-        <animation effect="slide" start="0" end="0,440" time="400" tween="quadratic" easing="inout" reversible="false" condition="$EXP[Exp_Hubs_Spotlight_SlideDown] + !String.IsEmpty(Window(Home).Property(RixFlix.MotionPair))">Conditional</animation>
-        <animation effect="slide" start="0,440" end="0" time="400" tween="quadratic" easing="inout" reversible="false" condition="![$EXP[Exp_Hubs_Spotlight_SlideDown]] + !String.IsEmpty(Window(Home).Property(RixFlix.MotionPair))">Conditional</animation>
+        <animation effect="slide" start="0" end="0,440" time="400" tween="sine" easing="inout" reversible="true" condition="$EXP[Exp_Hubs_Spotlight_SlideDown]">Conditional</animation>
     </include>
 
     <include name="Hub_Spotlight">
@@ -571,7 +556,7 @@
                 <include condition="$PARAM[isolated_motion]">Hub_Spotlight_Motion</include>
                 <top>260</top>
                 <height>hub_spotlight_h</height>
-                <visible>$EXP[Hub_Spotlight_Visible_Expression] | !String.IsEmpty(Window(Home).Property(RixFlix.MotionSpotlightStatic))</visible>
+                <visible>$EXP[Hub_Spotlight_Visible_Expression]</visible>
                 <include>Home_Info_Animation</include>
                 <!-- Rick, 2026-10-18: the spotlight is the trailer's stage. Only Play; Left/Right
                      walk the random wraplist (301), so Left brings back the previous title. -->

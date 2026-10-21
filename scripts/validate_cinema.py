@@ -123,17 +123,9 @@ def check_home_rows(constants):
     # 1.12.14: Home rows own one 139px effect, not the sum of independent
     # ancestor440/child301 animation lifecycles. Spotlight visuals move separately.
     assert not grouplist.findall('animation'), 'Home must not inherit the old row compensation'
-    # 1.12.29: each SlideDown slide also has a probe-only non-reversible pair behind
-    # RixFlix.MotionPair; the reversible slide runs whenever that property is empty.
-    pair_on = '!String.IsEmpty(Window(Home).Property(RixFlix.MotionPair))'
-    pair_off = ' + String.IsEmpty(Window(Home).Property(RixFlix.MotionPair))'
-    def split_pair(anims):
-        pairs = [a for a in anims if a.get('condition', '').endswith(pair_on)]
-        assert len(pairs) == 2 and all(a.get('reversible') == 'false' for a in pairs), pairs
-        return [a for a in anims if a not in pairs]
-    motion = split_pair(hubs.findall("include[@name='Hub_Home_Rows_Motion']/animation"))
+    motion = hubs.findall("include[@name='Hub_Home_Rows_Motion']/animation")
     assert [a.get('end') for a in motion] == ['0,-139', '0,139', '0,-301']
-    assert motion[1].get('condition') == '$EXP[Exp_Hubs_Spotlight_SlideDown]' + pair_off
+    assert motion[1].get('condition') == '$EXP[Exp_Hubs_Spotlight_SlideDown]'
     # 1.12.16: spotlight state follows focus first; the queued WidgetContainer only off 310/301/602.
     exprs = ET.parse(ROOT / '1080i/Includes_Expressions.xml').getroot()
     assert exprs.find("expression[@name='Exp_Hubs_Spotlight_SlideDown']").text.startswith(
@@ -153,7 +145,7 @@ def check_home_rows(constants):
     scroll = defaults.find("default[@type='grouplist']/scrolltime")
     assert (scroll.text, scroll.get('tween'), scroll.get('easing')) == ('400', 'quadratic', None), scroll.attrib
     assert (motion[2].get('time'), motion[2].get('tween'), motion[2].get('easing')) == ('400', 'quadratic', 'out')
-    spot = split_pair(hubs.findall("include[@name='Hub_Spotlight_Motion']/animation"))
+    spot = hubs.findall("include[@name='Hub_Spotlight_Motion']/animation")
     assert len(spot) == 1 and spot[0].get('end') == '0,440', spot
     spotlight = hubs.find("include[@name='Hub_Spotlight']/definition")
     assert not spotlight.findall('animation'), '440px must not be injected into Home group400'
@@ -163,9 +155,16 @@ def check_home_rows(constants):
     assert home.find('.//param[@name="isolated_spotlight_motion"]').text == 'true'
     ancestor = hubs.find('.//include[.="Hub_Window_Slide_OnSpotlight"]')
     assert '![$PARAM[isolated_spotlight_motion]]' in ancestor.get('condition')
+    # 1.12.32: sine, not quadratic. Kodi's QuadTweener EASE_INOUT reaches the end at the
+    # midpoint and restarts from the start (Tween.h: no /2, no start offset), which snapped
+    # both slides back at 200 ms: the Play <-> New Releases jitter (theater 81146e57081ab571).
     for a in motion[1:2] + spot:
         assert (a.get('start'), a.get('time'), a.get('tween'), a.get('easing'), a.get('reversible')) == \
-            ('0', '400', 'quadratic', 'inout', 'true'), a.attrib
+            ('0', '400', 'sine', 'inout', 'true'), a.attrib
+    for xml in sorted((ROOT / '1080i').glob('*.xml')):
+        root = ET.parse(xml).getroot()
+        for anim in [*root.iter('animation'), *root.iter('effect')]:
+            assert not (anim.get('tween') == 'quadratic' and anim.get('easing') == 'inout'), (xml.name, anim.attrib)
     # Recently Added: the same landscape card, the standard row height (only the first row
     # may be short: a short second row lands 128px differently by direction).
     assert rule('widget_home_include', 'PremiereFull') == 'List_Premiere_Row'
@@ -364,18 +363,11 @@ def check():
     assert any(i.text == 'Home_Motion_Debug' for i in home.iter('include'))
     debug = hubs.find("include[@name='Home_Motion_Debug']/control")
     assert debug.findtext('visible') == '!String.IsEmpty(Window(Home).Property(RixFlix.MotionDebug))'
-    # 1.12.27: the probe's A/B switches are inert unless their Home property is set.
-    background = (ROOT / '1080i/Includes_Background.xml').read_text()
-    assert '<visible>String.IsEmpty(Window(Home).Property(RixFlix.MotionNoArt))</visible>' in background
-    assert (ROOT / '1080i/Includes_Hubs.xml').read_text().count(
-        '| !String.IsEmpty(Window(Home).Property(RixFlix.MotionSpotlightStatic))</visible>') == 2
     # 1.12.28: twelve latch bars inside the gated strip, each a non-reversible slide on its condition.
     latch = hubs.find("include[@name='Home_Motion_Debug_Latch']/control/animation")
     assert (latch.get('reversible'), latch.get('condition')) == ('false', '$PARAM[condition]')
     assert sum(i.text == 'Home_Motion_Debug_Latch' or i.get('content') == 'Home_Motion_Debug_Latch'
                for i in debug.iter('include')) == 12
-    # 1.12.31: three tween bars (the SlideDown slide at window level) inside the gated strip.
-    assert sum(i.get('content') == 'Home_Motion_Debug_Tween' for i in debug.iter('include')) == 3
     ratios = []
     style = params(template) | params(play)
     # Rick 2026-10-20 21:13: the spotlight Play is white with black text when focused.

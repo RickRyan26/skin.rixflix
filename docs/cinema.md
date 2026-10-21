@@ -11,6 +11,36 @@ moment the seek completed. The bar's `Player.HasPerformedSeek(2)` is now `(3)`, 
 the chapter label already used, and so is the seek-offset label at `Includes_Labels.xml`
 ~1004. The bar no longer flickers off and back on during a refill. The full measurements
 are in Rixflix `docs/home-theater.md` ("Seek refill anatomy").
+## 1.12.32: the Play <-> New Releases jitter was Kodi's broken quadratic in-out
+
+**Cause.** Both `SlideDown` slides, the rows' +139 (`Hub_Home_Rows_Motion`) and the
+spotlight's +440 (`Hub_Spotlight_Motion`), used `tween="quadratic" easing="inout"`.
+Kodi's `QuadTweener` `EASE_INOUT` (`xbmc/guilib/Tween.h`) is wrong: the first half
+returns `change * t^2` with no `/2`, so it covers the whole distance by the midpoint. The
+second half returns `change * u * (2 - u)` with no `change/2` offset, so it starts again
+from the beginning. Every 400 ms slide therefore reached its end at 200 ms, snapped back
+to its start, and eased out a second time. That snap is the backward step, and it appears
+in both directions and only on the moves that run these two slides. Row-to-row moves use
+the grouplist scroll's default ease-out and were always smooth. This is not a condition
+flip, a stale transform or the background art.
+
+**Proof.** The 1.12.31 window-level copies (theater receipt 81146e57081ab571, bar x
+against the latch clock): Up, `SlideDown` quadratic in-out read 58, 233, 934 at 41, 82,
+164 ms (exactly 1390·(t/200)²), then **68** at 205 ms and 946 at 287 ms. The same slide
+with `linear` was monotonic: 142, 285, 570, 712, 997. A quadratic in-out copy on
+`ControlGroup(310).HasFocus` stepped back the same way, so the condition plays no part.
+
+**Fix.** Both slides are `tween="sine" easing="inout"`, which is correct in Kodi
+(`change/2 * (1 - cos(pi t))`) and is the closest curve to the in-out the comments call
+for. `validate_cinema.py` asserts the two slides and fails on any quadratic in-out
+animation or effect anywhere in `1080i/`. `cubic` in-out is also correct if a steeper
+curve is ever wanted.
+
+**Cleanup.** The probe-only A/B gates are gone: `RixFlix.MotionNoArt`,
+`RixFlix.MotionSpotlightStatic`, `RixFlix.MotionPair` and the 1.12.31 tween bars. The
+debug cells and latch bars stay. They draw nothing unless the probe sets
+`RixFlix.MotionDebug`, and the strip reads them.
+
 ## 1.12.31: the SlideDown slide at window level
 
 The 1.12.30 probes inside group 400, group 500 and the Info panels' parent all stayed on
