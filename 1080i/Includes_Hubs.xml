@@ -320,6 +320,59 @@
         <animation effect="slide" start="0" end="0,-301" time="400" tween="quadratic" easing="out" reversible="true" condition="[ControlGroup(602).HasFocus + !Control.HasFocus(501) + !Control.HasFocus(502)] | [!ControlGroup(602).HasFocus + !Integer.IsEqual(Window.Property(TMDbHelper.WidgetContainer),301) + !Integer.IsEqual(Window.Property(TMDbHelper.WidgetContainer),501) + !Integer.IsEqual(Window.Property(TMDbHelper.WidgetContainer),502)]">Conditional</animation>
     </include>
 
+    <!-- Motion debug strip (Rixflix am9/rixflix-home-motion-strip.py). Hidden unless the probe sets
+         Window(Home).Property(RixFlix.MotionDebug); each cell is green while its condition holds,
+         red while not. The cells are evaluated in Home's context on the same frames as the
+         row animations, so a burst capture shows which input flipped on which frame. -->
+    <include name="Home_Motion_Debug_Cell">
+        <control type="group">
+            <left>$PARAM[left]</left>
+            <width>150</width>
+            <height>110</height>
+            <control type="image">
+                <height>70</height>
+                <texture colordiffuse="FF00C853">common/white.png</texture>
+                <visible>$PARAM[condition]</visible>
+            </control>
+            <control type="image">
+                <height>70</height>
+                <texture colordiffuse="FFD50000">common/white.png</texture>
+                <visible>![$PARAM[condition]]</visible>
+            </control>
+            <control type="label">
+                <top>70</top>
+                <height>40</height>
+                <font>font_tiny</font>
+                <textcolor>FFFFFFFF</textcolor>
+                <label>$PARAM[label]</label>
+            </control>
+        </control>
+    </include>
+    <include name="Home_Motion_Debug">
+        <control type="group">
+            <top>20</top>
+            <left>20</left>
+            <visible>!String.IsEmpty(Window(Home).Property(RixFlix.MotionDebug))</visible>
+            <include content="Home_Motion_Debug_Cell"><param name="left">0</param><param name="label">SlideDown</param><param name="condition">$EXP[Exp_Hubs_Spotlight_SlideDown]</param></include>
+            <include content="Home_Motion_Debug_Cell"><param name="left">160</param><param name="label">G310</param><param name="condition">ControlGroup(310).HasFocus</param></include>
+            <include content="Home_Motion_Debug_Cell"><param name="left">320</param><param name="label">F301</param><param name="condition">Control.HasFocus(301)</param></include>
+            <include content="Home_Motion_Debug_Cell"><param name="left">480</param><param name="label">G602</param><param name="condition">ControlGroup(602).HasFocus</param></include>
+            <include content="Home_Motion_Debug_Cell"><param name="left">640</param><param name="label">F501</param><param name="condition">Control.HasFocus(501)</param></include>
+            <include content="Home_Motion_Debug_Cell"><param name="left">800</param><param name="label">WC301</param><param name="condition">Integer.IsEqual(Window.Property(TMDBHelper.WidgetContainer),301)</param></include>
+            <include content="Home_Motion_Debug_Cell"><param name="left">960</param><param name="label">WC501</param><param name="condition">Integer.IsEqual(Window.Property(TMDBHelper.WidgetContainer),501)</param></include>
+            <include content="Home_Motion_Debug_Cell"><param name="left">1120</param><param name="label">Modal</param><param name="condition">System.HasActiveModalDialog</param></include>
+            <include content="Home_Motion_Debug_Cell"><param name="left">1280</param><param name="label">Home</param><param name="condition">Window.IsActive(home)</param></include>
+            <control type="label">
+                <left>1440</left>
+                <width>460</width>
+                <height>110</height>
+                <font>font_tiny</font>
+                <textcolor>FFFFFFFF</textcolor>
+                <label>focus $INFO[System.CurrentControlId] / WC $INFO[Window(Home).Property(TMDbHelper.WidgetContainer)] / win $INFO[System.CurrentWindow]</label>
+            </control>
+        </control>
+    </include>
+
     <include name="Hub_Widgets_Legacy_Motion">
         <animation effect="slide" start="0" end="0,-440" condition="true">Conditional</animation>
     </include>

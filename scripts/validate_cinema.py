@@ -348,6 +348,11 @@ def check():
         'Dialog.Close(videoosd)', 'PlayerControl(Play)')
     assert (timeline.findtext('onleft'), timeline.findtext('onright')) == (
         'Action(StepBack)', 'Action(StepForward)')
+    # 1.12.24: Home carries the probe-gated motion debug strip, hidden unless the probe sets its property.
+    home = ET.parse(ROOT / '1080i/Home.xml').getroot()
+    assert any(i.text == 'Home_Motion_Debug' for i in home.iter('include'))
+    debug = hubs.find("include[@name='Home_Motion_Debug']/control")
+    assert debug.findtext('visible') == '!String.IsEmpty(Window(Home).Property(RixFlix.MotionDebug))'
     ratios = []
     style = params(template) | params(play)
     # Rick 2026-10-20 21:13: the spotlight Play is white with black text when focused.

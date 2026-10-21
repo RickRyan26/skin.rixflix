@@ -1,5 +1,19 @@
 # Cinema presentation — 1.10.0
 
+## 1.12.24: a motion debug strip on Home, for the probe only
+
+Spotlight <-> New Releases still jittered on 1.12.23. A burst strip (one key, then ten
+TakeScreenshot builtins that Kodi runs one per main-loop pass, Rixflix
+`am9/rixflix-home-motion-strip.py`) showed the cause is inside one motion, not between runs.
+Frame 3 of every burst puts the rows one frame back toward their start, and frame 4 returns to
+frame 2's position to the pixel (Down 862 -> 900 -> 862, Up 910 -> 874 -> 912; card top in
+1080p units). That is `CAnimation::Animate`'s arithmetic for a reversible effect whose condition
+flips for one frame: it runs one frame the other way, then reverses back from the same amount.
+`Home_Motion_Debug` draws each input of `Exp_Hubs_Spotlight_SlideDown` as a green/red cell
+(plus focus, WidgetContainer and the active window), hidden unless
+`Window(Home).Property(RixFlix.MotionDebug)` is set. The probe sets it for the burst and clears
+it after, so a capture names the input that flipped. `validate_cinema.py` asserts the gate.
+
 ## 1.12.23: the OSD timeline behaves like Netflix
 
 Rick, 2026-10-20 21:17: with the timeline focused, Up should return to the video without the

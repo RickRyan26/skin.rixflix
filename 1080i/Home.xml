@@ -29,5 +29,6 @@
             <param name="spotlight_content">$VAR[Path_RixFlix_HomeSpotlight]</param>
             <param name="spotlight_sortby">$VAR[Sort_RixFlix_HomeSpotlight]</param>
         </include>
+        <include>Home_Motion_Debug</include>
     </controls>
 </window>
