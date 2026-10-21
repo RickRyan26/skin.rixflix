@@ -11,6 +11,20 @@ moment the seek completed. The bar's `Player.HasPerformedSeek(2)` is now `(3)`, 
 the chapter label already used, and so is the seek-offset label at `Includes_Labels.xml`
 ~1004. The bar no longer flickers off and back on during a refill. The full measurements
 are in Rixflix `docs/home-theater.md` ("Seek refill anatomy").
+## 1.12.29: a reversible-versus-pair A/B for the SlideDown slides
+
+The 1.12.28 latch bars ruled out a condition flip. On Up, the `SlideDown` bar shares the
+slides' own cached InfoBool and never resets, and on Down `G602` (the term that holds
+`SlideDown` false inside 602) never drops. The timeline the bars give (0.4 px/ms since
+focus) puts the backward frame about 205 ms into the move in every burst
+(theater receipt 044c1c235aab5e30). In that frame the rows and the spotlight Play render
+at their start offsets, and the frames after it lag the curve, while linear
+non-reversible slides evaluated in the same pass stay on time. So the reversible state
+machine of the two slides is disturbed without its condition changing. Each slide now
+also exists as a non-reversible pair (the `Hub_Spotlight_Content_Slide` pattern), selected
+only while `Window(Home).Property(RixFlix.MotionPair)` is set. The probe A/Bs it in one
+deploy. `validate_cinema.py` asserts the pairs and the gate.
+
 ## 1.12.28: latch bars for a one-frame flip
 
 The 1.12.27 A/B kept the backward frame with the art hidden and with the spotlight held

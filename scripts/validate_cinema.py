@@ -123,9 +123,17 @@ def check_home_rows(constants):
     # 1.12.14: Home rows own one 139px effect, not the sum of independent
     # ancestor440/child301 animation lifecycles. Spotlight visuals move separately.
     assert not grouplist.findall('animation'), 'Home must not inherit the old row compensation'
-    motion = hubs.findall("include[@name='Hub_Home_Rows_Motion']/animation")
+    # 1.12.29: each SlideDown slide also has a probe-only non-reversible pair behind
+    # RixFlix.MotionPair; the reversible slide runs whenever that property is empty.
+    pair_on = '!String.IsEmpty(Window(Home).Property(RixFlix.MotionPair))'
+    pair_off = ' + String.IsEmpty(Window(Home).Property(RixFlix.MotionPair))'
+    def split_pair(anims):
+        pairs = [a for a in anims if a.get('condition', '').endswith(pair_on)]
+        assert len(pairs) == 2 and all(a.get('reversible') == 'false' for a in pairs), pairs
+        return [a for a in anims if a not in pairs]
+    motion = split_pair(hubs.findall("include[@name='Hub_Home_Rows_Motion']/animation"))
     assert [a.get('end') for a in motion] == ['0,-139', '0,139', '0,-301']
-    assert motion[1].get('condition') == '$EXP[Exp_Hubs_Spotlight_SlideDown]'
+    assert motion[1].get('condition') == '$EXP[Exp_Hubs_Spotlight_SlideDown]' + pair_off
     # 1.12.16: spotlight state follows focus first; the queued WidgetContainer only off 310/301/602.
     exprs = ET.parse(ROOT / '1080i/Includes_Expressions.xml').getroot()
     assert exprs.find("expression[@name='Exp_Hubs_Spotlight_SlideDown']").text.startswith(
@@ -145,7 +153,7 @@ def check_home_rows(constants):
     scroll = defaults.find("default[@type='grouplist']/scrolltime")
     assert (scroll.text, scroll.get('tween'), scroll.get('easing')) == ('400', 'quadratic', None), scroll.attrib
     assert (motion[2].get('time'), motion[2].get('tween'), motion[2].get('easing')) == ('400', 'quadratic', 'out')
-    spot = hubs.findall("include[@name='Hub_Spotlight_Motion']/animation")
+    spot = split_pair(hubs.findall("include[@name='Hub_Spotlight_Motion']/animation"))
     assert len(spot) == 1 and spot[0].get('end') == '0,440', spot
     spotlight = hubs.find("include[@name='Hub_Spotlight']/definition")
     assert not spotlight.findall('animation'), '440px must not be injected into Home group400'
