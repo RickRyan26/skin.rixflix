@@ -11,6 +11,21 @@ moment the seek completed. The bar's `Player.HasPerformedSeek(2)` is now `(3)`, 
 the chapter label already used, and so is the seek-offset label at `Includes_Labels.xml`
 ~1004. The bar no longer flickers off and back on during a refill. The full measurements
 are in Rixflix `docs/home-theater.md` ("Seek refill anatomy").
+## 1.12.28: latch bars for a one-frame flip
+
+The 1.12.27 A/B kept the backward frame with the art hidden and with the spotlight held
+visible, so neither lead is the cause. The frames themselves show that, in that frame, the
+rows and the spotlight Play (the two `Exp_Hubs_Spotlight_SlideDown` reversible slides, and
+nothing else) step back to an earlier position, then carry on from it: the shape
+`CAnimation::Animate` gives when its condition flips for one tick and flips back. The cells
+can't see that: a 4K `TakeScreenshot` stalls the GUI about 83 ms, so about two 24 Hz frames
+pass between captures. The strip now carries twelve latch bars under the cells (rows 30px
+apart: F501, !SlideDown, G310, SlideDown, G602, !G602, !G310, F301, !F301, WC301, !WC301,
+F311). Each one is a non-reversible conditional slide at 0.4 px/ms that snaps to x=0 when
+its condition fails, so a bar that trails its reference in a later frame dates the flip
+and names the input. They live inside the `RixFlix.MotionDebug` group, and
+`validate_cinema.py` asserts the latch include and its count.
+
 ## 1.12.27: A/B switches for the motion strip
 
 The 1.12.26 cells showed no input change in the backward frame, and a control burst on

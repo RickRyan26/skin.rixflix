@@ -361,6 +361,11 @@ def check():
     assert '<visible>String.IsEmpty(Window(Home).Property(RixFlix.MotionNoArt))</visible>' in background
     assert (ROOT / '1080i/Includes_Hubs.xml').read_text().count(
         '| !String.IsEmpty(Window(Home).Property(RixFlix.MotionSpotlightStatic))</visible>') == 2
+    # 1.12.28: twelve latch bars inside the gated strip, each a non-reversible slide on its condition.
+    latch = hubs.find("include[@name='Home_Motion_Debug_Latch']/control/animation")
+    assert (latch.get('reversible'), latch.get('condition')) == ('false', '$PARAM[condition]')
+    assert sum(i.text == 'Home_Motion_Debug_Latch' or i.get('content') == 'Home_Motion_Debug_Latch'
+               for i in debug.iter('include')) == 12
     ratios = []
     style = params(template) | params(play)
     # Rick 2026-10-20 21:13: the spotlight Play is white with black text when focused.

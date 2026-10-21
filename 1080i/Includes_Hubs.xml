@@ -382,6 +382,42 @@
                 <textcolor>FFFFFFFF</textcolor>
                 <label>focus $INFO[System.CurrentControlId] / WC $INFO[Window(Home).Property(TMDbHelper.WidgetContainer)] / win $INFO[System.CurrentWindow]</label>
             </control>
+            <!-- 1.12.28 latch bars. A 4K capture stalls the GUI about two frames, so the cells
+                 above never see a condition that flips for one uncaptured frame. Each bar slides
+                 right 0.4 px/ms while its condition holds and snaps to x=0 when it fails
+                 (reversible="false" resets), so a later frame still shows a flip: the bar
+                 trails its reference by the time since the flip. Rows are 30px apart, in
+                 order: F501, !SlideDown, G310, SlideDown, G602, !G602, !G310, F301, !F301,
+                 WC301, !WC301, F311. -->
+            <control type="group">
+                <top>260</top>
+                <control type="image">
+                    <width>1700</width>
+                    <height>360</height>
+                    <texture colordiffuse="FF000000">common/white.png</texture>
+                </control>
+                <include content="Home_Motion_Debug_Latch"><param name="top">0</param><param name="condition">Control.HasFocus(501)</param></include>
+                <include content="Home_Motion_Debug_Latch"><param name="top">30</param><param name="condition">![$EXP[Exp_Hubs_Spotlight_SlideDown]]</param></include>
+                <include content="Home_Motion_Debug_Latch"><param name="top">60</param><param name="condition">ControlGroup(310).HasFocus</param></include>
+                <include content="Home_Motion_Debug_Latch"><param name="top">90</param><param name="condition">$EXP[Exp_Hubs_Spotlight_SlideDown]</param></include>
+                <include content="Home_Motion_Debug_Latch"><param name="top">120</param><param name="condition">ControlGroup(602).HasFocus</param></include>
+                <include content="Home_Motion_Debug_Latch"><param name="top">150</param><param name="condition">!ControlGroup(602).HasFocus</param></include>
+                <include content="Home_Motion_Debug_Latch"><param name="top">180</param><param name="condition">!ControlGroup(310).HasFocus</param></include>
+                <include content="Home_Motion_Debug_Latch"><param name="top">210</param><param name="condition">Control.HasFocus(301)</param></include>
+                <include content="Home_Motion_Debug_Latch"><param name="top">240</param><param name="condition">!Control.HasFocus(301)</param></include>
+                <include content="Home_Motion_Debug_Latch"><param name="top">270</param><param name="condition">Integer.IsEqual(Window.Property(TMDBHelper.WidgetContainer),301)</param></include>
+                <include content="Home_Motion_Debug_Latch"><param name="top">300</param><param name="condition">!Integer.IsEqual(Window.Property(TMDBHelper.WidgetContainer),301)</param></include>
+                <include content="Home_Motion_Debug_Latch"><param name="top">330</param><param name="condition">Control.HasFocus(311)</param></include>
+            </control>
+        </control>
+    </include>
+    <include name="Home_Motion_Debug_Latch">
+        <control type="image">
+            <top>$PARAM[top]</top>
+            <width>40</width>
+            <height>20</height>
+            <texture colordiffuse="FFFFFFFF">common/white.png</texture>
+            <animation effect="slide" start="0" end="1600,0" time="4000" reversible="false" condition="$PARAM[condition]">Conditional</animation>
         </control>
     </include>
 
