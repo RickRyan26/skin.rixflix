@@ -374,6 +374,11 @@ def check():
     assert (latch.get('reversible'), latch.get('condition')) == ('false', '$PARAM[condition]')
     assert sum(i.text == 'Home_Motion_Debug_Latch' or i.get('content') == 'Home_Motion_Debug_Latch'
                for i in debug.iter('include')) == 12
+    # 1.12.30: six subtree probes inside Hub_Window, each gated by the same debug property.
+    probe = hubs.find("include[@name='Home_Motion_Debug_Probe']/control")
+    assert probe.findtext('visible') == '!String.IsEmpty(Window(Home).Property(RixFlix.MotionDebug))'
+    assert sum(i.get('content') == 'Home_Motion_Debug_Probe'
+               for i in hubs.find("include[@name='Hub_Window']").iter('include')) == 6
     ratios = []
     style = params(template) | params(play)
     # Rick 2026-10-20 21:13: the spotlight Play is white with black text when focused.

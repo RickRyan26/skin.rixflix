@@ -11,6 +11,20 @@ moment the seek completed. The bar's `Player.HasPerformedSeek(2)` is now `(3)`, 
 the chapter label already used, and so is the seek-offset label at `Includes_Labels.xml`
 ~1004. The bar no longer flickers off and back on during a refill. The full measurements
 are in Rixflix `docs/home-theater.md` ("Seek refill anatomy").
+## 1.12.30: subtree probes for a stale transform
+
+The 1.12.29 pair kept the backward frame (theater receipt 8c21a2ee37ae2f27), so the
+reversible state machine is not the cause. In every run the step is about one frame of
+motion against the direction of travel (Down 862, 900, 862; Up 910, 874, 912), and it hits
+only the spotlight Play and the rows. The background and the window-level latch bars stay
+current in the same frame. That is what a subtree rendered from last pass's cached
+transform would look like. Kodi's default dirty-region mode 3 redraws the full viewport,
+so stale pixels are ruled out. The 1.12.28 bar now also sits inside group 400 (y650/670),
+group 500 (y700/720) and the Info panels' parent (y750/770): the Down condition (F501) and
+then the Up one (G310). It is pure green and gated by `RixFlix.MotionDebug`. In the
+backward frame, a probe that trails the window-level bars names its subtree.
+`validate_cinema.py` asserts the probes and their gate.
+
 ## 1.12.29: a reversible-versus-pair A/B for the SlideDown slides
 
 The 1.12.28 latch bars ruled out a condition flip. On Up, the `SlideDown` bar shares the
