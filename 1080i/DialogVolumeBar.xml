@@ -11,7 +11,11 @@
             <param name="mainlabel">$LOCALIZE[13376]</param>
             <param name="minilabel">$INFO[Player.Volume]</param>
             <param name="haslabel">false</param>
-            <!-- <param name="visible">!Player.Muted</param> -->
+            <!-- RixFlix: the loading card means "a video is loading", nothing else. Kodi keeps
+                 this dialog open for as long as ITS mute flag is set, and an unmute from the
+                 TV/Sonos remote never reaches that flag, so the card stuck on Home. Volume
+                 lives on the TV/Sonos (passthrough), so Kodi's volume needs no card. -->
+            <param name="visible">false</param>
             <param name="flipspinner">false</param>
             <param name="percentage_label">$INFO[Control.GetLabel(933)]</param>
             <param name="percentage_visible">false</param>

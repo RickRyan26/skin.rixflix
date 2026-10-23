@@ -11,7 +11,10 @@
             <param name="progress_id">32</param>
             <param name="minilabel">$INFO[Control.GetLabel(31)]</param>
             <param name="mainlabel">$INFO[Control.GetLabel(30)]</param>
-            <param name="visible">!Window.IsActive(DialogNotification.xml) + ![Window.IsActive(fullscreenvideo) | Window.IsActive(visualisation)]</param>
+            <!-- RixFlix: background jobs (jellyfin-kodi sync, TMDb Helper lookups) report here
+                 with item titles and people; in the loading card they read as a stuck load.
+                 The card is for a loading video only (DialogBusy). -->
+            <param name="visible">false</param>
             <param name="visible_condition">!$EXP[Exp_FurnitureBusy_AnimationCond_DialogExtendedProgressBar]</param>
             <param name="windowopen_condition">!$EXP[Exp_FurnitureBusy_AnimationCond_DialogExtendedProgressBar]</param>
             <param name="percentage_label">$INFO[Control.GetLabel(32), - ,%]</param>

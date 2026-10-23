@@ -239,7 +239,7 @@
                 <include content="Furniture_Busy">
                     <param name="hasspinner">true</param>
                     <param name="spinspinner">true</param>
-                    <param name="spinnervisible">[!Window.IsActive(DialogVolumeBar.xml) | Player.Muted]</param>
+                    <param name="spinnervisible">true</param>
                     <param name="icon">special://skin/extras/icons/kodi.png</param>
                     <param name="haslabel">false</param>
                 </include>
