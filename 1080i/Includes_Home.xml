@@ -522,7 +522,7 @@
                 <param name="window">1108</param>
                 <param name="id">3108</param>
             </include>
-            <include condition="!$EXP[Exp_Hubs_Menu_Loopback]">Home_Settings_Button</include>
+            <!-- No Options gear: Down off the last Home row opens Options (Rick 2026-10-24). -->
             <control type="group">
                 <width>0</width>
             </control>

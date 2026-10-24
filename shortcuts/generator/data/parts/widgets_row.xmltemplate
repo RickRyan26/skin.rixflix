@@ -27,8 +27,11 @@
     <!-- Rows above the focused one fade out as the grouplist scrolls them away. The clip
          starts 16px above the focused cards, and the previous row's progress/count badges
          hang ~25px below its cards, so without this their rims show as arcs over the row.
-         Row ids are 501 + index inside grouplist {grouplist_id}; the spotlight is outside it. -->
-    <animation effect="fade" start="100" end="0" time="200" condition="ControlGroup({grouplist_id}).HasFocus + Integer.IsGreater(System.CurrentControlId,{widget_id})">Conditional</animation>
+         Row ids are 501 + index inside grouplist {grouplist_id}; the spotlight is outside it.
+         Under a modal (Options opened by Down off the last row) System.CurrentControlId is the
+         dialog's 7xxx control, above every row id, so every row - the focused one too - faded
+         out behind the dialog. There, Home's own last-focused row (WidgetContainer) decides. -->
+    <animation effect="fade" start="100" end="0" time="200" condition="ControlGroup({grouplist_id}).HasFocus + [[!System.HasActiveModalDialog + Integer.IsGreater(System.CurrentControlId,{widget_id})] | [System.HasActiveModalDialog + Integer.IsGreater(Window.Property(TMDbHelper.WidgetContainer),{widget_id})]]">Conditional</animation>
 
     <onfocus>ClearProperty(HomeSwitcher.IsVisible,Home)</onfocus>
     <onfocus>ClearProperty(InfoPanel.FullSwitch,Home)</onfocus>

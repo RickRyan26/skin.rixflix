@@ -74,13 +74,14 @@
         <!-- loading: no sentence; the orbit spinner in Search_Info_Panel is the signal -->
         <value condition="!String.IsEmpty(Control.GetLabel(3000).index(1)) + Integer.IsEqual(Container(601).NumItems,0) + $EXP[Exp_RixFlix_Search_Loading]" />
         <value condition="!String.IsEmpty(Control.GetLabel(3000).index(1)) + Integer.IsEqual(Container(601).NumItems,0)">No titles match "$INFO[Control.GetLabel(3000).index(1)]".[CR]Try a shorter title or check the spelling.</value>
-        <value>Search your Movies and TV Shows.[CR]Press OK, enter part of a title, then choose Done.</value>
+        <!-- empty query: no instructions (Rick 2026-10-24); Up from the top Home row opens Search -->
+        <value />
     </variable>
 
     <variable name="Label_Search_Title_NoResults">
         <value condition="!String.IsEmpty(Control.GetLabel(3000).index(1)) + Integer.IsEqual(Container(601).NumItems,0) + $EXP[Exp_RixFlix_Search_Loading]">[CAPITALIZE]$INFO[Control.GetLabel(3000).index(1)][/CAPITALIZE]</value>
         <value condition="!String.IsEmpty(Control.GetLabel(3000).index(1)) + Integer.IsEqual(Container(601).NumItems,0)">$LOCALIZE[31046]</value>
-        <value>$LOCALIZE[31281]</value>
+        <value />
     </variable>
 
     <variable name="Label_Settings_WidgetNoResults">
