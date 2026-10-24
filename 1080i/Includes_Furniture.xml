@@ -448,9 +448,13 @@
                         <textcolor>main_fg_70</textcolor>
                         <shadowcolor>main_bg_30</shadowcolor>
                         <label>$PARAM[minilabel]</label>
-                        <!-- A capped auto width ellipsizes; the grouplist would cut mid-glyph. -->
+                        <!-- A capped auto width ellipsizes; the grouplist would cut mid-glyph.
+                             Left, not right: Kodi aligns inside the 560 max box while the
+                             grouplist sizes the label to its text, so right-aligned short
+                             text was drawn off the end and vanished (1.12.34). The
+                             grouplist's own align right does the right alignment. -->
                         <width max="560">auto</width>
-                        <align>right</align>
+                        <align>left</align>
                         <height>40</height>
                         <centertop>30</centertop>
                     </control>
