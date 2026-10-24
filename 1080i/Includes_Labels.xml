@@ -71,13 +71,14 @@
         <!-- RixFlix: an empty selector while a provider is still answering is
              "searching", never "no results" - the message that sent viewers away
              before the local rows had materialised (Includes_RixFlix.xml). -->
-        <value condition="!String.IsEmpty(Control.GetLabel(3000).index(1)) + Integer.IsEqual(Container(601).NumItems,0) + $EXP[Exp_RixFlix_Search_Loading]">Looking for "[CAPITALIZE]$INFO[Control.GetLabel(3000).index(1), , ][/CAPITALIZE]" in Movies and TV Shows...</value>
+        <!-- loading: no sentence; the orbit spinner in Search_Info_Panel is the signal -->
+        <value condition="!String.IsEmpty(Control.GetLabel(3000).index(1)) + Integer.IsEqual(Container(601).NumItems,0) + $EXP[Exp_RixFlix_Search_Loading]" />
         <value condition="!String.IsEmpty(Control.GetLabel(3000).index(1)) + Integer.IsEqual(Container(601).NumItems,0)">No titles match "$INFO[Control.GetLabel(3000).index(1)]".[CR]Try a shorter title or check the spelling.</value>
         <value>Search your Movies and TV Shows.[CR]Press OK, enter part of a title, then choose Done.</value>
     </variable>
 
     <variable name="Label_Search_Title_NoResults">
-        <value condition="!String.IsEmpty(Control.GetLabel(3000).index(1)) + Integer.IsEqual(Container(601).NumItems,0) + $EXP[Exp_RixFlix_Search_Loading]">Searching...</value>
+        <value condition="!String.IsEmpty(Control.GetLabel(3000).index(1)) + Integer.IsEqual(Container(601).NumItems,0) + $EXP[Exp_RixFlix_Search_Loading]">[CAPITALIZE]$INFO[Control.GetLabel(3000).index(1)][/CAPITALIZE]</value>
         <value condition="!String.IsEmpty(Control.GetLabel(3000).index(1)) + Integer.IsEqual(Container(601).NumItems,0)">$LOCALIZE[31046]</value>
         <value>$LOCALIZE[31281]</value>
     </variable>
@@ -593,11 +594,6 @@
     <variable name="Label_FullscreenWidget_InfoButton">
         <value condition="Skin.HasSetting(Spotlight.UseMenuButton)">$LOCALIZE[31502]</value>
         <value>$LOCALIZE[31077]</value>
-    </variable>
-
-    <variable name="Label_RixFlix_TrailerButton">
-        <value condition="String.IsEqual(Window(Home).Property(RixFlix.TrailerResolving),Container(301).ListItem.Trailer)">Loading Trailer…</value>
-        <value>Play Trailer</value>
     </variable>
 
     <variable name="Label_Setting_Spotlight_UseMenuButton">
