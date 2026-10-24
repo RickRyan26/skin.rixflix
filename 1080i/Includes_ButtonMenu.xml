@@ -5,7 +5,7 @@
         <item>
             <label>$LOCALIZE[559]</label>
             <icon>special://skin/extras/icons/playlist.png</icon>
-            <onclick>Action(Back)</onclick>
+            <onclick>Dialog.Close(all,true)</onclick>
             <onclick condition="Integer.IsGreater(Playlist.Length(video),0) + [Player.HasVideo | Integer.IsEqual(Playlist.Length(music),0)]">ActivateWindow(videoplaylist)</onclick>
             <onclick condition="Integer.IsGreater(Playlist.Length(music),0) + !Player.HasVideo">ActivateWindow(musicplaylist)</onclick>
             <!-- <visible>[Integer.IsGreater(Playlist.Length(video),0) + [Player.HasVideo | Integer.IsEqual(Playlist.Length(music),0)]] | [Integer.IsGreater(Playlist.Length(music),0) + !Player.HasVideo]</visible> -->
@@ -22,7 +22,7 @@
             <label>$VAR[Label_OSD_PausePlay]</label>
             <icon>$VAR[Image_OSD_PausePlay]</icon>
             <onclick condition="Player.HasMedia">PlayerControl(Play)</onclick>
-            <onclick condition="!Player.HasMedia">Action(Back)</onclick>
+            <onclick condition="!Player.HasMedia">Dialog.Close(all,true)</onclick>
             <onclick condition="!Player.HasMedia + Integer.IsGreater(Playlist.Length(music),0)">PlayMedia(playlistmusic://,isdir,playlist_type_hint=0)</onclick>
             <onclick condition="!Player.HasMedia + !Integer.IsGreater(Playlist.Length(music),0)">PlayMedia(playlistvideo://,isdir,playlist_type_hint=1)</onclick>
             <!-- <visible>Player.HasMedia | Integer.IsGreater(Playlist.Length(video),0) | Integer.IsGreater(Playlist.Length(music),0)</visible> -->
@@ -222,7 +222,7 @@
                 <onleft>$PARAM[onleft]</onleft>
                 <oninfo>$PARAM[onback]</oninfo>
                 <onback>$PARAM[onback]</onback>
-                <onclick>Action(Back)</onclick>
+                <onclick>Dialog.Close(all,true)</onclick>
                 <onclick condition="Skin.HasSetting(SkinUserLogin.Disabled)">System.LogOff</onclick>
                 <onclick condition="!Skin.HasSetting(SkinUserLogin.Disabled)">ActivateWindow(1195)</onclick>
                 <include>defs_dialog_button</include>
@@ -316,7 +316,7 @@
                 <onleft>$PARAM[onleft]</onleft>
                 <oninfo>$PARAM[onback]</oninfo>
                 <onback>$PARAM[onback]</onback>
-                <onclick>Action(Back)</onclick>
+                <onclick>Dialog.Close(all,true)</onclick>
                 <onclick>ActivateWindow(systeminfo)</onclick>
                 <include>defs_dialog_button</include>
             </control>
@@ -354,7 +354,7 @@
                 <onleft>$PARAM[onleft]</onleft>
                 <oninfo>$PARAM[onback]</oninfo>
                 <onback>$PARAM[onback]</onback>
-                <onclick>Action(Back)</onclick>
+                <onclick>Dialog.Close(all,true)</onclick>
                 <onclick>ActivateWindow(1161)</onclick>
                 <include>defs_dialog_button</include>
             </control>
@@ -376,7 +376,7 @@
                 <onleft>$PARAM[onleft]</onleft>
                 <oninfo>$PARAM[onback]</oninfo>
                 <onback>$PARAM[onback]</onback>
-                <onclick>Action(Back)</onclick>
+                <onclick>Dialog.Close(all,true)</onclick>
                 <onclick>$PARAM[onclick]</onclick>
                 <include>defs_dialog_button</include>
             </control>
@@ -398,7 +398,7 @@
                 <onleft>$PARAM[onleft]</onleft>
                 <oninfo>$PARAM[onback]</oninfo>
                 <onback>$PARAM[onback]</onback>
-                <onclick>Action(Back)</onclick>
+                <onclick>Dialog.Close(all,true)</onclick>
                 <onclick>ActivateWindow(settings)</onclick>
                 <include>defs_dialog_button</include>
             </control>
