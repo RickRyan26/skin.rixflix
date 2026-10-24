@@ -426,10 +426,15 @@
         <param name="percentage_visible">false</param>
         <param name="divider_visible">true</param>
         <definition>
+            <!-- Rick 2026-10-23 21:51: "12 Years a Slav|" / "STEVE MCQUEE|" on the Now Playing
+                 card. Nothing clipped the labels: DialogBusy's label-less card (right -24,
+                 width 138, so its left edge is 114px in from the shared right edge) is drawn
+                 over this card in the same colour while a movie starts, and the text ended
+                 100px in. Text stops 124px in, clear of that card and the spinner ring. -->
             <control type="group">
                 <top>25</top>
                 <height>40</height>
-                <right>100</right>
+                <right>124</right>
                 <control type="grouplist">
                     <orientation>horizontal</orientation>
                     <align>right</align>
@@ -443,7 +448,8 @@
                         <textcolor>main_fg_70</textcolor>
                         <shadowcolor>main_bg_30</shadowcolor>
                         <label>$PARAM[minilabel]</label>
-                        <width>auto</width>
+                        <!-- A capped auto width ellipsizes; the grouplist would cut mid-glyph. -->
+                        <width max="560">auto</width>
                         <align>right</align>
                         <height>40</height>
                         <centertop>30</centertop>
