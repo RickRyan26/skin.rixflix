@@ -72,6 +72,9 @@
         <stop>String.IsEmpty(Window(Home).Property(RixFlix.HomeReturn.Go))</stop>
         <onstart>ClearProperty(RixFlix.HomeReturn.Go,Home)</onstart>
         <onstart condition="Window.IsActive(11170)">Dialog.Close(1170,true)</onstart>
+        <!-- Search keeps always=false, so the focus it leaves with is restored on re-entry. Leaving on 7900 re-armed Go -->
+        <!-- from its own onfocus and bounced Home before any Back; park the saved focus on the edit field first. -->
+        <onstart condition="Window.IsActive(11105)">SetFocus(3000)</onstart>
         <onstart>ActivateWindow(Home)</onstart>
     </timer>
 </timers>
