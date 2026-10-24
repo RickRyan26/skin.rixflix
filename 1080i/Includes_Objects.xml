@@ -312,8 +312,8 @@
 
     <include name="Object_BusySpinner">
         <param name="colordiffuse">main_fg</param>
-        <param name="label">$LOCALIZE[31023]</param>
-        <param name="haslabel">true</param>
+        <param name="label" />
+        <param name="haslabel">false</param>
         <param name="hasspinner">true</param>
         <param name="hasprogress">false</param>
         <param name="texture">dialog/loading-back.png</param>

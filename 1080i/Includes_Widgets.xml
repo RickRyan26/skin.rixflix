@@ -215,9 +215,6 @@
                     <left>100</left>
                     <centertop>50%</centertop>
                     <height>80</height>
-                    <include content="Object_InfoCircle_Text_Top">
-                        <label>$LOCALIZE[31023]</label>
-                    </include>
                     <include content="Object_InfoCircle_Text_Sub">
                         <label>$PARAM[label]</label>
                     </include>

@@ -517,8 +517,8 @@
     </include>
 
     <include name="Furniture_Busy_Main">
-        <param name="mainlabel">$LOCALIZE[20186]</param>
-        <param name="minilabel">$LOCALIZE[31023]...</param>
+        <param name="mainlabel" />
+        <param name="minilabel" />
         <param name="haslabel">true</param>
         <param name="visible_delay" />
         <param name="visible_condition" />
@@ -570,8 +570,8 @@
     </include>
 
     <include name="Furniture_Busy">
-        <param name="mainlabel">$LOCALIZE[20186]</param>
-        <param name="minilabel">$LOCALIZE[31023]...</param>
+        <param name="mainlabel" />
+        <param name="minilabel" />
         <param name="hasspinner">false</param>
         <param name="hasprogress">false</param>
         <param name="haslabel">true</param>
