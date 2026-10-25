@@ -21,6 +21,15 @@ their existing contracts. Native window activation follows Kodi's
 `python3 scripts/validate_cinema.py` is the source structural check; device proof of
 playing and paused returns belongs to the parent pin/installer session.
 
+**1.12.42: fit the full label.** Pillow measures `Return to video` in the bundled
+`fonts/Inter-Bold.ttf` at 28px (`font_main_bold`) as 207.78px. CoreELEC Kodi
+[`CGUILabel::GetMaxWidth()` at 4665ec22](https://github.com/CoreELEC/xbmc/blob/4665ec22/xbmc/guilib/GUILabel.cpp#L226-L230)
+subtracts twice `textoffsetx` from the button width: the former 240px caller with
+24px offsets left only 192px, truncating the unfocused label and scrolling it on
+focus. Only Home spotlight button 311 now requests 280px, leaving 232px of text
+space (24.22px beyond the measurement). The shared button template, exact label,
+native return action and spotlight arrow navigation retain their existing contracts.
+
 
 ## 1.12.25: the seek bar stays up through a network seek
 

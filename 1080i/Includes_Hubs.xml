@@ -619,7 +619,7 @@
 
                         <param name="label">$VAR[Label_RixFlix_HomePlayButton]</param>
 
-                        <param name="width">240</param>
+                        <param name="width">280</param>
                         <param name="surface">rix_cinema_paper</param>
                         <param name="ink">rix_cinema_ink</param>
                         <!-- Rick 2026-10-20 21:13: white with black text, not red with white. -->
