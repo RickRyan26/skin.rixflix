@@ -1,5 +1,26 @@
 # Cinema presentation — 1.10.0
 
+## 1.12.41: Home Play returns to the existing video
+
+Home spotlight button 311 labels itself **Return to video** when
+`Window.IsActive(Home) + Player.HasVideo + !$EXP[Exp_RixFlix_PreviewPlaying]`.
+`Player.HasVideo` also covers paused video; testing `Player.Playing` would strand a
+paused movie behind Home. The existing preview expression excludes hover trailers.
+This branch only calls `ActivateWindow(fullscreenvideo)`, so it changes the window
+without stopping, starting, resuming or toggling the player.
+
+Every original onclick has the inverse guard, including trailer cleanup and focus
+restoration: returning to the movie must never select/play the spotlight title.
+Kodi's [`CGUIAction::ExecuteActions`](https://github.com/xbmc/xbmc/blob/master/xbmc/guilib/GUIAction.cpp)
+collects matching actions before executing any of them, so opening fullscreen does
+not re-evaluate the Home guard and fall through into the spotlight branch.
+Without a real background video, the original Play/folder label and ordered spotlight
+actions remain intact. Other hubs, Back, spotlight Left/Right and widget counts keep
+their existing contracts. Native window activation follows Kodi's
+[built-in function contract](https://kodi.wiki/view/List_of_built-in_functions).
+`python3 scripts/validate_cinema.py` is the source structural check; device proof of
+playing and paused returns belongs to the parent pin/installer session.
+
 
 ## 1.12.25: the seek bar stays up through a network seek
 

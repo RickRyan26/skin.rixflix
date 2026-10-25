@@ -544,6 +544,13 @@
         <animation effect="slide" start="0" end="0,440" time="400" tween="sine" easing="inout" reversible="true" condition="$EXP[Exp_Hubs_Spotlight_SlideDown]">Conditional</animation>
     </include>
 
+    <!-- HasVideo includes paused video; hover previews must keep the normal spotlight action. -->
+    <expression name="Exp_RixFlix_HomeReturnToVideo">[Window.IsActive(Home) + Player.HasVideo + !$EXP[Exp_RixFlix_PreviewPlaying]]</expression>
+    <variable name="Label_RixFlix_HomePlayButton">
+        <value condition="$EXP[Exp_RixFlix_HomeReturnToVideo]">Return to video</value>
+        <value>$VAR[Label_FullscreenWidget_PlayButton]</value>
+    </variable>
+
     <include name="Hub_Spotlight">
         <param name="window">Home</param>
         <param name="isolated_motion">false</param>
@@ -610,7 +617,7 @@
                     <include content="Hub_Spotlight_Button_Cinema">
                         <param name="id">311</param>
 
-                        <param name="label">$VAR[Label_FullscreenWidget_PlayButton]</param>
+                        <param name="label">$VAR[Label_RixFlix_HomePlayButton]</param>
 
                         <param name="width">240</param>
                         <param name="surface">rix_cinema_paper</param>
@@ -618,13 +625,14 @@
                         <!-- Rick 2026-10-20 21:13: white with black text, not red with white. -->
                         <param name="focus_surface">rix_cinema_paper</param>
                         <param name="focus_ink">rix_cinema_ink</param>
-                        <onclick condition="$EXP[Exp_RixFlix_AutoplayTrailer] + [String.IsEqual(Window(Home).Property(RixFlix.AutoplayTrailerResolved),Player.Filenameandpath) | String.IsEqual(Window(Home).Property(RixFlix.LocalTrailerPlaylist),Player.Filenameandpath)]">PlayerControl(Stop)</onclick>
-                        <onclick condition="$EXP[Exp_RixFlix_AutoplayTrailer]">ClearProperty(RixFlix.AutoplayTrailerResolved,Home)</onclick>
-                        <onclick condition="$EXP[Exp_RixFlix_AutoplayTrailer]">ClearProperty(RixFlix.AutoplayTrailer,Home)</onclick>
-                        <onclick>SetFocus(301)</onclick>
-                        <onclick condition="!String.StartsWith(Container(301).ListItem.FolderPath,videodb://)">Action(select)</onclick>
-                        <onclick condition="String.StartsWith(Container(301).ListItem.FolderPath,videodb://)">Action(play)</onclick>
-                        <onclick>SetFocus(311)</onclick>
+                        <onclick condition="$EXP[Exp_RixFlix_HomeReturnToVideo]">ActivateWindow(fullscreenvideo)</onclick>
+                        <onclick condition="!$EXP[Exp_RixFlix_HomeReturnToVideo] + $EXP[Exp_RixFlix_AutoplayTrailer] + [String.IsEqual(Window(Home).Property(RixFlix.AutoplayTrailerResolved),Player.Filenameandpath) | String.IsEqual(Window(Home).Property(RixFlix.LocalTrailerPlaylist),Player.Filenameandpath)]">PlayerControl(Stop)</onclick>
+                        <onclick condition="!$EXP[Exp_RixFlix_HomeReturnToVideo] + $EXP[Exp_RixFlix_AutoplayTrailer]">ClearProperty(RixFlix.AutoplayTrailerResolved,Home)</onclick>
+                        <onclick condition="!$EXP[Exp_RixFlix_HomeReturnToVideo] + $EXP[Exp_RixFlix_AutoplayTrailer]">ClearProperty(RixFlix.AutoplayTrailer,Home)</onclick>
+                        <onclick condition="!$EXP[Exp_RixFlix_HomeReturnToVideo]">SetFocus(301)</onclick>
+                        <onclick condition="!$EXP[Exp_RixFlix_HomeReturnToVideo] + !String.StartsWith(Container(301).ListItem.FolderPath,videodb://)">Action(select)</onclick>
+                        <onclick condition="!$EXP[Exp_RixFlix_HomeReturnToVideo] + String.StartsWith(Container(301).ListItem.FolderPath,videodb://)">Action(play)</onclick>
+                        <onclick condition="!$EXP[Exp_RixFlix_HomeReturnToVideo]">SetFocus(311)</onclick>
                         <include content="Hub_Spotlight_Button">
                             <param name="id">311</param>
                             <param name="window">$PARAM[window]</param>
