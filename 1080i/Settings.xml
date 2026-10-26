@@ -271,6 +271,21 @@
                     </control>
                 </include>
                 <include>Settings_InfoText</include>
+                <control type="label">
+                    <description>Automatic update status (read-only, published by RixFlix)</description>
+                    <left>480</left>
+                    <right>100</right>
+                    <bottom>120</bottom>
+                    <height>40</height>
+                    <align>left</align>
+                    <aligny>center</aligny>
+                    <scroll>true</scroll>
+                    <font>font_hint</font>
+                    <textcolor>dialog_fg_70</textcolor>
+                    <label>$INFO[Window(Home).Property(RixFlix.UpdateStatus)]</label>
+                    <visible>!String.IsEmpty(Window(Home).Property(RixFlix.UpdateStatus))</visible>
+                    <visible>!System.HasVisibleModalDialog</visible>
+                </control>
             </include>
         </include>
 
