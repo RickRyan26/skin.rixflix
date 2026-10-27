@@ -124,6 +124,13 @@
             <width>720</width>
             <right>-20</right>
             <visible>Player.HasMedia + !$EXP[Exp_RixFlix_PreviewPlaying]</visible>
+            <!-- 1.12.45 (Rick 2026-10-26 19:24 photo): an empty card with only the play icon
+                 bottom-right over Home's rows. Exp_RixFlix_PreviewPlaying needs Player.HasVideo,
+                 which a hover preview lacks while it opens and closes (Player.HasMedia already
+                 true/still true), and Player.Title is empty then. The resident owns the preview
+                 from its play call to Kodi's terminal callback and publishes LocalTrailerActive
+                 for exactly that span, so the card stays hidden for all of it. -->
+            <visible>String.IsEmpty(Window(Home).Property(RixFlix.LocalTrailerActive))</visible>
             <!-- Rick 2026-10-20 19:39: no card while the video (or visualisation) plays behind
                  the window - the picture already says what is playing. Same condition the
                  background uses to draw it, so the card returns on pause or with video off. -->

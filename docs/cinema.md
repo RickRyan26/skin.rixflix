@@ -1,5 +1,19 @@
 # Cinema presentation — 1.10.0
 
+## 1.12.45: no Now Playing card around a hover preview
+
+Rick's 2026-10-26 19:24 photo: a wide dark card bottom-right over the rows with nothing in
+it but the play icon. It is `Furniture_Player` (720px + the 24px card margins; the icon is
+`Image_NowPlaying_PlayPause`'s `play2.png`, not DialogBusy's RIX badge). Its preview guard,
+`!$EXP[Exp_RixFlix_PreviewPlaying]`, needs `Player.HasVideo`, and a hover preview has
+`Player.HasMedia` without video while it opens and while it closes; `Player.Title` is empty
+then, so the card drew blank. It now also requires
+`String.IsEmpty(Window(Home).Property(RixFlix.LocalTrailerActive))`: Rixflix's resident sets
+that at its play call and clears it only after Kodi's terminal callback, so it covers the
+whole preview lifetime, and a real movie start releases it on the next 50 ms tick.
+`validate_cinema.py` pins the guard. Rixflix `docs/home-theater.md` has the log evidence
+and the 2.5 s dwell that removes the open/close churn behind it.
+
 ## 1.12.44: four landscape New/Fresh rows
 
 Rick (2026-10-26): "break the (New Releases and Recently Added) up into 2 rows each; New

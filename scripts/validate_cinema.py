@@ -199,6 +199,9 @@ def check_home_rows(constants):
     # 1.12.21: no Now Playing card while the video plays behind; its text skips the divider.
     player = furniture.find("include[@name='Furniture_Player']/control")
     assert '$EXP[Exp_Video_IsNotPlaying]' in [v.text for v in player.findall('visible')]
+    # 1.12.45: nor for any part of an owned hover preview (it opens and closes without HasVideo).
+    assert 'String.IsEmpty(Window(Home).Property(RixFlix.LocalTrailerActive))' in \
+        [v.text for v in player.findall('visible')], 'empty Now Playing card over a preview open/close'
     floating = [i for i in player.iter('include') if i.get('content') == 'Furniture_Busy_FloatingText']
     assert [i.findtext("param[@name='divider_visible']") for i in floating] == ['false'], floating
     busy = cards(furniture.find("include[@name='Furniture_Busy_Main']"))
