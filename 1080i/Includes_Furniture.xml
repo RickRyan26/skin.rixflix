@@ -131,9 +131,12 @@
                  from its play call to Kodi's terminal callback and publishes LocalTrailerActive
                  for exactly that span, so the card stays hidden for all of it. -->
             <visible>String.IsEmpty(Window(Home).Property(RixFlix.LocalTrailerActive))</visible>
+            <!-- 1.12.46: Rick's paused Love Language on Home must leave the rows clear.
+                 Exp_Video_IsNotPlaying includes pause, so it cannot suppress this card. -->
+            <visible>!Player.Paused</visible>
             <!-- Rick 2026-10-20 19:39: no card while the video (or visualisation) plays behind
                  the window - the picture already says what is playing. Same condition the
-                 background uses to draw it, so the card returns on pause or with video off. -->
+                 background uses to draw it; the card can return with video off while unpaused. -->
             <visible>$EXP[Exp_Video_IsNotPlaying]</visible>
             <!-- Rick 2026-10-20: the Now Playing title, sub-label and progress ring (and the busy
                  spinner that opens over them while a movie starts) read over posters with no

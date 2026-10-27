@@ -1,5 +1,14 @@
 # Cinema presentation — 1.10.0
 
+## 1.12.46: no Now Playing card while paused
+
+Rick's 2026-10-26 Love Language photo shows the title, director and pause icon on the
+bottom-right card over Home. This is `Furniture_Player`; its existing
+`Exp_Video_IsNotPlaying` condition deliberately includes pause, so the earlier preview
+exclusion cannot hide it for a paused movie. The group now also requires
+`!Player.Paused`. The full-screen pause title and timeline remain in `DialogSeekBar.xml`;
+the Home footer no longer covers the rows during pause.
+
 ## 1.12.45: no Now Playing card around a hover preview
 
 Rick's 2026-10-26 19:24 photo: a wide dark card bottom-right over the rows with nothing in
