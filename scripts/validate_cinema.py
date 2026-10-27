@@ -134,10 +134,10 @@ def check_home_rows(constants):
         '[ControlGroup(310).HasFocus | Control.HasFocus(301) | [!ControlGroup(602).HasFocus + ')
     assert hubs.find("expression[@name='Hub_Spotlight_Visible_Expression']").text.startswith('[$EXP[Exp_Hubs_Spotlight_SlideDown] + ')
     assert '<param name="widgetfade_disable">![$EXP[Exp_Hubs_Spotlight_SlideDown]]</param>' in template
-    assert all('WidgetContainer),' + str(i) in motion[2].get('condition') for i in (301, 501, 502))
+    assert all('WidgetContainer),' + str(i) in motion[2].get('condition') for i in (301, 501, 502, 503, 504))
     # 1.12.15: inside 602 the lift keys on focus (same frame as the scroll), not the queued property.
     assert motion[2].get('condition').startswith(
-        '[ControlGroup(602).HasFocus + !Control.HasFocus(501) + !Control.HasFocus(502)] | [!ControlGroup(602).HasFocus + ')
+        '[ControlGroup(602).HasFocus + !Control.HasFocus(501) + !Control.HasFocus(502) + !Control.HasFocus(503) + !Control.HasFocus(504)] | [!ControlGroup(602).HasFocus + ')
     # 1.12.17: Home 602 scrolls on the grouplist default (400ms quadratic, Kodi's default ease
     # out) and the lift that coincides with it eases out too. An in-out scroll (1.12.15) made
     # every row change a slow start then a rush.

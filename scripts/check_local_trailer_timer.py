@@ -1,4 +1,4 @@
-"""Source gates for local New Releases hover; YouTube autoplay stays parked."""
+"""Source gates for local New/Fresh row hover; YouTube autoplay stays parked."""
 from pathlib import Path
 import xml.etree.ElementTree as ET
 
@@ -8,9 +8,10 @@ local = next(t for t in root.findall('timer') if t.findtext('name') == 'rixflix_
 start, stop = local.findtext('start'), local.findtext('stop')
 assert local.find('start').get('reset') == 'false'
 assert 'Skin.HasSetting(RixFlix.EnableLocalNewReleaseTrailers)' in start
-assert 'Control.HasFocus(501)' in start and 'Window.IsActive(home)' in start
+assert all('Control.HasFocus(%d)' % row in start for row in (501, 502, 503, 504)) and 'Window.IsActive(home)' in start
 assert '!Player.HasMedia' in start
-assert '!Control.HasFocus(501)' in stop and '!Window.IsActive(home)' in stop
+ROWS = '[Control.HasFocus(501) | Control.HasFocus(502) | Control.HasFocus(503) | Control.HasFocus(504)]'
+assert ROWS in start and '!' + ROWS in stop and '!Window.IsActive(home)' in stop
 assert 'LocalTrailerFocusID' in stop and 'LocalTrailerFocusType' in stop
 assert 'busydialog' in stop
 assert '$EXP[' not in start + stop

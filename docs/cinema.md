@@ -1,5 +1,18 @@
 # Cinema presentation — 1.10.0
 
+## 1.12.44: four landscape New/Fresh rows
+
+Rick (2026-10-26): "break the (New Releases and Recently Added) up into 2 rows each; New
+Movies, New Shows & Fresh Movies, Fresh Shows", with no title on two of them. Rixflix's
+row JSON now puts those four first (501 `Premiere`, 502-504 `PremiereFull`), then Continue
+Movies 505, Continue Shows 506 and Categories 507; the provider keeps them single-kind and
+disjoint. Every landscape row behaves as 502 always did: the one local-trailer timer keys
+on focus in 501-504, and the 301px lift exempts 501-504 (focus inside 602, or the queued
+`TMDbHelper.WidgetContainer` outside it), so all four drop by `home_premiere_drop` onto
+the spotlight stage and the poster rows stay below the screen. `check_local_trailer_timer.py`
+now pins the whole four-row focus group in start and its negation in stop (its old
+`!Control.HasFocus(501)` probe had matched nothing since the 1.12.11 `![…]` stop).
+
 ## 1.12.41: Home Play returns to the existing video
 
 Home spotlight button 311 labels itself **Return to video** when

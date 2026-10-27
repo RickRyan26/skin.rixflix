@@ -2,13 +2,13 @@
 <timers>
     <timer>
         <name>rixflix_local_new_release_trailer</name>
-        <description>Local-only New Releases / Recently Added hover selection; resident service owns playback</description>
+        <description>Local-only New/Fresh Movies/Shows (501-504) hover selection; resident service owns playback</description>
         <!-- ONE timer keyed on the focused row (Container.ListItem = the focused list on Home).
              Two per-row timers race: 502->501 runs 501's onstart, then 502's onstop clears it. -->
         <!-- No RunScript or resolver on focus. Keep running through natural end
              so one dwell cannot replay indefinitely. Timers cannot use $EXP. -->
-        <start reset="false">Skin.HasSetting(RixFlix.EnableLocalNewReleaseTrailers) + Window.IsActive(home) + [Control.HasFocus(501) | Control.HasFocus(502)] + !Player.HasMedia + !Window.IsVisible(busydialog) + !Window.IsVisible(busydialognocancel) + !String.IsEmpty(Container.ListItem.DBID) + !String.IsEmpty(Container.ListItem.Trailer)</start>
-        <stop>!Window.IsActive(home) | ![Control.HasFocus(501) | Control.HasFocus(502)] | Window.IsVisible(busydialog) | Window.IsVisible(busydialognocancel) | !String.IsEqual(Window(Home).Property(RixFlix.LocalTrailerFocusID),Container.ListItem.DBID) | !String.IsEqual(Window(Home).Property(RixFlix.LocalTrailerFocusType),Container.ListItem.DBTYPE)</stop>
+        <start reset="false">Skin.HasSetting(RixFlix.EnableLocalNewReleaseTrailers) + Window.IsActive(home) + [Control.HasFocus(501) | Control.HasFocus(502) | Control.HasFocus(503) | Control.HasFocus(504)] + !Player.HasMedia + !Window.IsVisible(busydialog) + !Window.IsVisible(busydialognocancel) + !String.IsEmpty(Container.ListItem.DBID) + !String.IsEmpty(Container.ListItem.Trailer)</start>
+        <stop>!Window.IsActive(home) | ![Control.HasFocus(501) | Control.HasFocus(502) | Control.HasFocus(503) | Control.HasFocus(504)] | Window.IsVisible(busydialog) | Window.IsVisible(busydialognocancel) | !String.IsEqual(Window(Home).Property(RixFlix.LocalTrailerFocusID),Container.ListItem.DBID) | !String.IsEqual(Window(Home).Property(RixFlix.LocalTrailerFocusType),Container.ListItem.DBTYPE)</stop>
         <onstart>SetProperty(RixFlix.LocalTrailerFocusID,$INFO[Container.ListItem.DBID],Home)</onstart>
         <onstart>SetProperty(RixFlix.LocalTrailerFocusType,$INFO[Container.ListItem.DBTYPE],Home)</onstart>
         <onstart>SetProperty(RixFlix.LocalTrailerMetadata,$ESCINFO[Container.ListItem.Trailer],Home)</onstart>
