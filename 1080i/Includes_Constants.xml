@@ -197,23 +197,15 @@
     <constant name="widget_grouplist_b_detailed">-880</constant>
     <constant name="widget_grouplist_b_home">-1010</constant>
 
-    <!-- Home rows (Rick, 2026-10-18: more poster, less chrome). Kodi's grouplist pitch is
-         Size = top + height per child, and a focused row scrolls to the viewport top when
-         viewport (1150) = list top (10) + list height. Row pitch is then
-         viewport + label top: 1150 - 754 = 396, i.e. a 371px poster plus a 25px gutter.
-         The title sits rotated in the 80px left margin, so no header row is reserved.
-         New Releases is always the first row (first focusable: Kodi scrolls it to 0), so
-         its card height difference is paid by its own list height, not by the next label.
-         New Releases cards are 16:9 landscape, 432x243 (Rick 2026-10-18 21:29: shorter, so
-         they cover less of the preview). The drop is 544 - card height, which keeps the
-         focused cards' bottom at y1060 (500 + drop + 16 + 243), where the 464px posters
-         ended. The row height follows the card, so Recently Added stays just below the
-         screen edge (y1085), as before. -->
+    <!-- Landscape rows: 243px cards + 25px gutter = 268px pitch.
+         Lists stay viewport-height for the same origin in either direction.
+         Focused cards end at y887, like posters; the next row starts at y912. -->
     <constant name="home_preview_w">1600</constant>
     <constant name="home_preview_h">900</constant>
-    <constant name="home_premiere_drop">301</constant>
-    <constant name="home_row_bump_h">754</constant>
+    <constant name="home_premiere_drop">128</constant>
+    <constant name="home_row_bump_h">882</constant>
     <constant name="home_row_label_t">-754</constant>
+    <constant name="home_premiere_label_t">-882</constant>
     <constant name="home_row_h">1140</constant>
     <constant name="home_row_offset_y">6</constant>
     <constant name="home_row_busy_t">-64</constant>
@@ -223,7 +215,7 @@
     <constant name="home_premiere_item_h">243</constant>
     <constant name="home_premiere_itemlayout_w">448</constant>
     <constant name="home_premiere_itemlayout_h">283</constant>
-    <constant name="home_premiere_row_h">1012</constant>
+    <constant name="home_premiere_row_h">1140</constant>
     <constant name="home_category_item_w">300</constant>
     <constant name="home_category_item_h">180</constant>
     <constant name="home_category_itemlayout_w">316</constant>

@@ -1,9 +1,7 @@
 <include content="Widget_Row">
-    <!-- Home rows: titles live inside the row (rotated in the left margin), cards are
-         16px apart and rows 396px apart. Geometry: home_* constants in Includes_Constants.xml.
-         Only New Releases' taller row extends its own list (see widget_home_height). -->
+    <!-- Landscape rows use a 268px pitch; poster rows retain 396px. -->
     <param name="widgetheight">{widget_home_height}</param>
-    <param name="labeltop">home_row_label_t</param>
+    <param name="labeltop">{widget_home_labeltop}</param>
     <param name="inline_label">true</param>
     <param name="inline_label_top">home_title_t</param>
     <param name="busy_top">home_row_busy_t</param>

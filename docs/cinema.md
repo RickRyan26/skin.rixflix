@@ -1,5 +1,21 @@
 # Cinema presentation — 1.10.0
 
+## 1.12.47: tighter New/Fresh rows and a fully visible final card
+
+Rick (2026-10-26) requested the next row peeking below focus and no clipped final
+item. Landscape rows now have a 268px pitch (243px artwork + 25px gutter), using
+style-specific label tops and viewport-height lists in both directions. The first
+row bumper cancels its label top. Their focused cards end at y887, matching poster
+rows; the next landscape row starts at y912 and Continue Movies peeks in at y1040.
+Home motion uses a 312px spotlight transition and 128px poster lift. The four-row
+preview membership and animation curves remain the same.
+
+The 448px landscape stride fits four complete cards from x80. A movement range of
+4 admitted a fifth focus slot at x1872; 3 ends at x1856, inside the right margin.
+Source: [Kodi fixedlist](https://github.com/xbmc/xbmc/blob/master/xbmc/guilib/GUIFixedListContainer.cpp)
+and [grouplist](https://github.com/xbmc/xbmc/blob/master/xbmc/guilib/GUIControlGroupList.cpp).
+
+
 ## 1.12.46: no Now Playing card while paused
 
 Rick's 2026-10-26 Love Language photo shows the title, director and pause icon on the

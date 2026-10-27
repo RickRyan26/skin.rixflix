@@ -82,11 +82,16 @@ def check_home_rows(constants):
     pitch = viewport + num('home_row_label_t')
     card_top = row_top + num('home_row_offset_y')
     assert 16 <= pitch - sh <= 40, ('row gap', pitch - sh)
-    assert num('home_row_bump_h') == -num('home_row_label_t'), 'first row starts at the viewport top'
+    assert num('home_row_bump_h') == -num('home_premiere_label_t'), 'first row starts at the viewport top'
     assert num('home_row_list_l') + num('home_row_list_offx') == num('view_offx'), 'cards stay at x=80'
     assert num('home_row_list_l') == num('view_offx') - num('home_row_gap_w'), 'previous card ends at the list edge'
     assert num('home_row_list_l') >= num('view_pad') + num('home_title_left') + 40 / 2, 'title margin is clear'
-    assert num('home_premiere_row_h') - num('home_row_h') == round(ph - sh), 'New Releases pays its own height'
+    assert num('home_premiere_row_h') == num('home_row_h'), 'every row remains viewport-height'
+    landscape_pitch = viewport + num('home_premiere_label_t')
+    assert landscape_pitch - ph == 25, 'landscape gutter matches poster gutter'
+    premiere_list = lists.find("include[@name='List_Premiere_Row']/definition/include")
+    movement = int(premiere_list.findtext('movement'))
+    assert num('view_offx') + movement * num('home_premiere_itemlayout_w') + pw <= 1920 - num('home_row_gap_w'), 'last focused card fits'
     # Focused rows start at y500 (940 - 440); one full row and most of the next fit.
     assert 500 + pitch + card_top + sh * 0.4 <= 1080, ('at least 40% of the next row must show', pitch)
     # Kodi clips the label's PRE-rotation rect to the grouplist (x >= 0): the rect must
@@ -97,7 +102,7 @@ def check_home_rows(constants):
 
     template = (ROOT / 'shortcuts/generator/data/parts/widgets_row.xmltemplate').read_text()
     for marker in ('<param name="widgetheight">{widget_home_height}</param>',
-                   '<param name="labeltop">home_row_label_t</param>',
+                   '<param name="labeltop">{widget_home_labeltop}</param>',
                    '<param name="inline_label">true</param>',
                    '<param name="include">{widget_home_include}</param>'):
         assert marker in template, marker
@@ -126,7 +131,7 @@ def check_home_rows(constants):
     # ancestor440/child301 animation lifecycles. Spotlight visuals move separately.
     assert not grouplist.findall('animation'), 'Home must not inherit the old row compensation'
     motion = hubs.findall("include[@name='Hub_Home_Rows_Motion']/animation")
-    assert [a.get('end') for a in motion] == ['0,-139', '0,139', '0,-301']
+    assert [a.get('end') for a in motion] == ['0,-312', '0,312', '0,-128']
     assert motion[1].get('condition') == '$EXP[Exp_Hubs_Spotlight_SlideDown]'
     # 1.12.16: spotlight state follows focus first; the queued WidgetContainer only off 310/301/602.
     exprs = ET.parse(ROOT / '1080i/Includes_Expressions.xml').getroot()
@@ -172,15 +177,12 @@ def check_home_rows(constants):
     assert rule('widget_home_include', 'PremiereFull') == 'List_Premiere_Row'
     assert rule('widget_include', 'PremiereFull') == 'List_Premiere_Row'
     assert rules.find("rules[@name='widget_home_height']/rule[condition='{item_widget_style}==PremiereFull']") is None
-    added_bottom = 940 - 440 + num('home_premiere_drop') + card_top + ph
-    assert added_bottom == 1060, ('Recently Added cards share the New Releases bottom edge', added_bottom)
-    below_added = 940 - 440 + num('home_premiere_drop') + row_top + num('home_row_h') + num('home_row_label_t') + card_top
-    assert below_added >= 1080, ('Continue Movies must stay below the screen edge', below_added)
-    poster_bottom = 940 - 440 + num('home_premiere_drop') + card_top + ph
-    assert poster_bottom == 1060, ('New Releases cards keep the 1.12.9 bottom edge', poster_bottom)
-    # The row below stays off screen while New Releases is focused (the cards' row pays its height).
-    next_row = 940 - 440 + num('home_premiere_drop') + num('widget_items_t_detailed') + num('home_premiere_row_h') + num('home_row_label_t') + card_top
-    assert next_row >= 1080, ('Recently Added must stay below the screen edge', next_row)
+    assert rule('widget_home_labeltop', 'Premiere') == 'home_premiere_label_t'
+    assert rule('widget_home_labeltop', 'PremiereFull') == 'home_premiere_label_t'
+    landscape_top = 940 - 440 + num('home_premiere_drop') + card_top
+    assert landscape_top + ph == round(500 + card_top + sh) == 887, 'same card bottom for every style'
+    assert 1080 - (landscape_top + landscape_pitch) >= ph * .5, 'next landscape row peeks into view'
+    assert 1080 - (landscape_top + pitch) >= 40, 'Continue row also peeks below Fresh Shows'
     info = hubs.find("include[@name='Hub_Combined_Info']")
     assert 'Trailer' not in ET.tostring(info, encoding='unicode')
     panel = params(info.findall('.//include[@content="Info_Panel"]')[-1])

@@ -897,7 +897,8 @@
                 <param name="hidden_button">$PARAM[hidden_button]</param>
                 <nested />
                 <left>home_row_list_l</left>
-                <movement>4</movement>
+                <!-- Four full cards fit; a fifth focus slot clips the final card. -->
+                <movement>3</movement>
             </include>
         </definition>
     </include>

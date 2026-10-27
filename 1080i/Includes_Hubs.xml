@@ -316,16 +316,16 @@
          where it began, which was the Play <-> New Releases jitter. Never use quadratic
          in-out; sine and cubic in-out are correct. -->
     <include name="Hub_Home_Rows_Motion">
-        <animation effect="slide" start="0" end="0,-139" condition="true">Conditional</animation>
-        <animation effect="slide" start="0" end="0,139" time="400" tween="sine" easing="inout" reversible="true" condition="$EXP[Exp_Hubs_Spotlight_SlideDown]">Conditional</animation>
-        <!-- 1.12.15: the 301px poster-row lift keys on focus inside 602, so it starts on the
+        <animation effect="slide" start="0" end="0,-312" condition="true">Conditional</animation>
+        <animation effect="slide" start="0" end="0,312" time="400" tween="sine" easing="inout" reversible="true" condition="$EXP[Exp_Hubs_Spotlight_SlideDown]">Conditional</animation>
+        <!-- 1.12.15: the 128px poster-row lift keys on focus inside 602, so it starts on the
              grouplist scroll's own frame (WidgetContainer arrives a frame or two later through
              onfocus's queued message); outside 602 (spotlight, a dialog over Home) the property
              keeps it. 1.12.17: it eases out like the scroll. 1.12.15 instead moved the scroll to
              in-out to match this, and every row change became a slow start then a rush.
              1.12.44: Home splits New/Recently Added into four landscape rows (501-504, New
              Movies/Shows, Fresh Movies/Shows); all four sit on the spotlight stage unlifted. -->
-        <animation effect="slide" start="0" end="0,-301" time="400" tween="quadratic" easing="out" reversible="true" condition="[ControlGroup(602).HasFocus + !Control.HasFocus(501) + !Control.HasFocus(502) + !Control.HasFocus(503) + !Control.HasFocus(504)] | [!ControlGroup(602).HasFocus + !Integer.IsEqual(Window.Property(TMDbHelper.WidgetContainer),301) + !Integer.IsEqual(Window.Property(TMDbHelper.WidgetContainer),501) + !Integer.IsEqual(Window.Property(TMDbHelper.WidgetContainer),502) + !Integer.IsEqual(Window.Property(TMDbHelper.WidgetContainer),503) + !Integer.IsEqual(Window.Property(TMDbHelper.WidgetContainer),504)]">Conditional</animation>
+        <animation effect="slide" start="0" end="0,-128" time="400" tween="quadratic" easing="out" reversible="true" condition="[ControlGroup(602).HasFocus + !Control.HasFocus(501) + !Control.HasFocus(502) + !Control.HasFocus(503) + !Control.HasFocus(504)] | [!ControlGroup(602).HasFocus + !Integer.IsEqual(Window.Property(TMDbHelper.WidgetContainer),301) + !Integer.IsEqual(Window.Property(TMDbHelper.WidgetContainer),501) + !Integer.IsEqual(Window.Property(TMDbHelper.WidgetContainer),502) + !Integer.IsEqual(Window.Property(TMDbHelper.WidgetContainer),503) + !Integer.IsEqual(Window.Property(TMDbHelper.WidgetContainer),504)]">Conditional</animation>
     </include>
 
     <!-- Motion debug strip (Rixflix am9/rixflix-home-motion-strip.py). Hidden unless the probe sets
