@@ -182,7 +182,9 @@ def check_home_rows(constants):
     landscape_top = 940 - 440 + num('home_premiere_drop') + card_top
     assert landscape_top + ph == round(500 + card_top + sh) == 887, 'same card bottom for every style'
     assert 1080 - (landscape_top + landscape_pitch) >= ph * .5, 'next landscape row peeks into view'
-    assert 1080 - (landscape_top + pitch) >= 40, 'Continue row also peeks below Fresh Shows'
+    # 1.12.48: Continue Movies follows Fresh Shows at the landscape gutter, not 128px lower.
+    lead = rules.find("rules[@name='widget_home_labeltop']/rule[condition='{item_widget_labeltop}==Premiere']/value")
+    assert lead is not None and lead.text == 'home_premiere_label_t', 'Continue Movies keeps the 25px gutter'
     info = hubs.find("include[@name='Hub_Combined_Info']")
     assert 'Trailer' not in ET.tostring(info, encoding='unicode')
     panel = params(info.findall('.//include[@content="Info_Panel"]')[-1])

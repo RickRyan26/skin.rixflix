@@ -104,6 +104,13 @@
             <condition>{item_widget_style}==PremiereFull</condition>
             <value>home_premiere_label_t</value>
         </rule>
+        <!-- The first poster row after the landscape rows (1.12.48): its label spacer sets
+             only the distance from the row above (the list is viewport-height, so focus
+             still scrolls it to the same origin), so it takes the landscape 25px gutter. -->
+        <rule>
+            <condition>{item_widget_labeltop}==Premiere</condition>
+            <value>home_premiere_label_t</value>
+        </rule>
         <rule>
             <condition>True</condition>
             <value>home_row_label_t</value>

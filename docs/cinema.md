@@ -1,5 +1,17 @@
 # Cinema presentation — 1.10.0
 
+## 1.12.48: Continue Movies sits one gutter below Fresh Shows
+
+Rick (2026-10-27, photo of the TV): an extra-large gap between Fresh Shows and Continue
+Movies. Each Home row is two grouplist children, a label spacer (`labeltop`) and a
+viewport-height list, so the distance from one list to the next is
+`viewport + labeltop(next)`. Landscape rows use -882 (268px pitch, 25px gutter); poster rows
+kept -754, so the first poster row after Fresh Shows sat 128px lower (peek at y1040 instead
+of y912). Rixflix's row JSON now marks Continue Movies `widget_labeltop: Premiere`, which
+maps it to `home_premiere_label_t`. Focus positions are unchanged: a viewport-height list
+always scrolls to its own offset in both directions, and the spacer only moves the row while
+it is unfocused. Continue Shows and Categories keep the poster pitch.
+
 ## 1.12.47: tighter New/Fresh rows and a fully visible final card
 
 Rick (2026-10-26) requested the next row peeking below focus and no clipped final
