@@ -1,5 +1,19 @@
 # Cinema presentation — 1.10.0
 
+## 1.12.49: Down off the keyboard's bottom row runs the search
+
+Rick (2026-10-31): Up from Home opens the search keyboard, and Down from its bottom
+button row (Done, Cancel, Shift, Caps, Symbols, IP, Space, Backspace, Left, Right)
+should close it and search. That row had no `<ondown>`, so Down did nothing there. Each
+of its ten keys now runs `SendClick(300)` on Down. 300 is Kodi's `CTL_BUTTON_DONE`, whose
+click calls `OnOK()` (`GUIDialogKeyboardGeneric.cpp`), so this is exactly a Done press: it
+commits the term once and the search window shows the results. The key runs only while
+the search window (11105) is under the keyboard. Other keyboards, such as settings
+and passwords, keep Down as a no-op, so a stray press cannot submit
+their half-typed text. `SendClick` reaches the topmost modal dialog, which is the keyboard.
+Because the dialog doesn't special-case Down, an `<ondown>` made only of built-ins has no
+fallthrough here. The Back-handler rule applies only to window switches.
+
 ## 1.12.48: Continue Movies sits one gutter below Fresh Shows
 
 Rick (2026-10-27, photo of the TV): an extra-large gap between Fresh Shows and Continue
