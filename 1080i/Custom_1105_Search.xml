@@ -8,6 +8,7 @@
     <onunload>ClearProperty(RixFlix.SearchReturn.Go,Home)</onunload>
     <onunload>ClearProperty(RixFlix.SearchReturn.Window,Home)</onunload>
     <onunload>ClearProperty(RixFlix.SearchReturn.Path,Home)</onunload>
+    <onunload>ClearProperty(RixFlix.SearchDown,Home)</onunload>
 
     <include content="Hub_Onload">
         <param name="window_id">1105</param>

@@ -302,7 +302,10 @@
 
             <onup condition="!Skin.HasSetting(Search.DisableDiscover) + !Skin.HasSetting(Search.DisableCombined)">RunPlugin(plugin://plugin.video.themoviedb.helper/?info=user_discover$INFO[Window(Home).Property(TMDbHelper.UserDiscover.Folderpath.ParamString),&amp;,])</onup>
             <ondown condition="Integer.IsGreater(Container(502).NumItems,0)">502</ondown>
-            <ondown condition="Integer.IsEqual(Container(502).NumItems,0)">7900</ondown>
+            <!-- A commit leaves 502 empty for ~1.3 s. A Down then is a request for the results, not -->
+            <!-- for Home: hold it, and rixflix_search_down lands it on 502 once they arrive. -->
+            <ondown condition="Integer.IsEqual(Container(502).NumItems,0) + $EXP[Exp_RixFlix_Search_Loading]">SetProperty(RixFlix.SearchDown,1,Home)</ondown>
+            <ondown condition="Integer.IsEqual(Container(502).NumItems,0) + !$EXP[Exp_RixFlix_Search_Loading]">7900</ondown>
             <onback>7900</onback>
 
             <texturefocus />

@@ -1,5 +1,19 @@
 # Cinema presentation — 1.10.0
 
+## 1.12.50: a Down while results load lands on them, never Home
+
+A commit leaves results row 502 empty for the ~1.3 s it takes to load. On the search field,
+Down with 502 empty meant "no results, go Home" (7900), so the Down-Down that 1.12.49
+invites (or a held Down) threw the viewer back to Home mid-search. Now, while
+`Exp_RixFlix_Search_Loading` is true, Down only sets `Window(Home).Property(RixFlix.SearchDown)`.
+The `rixflix_search_down` timer then moves focus to 502 once it has items, if focus is
+still on the field. It stops without moving focus when loading ends empty, when the viewer
+moves, or after 5 s. The empty-results Down still goes Home once loading has finished. The
+timer inlines the loading expression because `Timers.xml` cannot use `$EXP`. Search's
+`<onunload>` clears the property. `validate_cinema.py` asserts both 1.12.49 and 1.12.50.
+There is only one results row (`DefaultSearch-All`, movies and shows together), so 502 is
+the only target: a TV-only match also lands there.
+
 ## 1.12.49: Down off the keyboard's bottom row runs the search
 
 Rick (2026-10-31): Up from Home opens the search keyboard, and Down from its bottom

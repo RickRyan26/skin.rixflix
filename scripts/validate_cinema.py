@@ -339,7 +339,20 @@ def check():
     search_root = ET.parse(ROOT / '1080i/Includes_Search.xml').getroot()
     edit = search_root.find("include[@name='Search_Bar_Edit']/control[@id='3000']")
     assert edit.findtext('onback') == '7900'
-    assert {n.text for n in edit.findall('ondown')} == {'502', '7900'}
+    # 1.12.50: a Down while results load is held for 502, never sent Home.
+    downs = {n.text: n.get('condition', '') for n in edit.findall('ondown')}
+    assert set(downs) == {'502', '7900', 'SetProperty(RixFlix.SearchDown,1,Home)'}, downs
+    assert '!$EXP[Exp_RixFlix_Search_Loading]' in downs['7900'], 'empty-results Down must not fire while loading'
+    held = ET.parse(ROOT / '1080i/Timers.xml').getroot().find("timer[name='rixflix_search_down']")
+    assert held is not None and any(n.text == 'SetFocus(502)' for n in held.findall('onstop'))
+    assert held.findall('onstop')[-1].text == 'ClearProperty(RixFlix.SearchDown,Home)'
+    # 1.12.49: Down off the keyboard's bottom row is a Done press while search is underneath.
+    keys = ET.parse(ROOT / '1080i/Dialog_DialogKeyboard.xml').getroot().find(
+        "include[@name='DialogKeyboard_Row_Buttons_SYMBOL']")
+    bottom = keys.findall('include')
+    assert len(bottom) == 10 and all(
+        [(n.text, n.get('condition')) for n in key.findall('ondown')] == [('SendClick(300)', 'Window.IsVisible(11105)')]
+        for key in bottom), 'every bottom-row key commits on Down'
     options = ET.parse(ROOT / '1080i/Custom_1170_Dialog_Options.xml').getroot()
     opt = options.find('.//include[@content="DialogView"]')
     assert params(opt)['onback'] == params(opt)['top_onup'] == '7900'
