@@ -2,6 +2,7 @@
 <window>
 
     <defaultcontrol always="true">300</defaultcontrol>
+    <onload>ClearProperty(RixFlix.SearchSymbols,Home)</onload>
     <onload condition="Window.IsVisible(11105) + !System.HasHiddenInput">SetFocus(400)</onload>
 
     <controls>

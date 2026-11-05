@@ -821,6 +821,10 @@
                 <onup>409</onup><ondown>300</ondown>
             </control>
             <control type="radiobutton" id="304">
+                <!-- A radiobutton exposes no selected infobool, and a key types its own label, so the numeric
+                     layer's labels follow this property. Native OnSymbols still flips m_keyType. -->
+                <onclick condition="String.IsEmpty(Window(Home).Property(RixFlix.SearchSymbols))">SetProperty(RixFlix.SearchSymbols,1,Home)</onclick>
+                <onclick condition="!String.IsEmpty(Window(Home).Property(RixFlix.SearchSymbols))">ClearProperty(RixFlix.SearchSymbols,Home)</onclick>
                 <left>24</left><top>240</top><width>76</width><height>56</height>
                 <label>$VAR[RixFlix_SearchSymbolsLabel]</label><font>font_mini</font>
                 <align>center</align><aligny>center</aligny><textoffsetx>0</textoffsetx>
@@ -928,111 +932,111 @@
         </control>
     </include>
     <variable name="RixFlix_SearchKey0">
-        <value condition="Control.IsSelected(304)">1</value>
+        <value condition="!String.IsEmpty(Window(Home).Property(RixFlix.SearchSymbols))">1</value>
         <value>Q</value>
     </variable>
     <variable name="RixFlix_SearchKey1">
-        <value condition="Control.IsSelected(304)">2</value>
+        <value condition="!String.IsEmpty(Window(Home).Property(RixFlix.SearchSymbols))">2</value>
         <value>W</value>
     </variable>
     <variable name="RixFlix_SearchKey2">
-        <value condition="Control.IsSelected(304)">3</value>
+        <value condition="!String.IsEmpty(Window(Home).Property(RixFlix.SearchSymbols))">3</value>
         <value>E</value>
     </variable>
     <variable name="RixFlix_SearchKey3">
-        <value condition="Control.IsSelected(304)">4</value>
+        <value condition="!String.IsEmpty(Window(Home).Property(RixFlix.SearchSymbols))">4</value>
         <value>R</value>
     </variable>
     <variable name="RixFlix_SearchKey4">
-        <value condition="Control.IsSelected(304)">5</value>
+        <value condition="!String.IsEmpty(Window(Home).Property(RixFlix.SearchSymbols))">5</value>
         <value>T</value>
     </variable>
     <variable name="RixFlix_SearchKey5">
-        <value condition="Control.IsSelected(304)">6</value>
+        <value condition="!String.IsEmpty(Window(Home).Property(RixFlix.SearchSymbols))">6</value>
         <value>Y</value>
     </variable>
     <variable name="RixFlix_SearchKey6">
-        <value condition="Control.IsSelected(304)">7</value>
+        <value condition="!String.IsEmpty(Window(Home).Property(RixFlix.SearchSymbols))">7</value>
         <value>U</value>
     </variable>
     <variable name="RixFlix_SearchKey7">
-        <value condition="Control.IsSelected(304)">8</value>
+        <value condition="!String.IsEmpty(Window(Home).Property(RixFlix.SearchSymbols))">8</value>
         <value>I</value>
     </variable>
     <variable name="RixFlix_SearchKey8">
-        <value condition="Control.IsSelected(304)">9</value>
+        <value condition="!String.IsEmpty(Window(Home).Property(RixFlix.SearchSymbols))">9</value>
         <value>O</value>
     </variable>
     <variable name="RixFlix_SearchKey9">
-        <value condition="Control.IsSelected(304)">0</value>
+        <value condition="!String.IsEmpty(Window(Home).Property(RixFlix.SearchSymbols))">0</value>
         <value>P</value>
     </variable>
     <variable name="RixFlix_SearchKey10">
-        <value condition="Control.IsSelected(304)">&amp;</value>
+        <value condition="!String.IsEmpty(Window(Home).Property(RixFlix.SearchSymbols))">&amp;</value>
         <value>A</value>
     </variable>
     <variable name="RixFlix_SearchKey11">
-        <value condition="Control.IsSelected(304)">+</value>
+        <value condition="!String.IsEmpty(Window(Home).Property(RixFlix.SearchSymbols))">+</value>
         <value>S</value>
     </variable>
     <variable name="RixFlix_SearchKey12">
-        <value condition="Control.IsSelected(304)">&#x27;</value>
+        <value condition="!String.IsEmpty(Window(Home).Property(RixFlix.SearchSymbols))">&#x27;</value>
         <value>D</value>
     </variable>
     <variable name="RixFlix_SearchKey13">
-        <value condition="Control.IsSelected(304)">&quot;</value>
+        <value condition="!String.IsEmpty(Window(Home).Property(RixFlix.SearchSymbols))">&quot;</value>
         <value>F</value>
     </variable>
     <variable name="RixFlix_SearchKey14">
-        <value condition="Control.IsSelected(304)">(</value>
+        <value condition="!String.IsEmpty(Window(Home).Property(RixFlix.SearchSymbols))">(</value>
         <value>G</value>
     </variable>
     <variable name="RixFlix_SearchKey15">
-        <value condition="Control.IsSelected(304)">)</value>
+        <value condition="!String.IsEmpty(Window(Home).Property(RixFlix.SearchSymbols))">)</value>
         <value>H</value>
     </variable>
     <variable name="RixFlix_SearchKey16">
-        <value condition="Control.IsSelected(304)">-</value>
+        <value condition="!String.IsEmpty(Window(Home).Property(RixFlix.SearchSymbols))">-</value>
         <value>J</value>
     </variable>
     <variable name="RixFlix_SearchKey17">
-        <value condition="Control.IsSelected(304)">:</value>
+        <value condition="!String.IsEmpty(Window(Home).Property(RixFlix.SearchSymbols))">:</value>
         <value>K</value>
     </variable>
     <variable name="RixFlix_SearchKey18">
-        <value condition="Control.IsSelected(304)">/</value>
+        <value condition="!String.IsEmpty(Window(Home).Property(RixFlix.SearchSymbols))">/</value>
         <value>L</value>
     </variable>
     <variable name="RixFlix_SearchKey19">
-        <value condition="Control.IsSelected(304)">.</value>
+        <value condition="!String.IsEmpty(Window(Home).Property(RixFlix.SearchSymbols))">.</value>
         <value>Z</value>
     </variable>
     <variable name="RixFlix_SearchKey20">
-        <value condition="Control.IsSelected(304)">,</value>
+        <value condition="!String.IsEmpty(Window(Home).Property(RixFlix.SearchSymbols))">,</value>
         <value>X</value>
     </variable>
     <variable name="RixFlix_SearchKey21">
-        <value condition="Control.IsSelected(304)">!</value>
+        <value condition="!String.IsEmpty(Window(Home).Property(RixFlix.SearchSymbols))">!</value>
         <value>C</value>
     </variable>
     <variable name="RixFlix_SearchKey22">
-        <value condition="Control.IsSelected(304)">?</value>
+        <value condition="!String.IsEmpty(Window(Home).Property(RixFlix.SearchSymbols))">?</value>
         <value>V</value>
     </variable>
     <variable name="RixFlix_SearchKey23">
-        <value condition="Control.IsSelected(304)">@</value>
+        <value condition="!String.IsEmpty(Window(Home).Property(RixFlix.SearchSymbols))">@</value>
         <value>B</value>
     </variable>
     <variable name="RixFlix_SearchKey24">
-        <value condition="Control.IsSelected(304)">é</value>
+        <value condition="!String.IsEmpty(Window(Home).Property(RixFlix.SearchSymbols))">é</value>
         <value>N</value>
     </variable>
     <variable name="RixFlix_SearchKey25">
-        <value condition="Control.IsSelected(304)">%</value>
+        <value condition="!String.IsEmpty(Window(Home).Property(RixFlix.SearchSymbols))">%</value>
         <value>M</value>
     </variable>
     <variable name="RixFlix_SearchSymbolsLabel">
-        <value condition="Control.IsSelected(304)">ABC</value><value>123</value>
+        <value condition="!String.IsEmpty(Window(Home).Property(RixFlix.SearchSymbols))">ABC</value><value>123</value>
     </variable>
 
 </includes>
