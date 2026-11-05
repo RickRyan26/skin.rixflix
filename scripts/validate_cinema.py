@@ -374,8 +374,13 @@ def check():
     keyboard = ET.parse(ROOT / '1080i/Dialog_DialogKeyboard.xml').getroot()
     compact = keyboard.find("include[@name='RixFlix_SearchKeyboard']/control")
     buttons = [c for c in compact.findall('control') if c.get('type') in ('button', 'radiobutton')]
-    assert len(buttons) == 30 and {int(c.get('id')) for c in buttons} == set(range(400, 426)) | {8, 32, 300, 304}
-    assert compact.findtext('width') == '880' and compact.findtext('height') == '384'
+    assert len(buttons) == 32 and {int(c.get('id')) for c in buttons} == set(range(400, 428)) | {8, 32, 300, 304}
+    assert compact.findtext('width') == '628' and compact.findtext('height') == '440'
+    assert compact.find("control[@id='300']").findtext('visible') == 'false', 'search is automatic: no visible Done'
+    assert not [c for c in compact.findall("control[@type='label']") if c.findtext('label')], 'no hint text row'
+    letter_row = [keyboard.find("variable[@name='RixFlix_SearchKey%d']" % i).findall('value')[-1].text for i in range(28)]
+    assert ''.join(letter_row) == "ABCDEFGHIJKLMNOPQRSTUVWXYZ-'", 'alphabetical 7 x 4 grid: %r' % letter_row
+    assert [compact.find("control[@id='%d']" % i).findtext('label') for i in (32, 8)] == ['SPACE', 'DELETE']
     assert not compact.findall(".//control[@type='list']"), 'Search has no suggestion list'
     assert not [c for c in buttons if c.get('type') == 'radiobutton'], 'a textureless radiobutton draws On/Off over its label'
     assert all(compact.find("control[@id='%d']" % i) is not None for i in (312, 313, 314)), 'native edit/IME controls'
