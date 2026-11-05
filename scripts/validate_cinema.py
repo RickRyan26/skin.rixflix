@@ -378,6 +378,8 @@ def check():
     assert compact.findtext('width') == '628' and compact.findtext('height') == '440'
     assert compact.find("control[@id='300']").findtext('visible') == 'false', 'search is automatic: no visible Done'
     assert not [c for c in compact.findall("control[@type='label']") if c.findtext('label')], 'no hint text row'
+    search = ET.parse(ROOT / '1080i/Includes_Search.xml').getroot()
+    assert search.find("include[@name='Search_Info_Panel']/control").findtext('visible') == '!Window.IsActive(DialogKeyboard.xml)', 'no hero text beside the keyboard'
     letter_row = [keyboard.find("variable[@name='RixFlix_SearchKey%d']" % i).findall('value')[-1].text for i in range(28)]
     assert ''.join(letter_row) == "ABCDEFGHIJKLMNOPQRSTUVWXYZ-'", 'alphabetical 7 x 4 grid: %r' % letter_row
     assert [compact.find("control[@id='%d']" % i).findtext('label') for i in (32, 8)] == ['SPACE', 'DELETE']

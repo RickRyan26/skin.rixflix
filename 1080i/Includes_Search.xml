@@ -97,6 +97,8 @@
 
     <include name="Search_Info_Panel">
         <control type="group">
+            <!-- The 628-wide keyboard covers less than the plot; nothing peeks out beside it. -->
+            <visible>!Window.IsActive(DialogKeyboard.xml)</visible>
             <include content="Hub_Combined_Info" condition="!Skin.HasSetting(Search.DisableDiscover) + !Skin.HasSetting(Search.DisableCombined)">
                 <param name="id">501</param>
             </include>
