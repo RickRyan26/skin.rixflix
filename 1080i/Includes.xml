@@ -18,6 +18,7 @@
     <include file="Includes_Settings.xml" />
     <include file="Includes_SkinSettings.xml" />
     <include file="Includes_Hubs.xml" />
+    <include file="Includes_CategoryHub.xml" />
     <include file="Includes_Categories.xml" />
     <include file="Includes_Background.xml" />
     <include file="Includes_Expressions.xml" />

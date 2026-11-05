@@ -942,6 +942,11 @@
                 <param name="offset_x">home_row_list_offx</param>
                 <param name="hidden_button_enabled">$PARAM[hidden_button_enabled]</param>
                 <param name="hidden_button">$PARAM[hidden_button]</param>
+                <!-- Native actions replace the old one-list destination. -->
+                <onclick>SetProperty(RixFlix.Category,$INFO[ListItem.Property(RixFlix.CategoryKey)],Home)</onclick>
+                <onclick>SetProperty(RixFlix.CategoryLabel,$ESCINFO[ListItem.Label],Home)</onclick>
+                <onclick>ClearProperty(RixFlix.CategoryReady,Home)</onclick>
+                <onclick>ActivateWindow(1101)</onclick>
                 <nested />
                 <left>home_row_list_l</left>
                 <movement>4</movement>

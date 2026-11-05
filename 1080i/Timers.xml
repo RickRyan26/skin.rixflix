@@ -87,4 +87,18 @@
         <onstop condition="Window.IsActive(11105) + Control.HasFocus(3000) + [Integer.IsGreater(Container(502).NumItems,0) + String.IsEqual(Container(502).ListItem.Property(RixFlix.SearchText),Window(Home).Property(RixFlix.SearchText))]">SetFocus(502)</onstop>
         <onstop>ClearProperty(RixFlix.SearchDown,Home)</onstop>
     </timer>
+    <timer>
+        <name>rixflix_category_return</name>
+        <start reset="true">Window.IsActive(11101) + !String.IsEmpty(Window(Home).Property(RixFlix.CategoryReturn.Go))</start>
+        <stop>String.IsEmpty(Window(Home).Property(RixFlix.CategoryReturn.Go))</stop>
+        <onstart>ClearProperty(RixFlix.CategoryReturn.Go,Home)</onstart>
+        <onstart>SetFocus(8901)</onstart>
+        <onstart>ActivateWindow(Home)</onstart>
+    </timer>
+    <timer>
+        <name>rixflix_category_ready</name>
+        <start reset="true">Window.IsActive(11101) + Control.HasFocus(8901) + String.IsEqual(Window(Home).Property(RixFlix.CategoryReady),$INFO[Window(Home).Property(RixFlix.Category)])</start>
+        <stop>!Window.IsActive(11101) | !Control.HasFocus(8901)</stop>
+        <onstart>SetFocus(8100)</onstart>
+    </timer>
 </timers>

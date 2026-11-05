@@ -1,11 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <window type="window" id="1101">
-    <include content="Hub_Onload">
-        <param name="window_id">1101</param>
-    </include>
+    <defaultcontrol always="false">8901</defaultcontrol>
+    <onunload>ClearProperty(RixFlix.CategoryReturn.Go,Home)</onunload>
     <controls>
-        <include content="Hub_Window">
-            <param name="window">1101</param>
-        </include>
+        <include>RixFlix_CategoryHub</include>
     </controls>
 </window>

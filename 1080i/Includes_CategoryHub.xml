@@ -1,0 +1,297 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<includes>
+    <include name="RixFlix_CategoryHub">
+        <control type="image">
+            <texture colordiffuse="ff080808">common/white.png</texture>
+        </control>
+        <control type="label">
+            <left>80</left><top>55</top><width>1760</width><height>80</height>
+            <font>font_head_bold</font><textcolor>white</textcolor>
+            <label>$INFO[Window(Home).Property(RixFlix.CategoryLabel)]</label>
+        </control>
+        <!-- Always load this tiny manifest, even when every genre row is hidden. -->
+        <control type="list" id="8999">
+            <left>-10</left><width>1</width><height>1</height><enable>false</enable>
+            <itemlayout width="1" height="1" /><focusedlayout width="1" height="1" />
+            <content>plugin://plugin.video.rixflix.providers/?mode=category_manifest&amp;cat=$INFO[Window(Home).Property(RixFlix.Category)]</content>
+        </control>
+        <control type="button" id="8901">
+            <visible allowhiddenfocus="true">false</visible>
+            <onback>8900</onback>
+        </control>
+        <control type="button" id="8900">
+            <visible allowhiddenfocus="true">false</visible>
+            <onfocus>SetProperty(RixFlix.CategoryReturn.Go,1,Home)</onfocus>
+            <onback>8900</onback>
+        </control>
+        <control type="label">
+            <left>80</left><top>180</top><width>1760</width><height>70</height>
+            <font>font_main_bold</font><textcolor>white</textcolor>
+            <label>Loading genres…</label>
+            <visible>!String.IsEqual(Window(Home).Property(RixFlix.CategoryReady),$INFO[Window(Home).Property(RixFlix.Category)])</visible>
+        </control>
+        <control type="label">
+            <left>80</left><top>180</top><width>1760</width><height>70</height>
+            <font>font_main</font><textcolor>white</textcolor>
+            <label>No genre has enough titles yet.</label>
+            <visible>String.IsEqual(Window(Home).Property(RixFlix.CategoryReady),$INFO[Window(Home).Property(RixFlix.Category)]) + Integer.IsEqual(Window(Home).Property(RixFlix.CategoryRows),0)</visible>
+        </control>
+        <control type="grouplist" id="8100">
+            <left>0</left><top>165</top><width>1920</width><height>900</height>
+            <orientation>vertical</orientation><itemgap>25</itemgap>
+            <scrolltime>250</scrolltime><onback>8900</onback>
+                <control type="group" id="8201">
+                    <height>490</height>
+                    <visible>String.IsEqual(Window(Home).Property(RixFlix.CategoryReady),$INFO[Window(Home).Property(RixFlix.Category)]) + Integer.IsGreater(Window(Home).Property(RixFlix.CategoryCount.Action),2)</visible>
+                    <control type="label">
+                        <left>80</left><top>0</top><height>55</height><width>1760</width>
+                        <font>font_main_bold</font><label>Action</label><textcolor>white</textcolor>
+                    </control>
+                    <include content="List_Poster_Row">
+                        <param name="id">8101</param>
+                        <param name="offset_y">10</param>
+                        <top>55</top><left>40</left><width>1880</width><height>435</height>
+                        <preloaditems>0</preloaditems>
+                        <onup>8100</onup><ondown>8100</ondown>
+                        <onback>8900</onback>
+                        <!-- No dynamic target: node.target on each native item owns navigation. -->
+                        <content limit="20">plugin://plugin.video.rixflix.providers/?mode=category_genre&amp;cat=$INFO[Window(Home).Property(RixFlix.Category)]&amp;genre=Action&amp;limit=20</content>
+                    </include>
+                </control>
+                <control type="group" id="8202">
+                    <height>490</height>
+                    <visible>String.IsEqual(Window(Home).Property(RixFlix.CategoryReady),$INFO[Window(Home).Property(RixFlix.Category)]) + Integer.IsGreater(Window(Home).Property(RixFlix.CategoryCount.Adventure),2)</visible>
+                    <control type="label">
+                        <left>80</left><top>0</top><height>55</height><width>1760</width>
+                        <font>font_main_bold</font><label>Adventure</label><textcolor>white</textcolor>
+                    </control>
+                    <include content="List_Poster_Row">
+                        <param name="id">8102</param>
+                        <param name="offset_y">10</param>
+                        <top>55</top><left>40</left><width>1880</width><height>435</height>
+                        <preloaditems>0</preloaditems>
+                        <onup>8100</onup><ondown>8100</ondown>
+                        <onback>8900</onback>
+                        <!-- No dynamic target: node.target on each native item owns navigation. -->
+                        <content limit="20">plugin://plugin.video.rixflix.providers/?mode=category_genre&amp;cat=$INFO[Window(Home).Property(RixFlix.Category)]&amp;genre=Adventure&amp;limit=20</content>
+                    </include>
+                </control>
+                <control type="group" id="8203">
+                    <height>490</height>
+                    <visible>String.IsEqual(Window(Home).Property(RixFlix.CategoryReady),$INFO[Window(Home).Property(RixFlix.Category)]) + Integer.IsGreater(Window(Home).Property(RixFlix.CategoryCount.Animation),2)</visible>
+                    <control type="label">
+                        <left>80</left><top>0</top><height>55</height><width>1760</width>
+                        <font>font_main_bold</font><label>Animation</label><textcolor>white</textcolor>
+                    </control>
+                    <include content="List_Poster_Row">
+                        <param name="id">8103</param>
+                        <param name="offset_y">10</param>
+                        <top>55</top><left>40</left><width>1880</width><height>435</height>
+                        <preloaditems>0</preloaditems>
+                        <onup>8100</onup><ondown>8100</ondown>
+                        <onback>8900</onback>
+                        <!-- No dynamic target: node.target on each native item owns navigation. -->
+                        <content limit="20">plugin://plugin.video.rixflix.providers/?mode=category_genre&amp;cat=$INFO[Window(Home).Property(RixFlix.Category)]&amp;genre=Animation&amp;limit=20</content>
+                    </include>
+                </control>
+                <control type="group" id="8204">
+                    <height>490</height>
+                    <visible>String.IsEqual(Window(Home).Property(RixFlix.CategoryReady),$INFO[Window(Home).Property(RixFlix.Category)]) + Integer.IsGreater(Window(Home).Property(RixFlix.CategoryCount.Comedy),2)</visible>
+                    <control type="label">
+                        <left>80</left><top>0</top><height>55</height><width>1760</width>
+                        <font>font_main_bold</font><label>Comedy</label><textcolor>white</textcolor>
+                    </control>
+                    <include content="List_Poster_Row">
+                        <param name="id">8104</param>
+                        <param name="offset_y">10</param>
+                        <top>55</top><left>40</left><width>1880</width><height>435</height>
+                        <preloaditems>0</preloaditems>
+                        <onup>8100</onup><ondown>8100</ondown>
+                        <onback>8900</onback>
+                        <!-- No dynamic target: node.target on each native item owns navigation. -->
+                        <content limit="20">plugin://plugin.video.rixflix.providers/?mode=category_genre&amp;cat=$INFO[Window(Home).Property(RixFlix.Category)]&amp;genre=Comedy&amp;limit=20</content>
+                    </include>
+                </control>
+                <control type="group" id="8205">
+                    <height>490</height>
+                    <visible>String.IsEqual(Window(Home).Property(RixFlix.CategoryReady),$INFO[Window(Home).Property(RixFlix.Category)]) + Integer.IsGreater(Window(Home).Property(RixFlix.CategoryCount.Crime),2)</visible>
+                    <control type="label">
+                        <left>80</left><top>0</top><height>55</height><width>1760</width>
+                        <font>font_main_bold</font><label>Crime</label><textcolor>white</textcolor>
+                    </control>
+                    <include content="List_Poster_Row">
+                        <param name="id">8105</param>
+                        <param name="offset_y">10</param>
+                        <top>55</top><left>40</left><width>1880</width><height>435</height>
+                        <preloaditems>0</preloaditems>
+                        <onup>8100</onup><ondown>8100</ondown>
+                        <onback>8900</onback>
+                        <!-- No dynamic target: node.target on each native item owns navigation. -->
+                        <content limit="20">plugin://plugin.video.rixflix.providers/?mode=category_genre&amp;cat=$INFO[Window(Home).Property(RixFlix.Category)]&amp;genre=Crime&amp;limit=20</content>
+                    </include>
+                </control>
+                <control type="group" id="8206">
+                    <height>490</height>
+                    <visible>String.IsEqual(Window(Home).Property(RixFlix.CategoryReady),$INFO[Window(Home).Property(RixFlix.Category)]) + Integer.IsGreater(Window(Home).Property(RixFlix.CategoryCount.Documentary),2)</visible>
+                    <control type="label">
+                        <left>80</left><top>0</top><height>55</height><width>1760</width>
+                        <font>font_main_bold</font><label>Documentary</label><textcolor>white</textcolor>
+                    </control>
+                    <include content="List_Poster_Row">
+                        <param name="id">8106</param>
+                        <param name="offset_y">10</param>
+                        <top>55</top><left>40</left><width>1880</width><height>435</height>
+                        <preloaditems>0</preloaditems>
+                        <onup>8100</onup><ondown>8100</ondown>
+                        <onback>8900</onback>
+                        <!-- No dynamic target: node.target on each native item owns navigation. -->
+                        <content limit="20">plugin://plugin.video.rixflix.providers/?mode=category_genre&amp;cat=$INFO[Window(Home).Property(RixFlix.Category)]&amp;genre=Documentary&amp;limit=20</content>
+                    </include>
+                </control>
+                <control type="group" id="8207">
+                    <height>490</height>
+                    <visible>String.IsEqual(Window(Home).Property(RixFlix.CategoryReady),$INFO[Window(Home).Property(RixFlix.Category)]) + Integer.IsGreater(Window(Home).Property(RixFlix.CategoryCount.Drama),2)</visible>
+                    <control type="label">
+                        <left>80</left><top>0</top><height>55</height><width>1760</width>
+                        <font>font_main_bold</font><label>Drama</label><textcolor>white</textcolor>
+                    </control>
+                    <include content="List_Poster_Row">
+                        <param name="id">8107</param>
+                        <param name="offset_y">10</param>
+                        <top>55</top><left>40</left><width>1880</width><height>435</height>
+                        <preloaditems>0</preloaditems>
+                        <onup>8100</onup><ondown>8100</ondown>
+                        <onback>8900</onback>
+                        <!-- No dynamic target: node.target on each native item owns navigation. -->
+                        <content limit="20">plugin://plugin.video.rixflix.providers/?mode=category_genre&amp;cat=$INFO[Window(Home).Property(RixFlix.Category)]&amp;genre=Drama&amp;limit=20</content>
+                    </include>
+                </control>
+                <control type="group" id="8208">
+                    <height>490</height>
+                    <visible>String.IsEqual(Window(Home).Property(RixFlix.CategoryReady),$INFO[Window(Home).Property(RixFlix.Category)]) + Integer.IsGreater(Window(Home).Property(RixFlix.CategoryCount.Family),2)</visible>
+                    <control type="label">
+                        <left>80</left><top>0</top><height>55</height><width>1760</width>
+                        <font>font_main_bold</font><label>Family</label><textcolor>white</textcolor>
+                    </control>
+                    <include content="List_Poster_Row">
+                        <param name="id">8108</param>
+                        <param name="offset_y">10</param>
+                        <top>55</top><left>40</left><width>1880</width><height>435</height>
+                        <preloaditems>0</preloaditems>
+                        <onup>8100</onup><ondown>8100</ondown>
+                        <onback>8900</onback>
+                        <!-- No dynamic target: node.target on each native item owns navigation. -->
+                        <content limit="20">plugin://plugin.video.rixflix.providers/?mode=category_genre&amp;cat=$INFO[Window(Home).Property(RixFlix.Category)]&amp;genre=Family&amp;limit=20</content>
+                    </include>
+                </control>
+                <control type="group" id="8209">
+                    <height>490</height>
+                    <visible>String.IsEqual(Window(Home).Property(RixFlix.CategoryReady),$INFO[Window(Home).Property(RixFlix.Category)]) + Integer.IsGreater(Window(Home).Property(RixFlix.CategoryCount.Fantasy),2)</visible>
+                    <control type="label">
+                        <left>80</left><top>0</top><height>55</height><width>1760</width>
+                        <font>font_main_bold</font><label>Fantasy</label><textcolor>white</textcolor>
+                    </control>
+                    <include content="List_Poster_Row">
+                        <param name="id">8109</param>
+                        <param name="offset_y">10</param>
+                        <top>55</top><left>40</left><width>1880</width><height>435</height>
+                        <preloaditems>0</preloaditems>
+                        <onup>8100</onup><ondown>8100</ondown>
+                        <onback>8900</onback>
+                        <!-- No dynamic target: node.target on each native item owns navigation. -->
+                        <content limit="20">plugin://plugin.video.rixflix.providers/?mode=category_genre&amp;cat=$INFO[Window(Home).Property(RixFlix.Category)]&amp;genre=Fantasy&amp;limit=20</content>
+                    </include>
+                </control>
+                <control type="group" id="8210">
+                    <height>490</height>
+                    <visible>String.IsEqual(Window(Home).Property(RixFlix.CategoryReady),$INFO[Window(Home).Property(RixFlix.Category)]) + Integer.IsGreater(Window(Home).Property(RixFlix.CategoryCount.Horror),2)</visible>
+                    <control type="label">
+                        <left>80</left><top>0</top><height>55</height><width>1760</width>
+                        <font>font_main_bold</font><label>Horror</label><textcolor>white</textcolor>
+                    </control>
+                    <include content="List_Poster_Row">
+                        <param name="id">8110</param>
+                        <param name="offset_y">10</param>
+                        <top>55</top><left>40</left><width>1880</width><height>435</height>
+                        <preloaditems>0</preloaditems>
+                        <onup>8100</onup><ondown>8100</ondown>
+                        <onback>8900</onback>
+                        <!-- No dynamic target: node.target on each native item owns navigation. -->
+                        <content limit="20">plugin://plugin.video.rixflix.providers/?mode=category_genre&amp;cat=$INFO[Window(Home).Property(RixFlix.Category)]&amp;genre=Horror&amp;limit=20</content>
+                    </include>
+                </control>
+                <control type="group" id="8211">
+                    <height>490</height>
+                    <visible>String.IsEqual(Window(Home).Property(RixFlix.CategoryReady),$INFO[Window(Home).Property(RixFlix.Category)]) + Integer.IsGreater(Window(Home).Property(RixFlix.CategoryCount.Mystery),2)</visible>
+                    <control type="label">
+                        <left>80</left><top>0</top><height>55</height><width>1760</width>
+                        <font>font_main_bold</font><label>Mystery</label><textcolor>white</textcolor>
+                    </control>
+                    <include content="List_Poster_Row">
+                        <param name="id">8111</param>
+                        <param name="offset_y">10</param>
+                        <top>55</top><left>40</left><width>1880</width><height>435</height>
+                        <preloaditems>0</preloaditems>
+                        <onup>8100</onup><ondown>8100</ondown>
+                        <onback>8900</onback>
+                        <!-- No dynamic target: node.target on each native item owns navigation. -->
+                        <content limit="20">plugin://plugin.video.rixflix.providers/?mode=category_genre&amp;cat=$INFO[Window(Home).Property(RixFlix.Category)]&amp;genre=Mystery&amp;limit=20</content>
+                    </include>
+                </control>
+                <control type="group" id="8212">
+                    <height>490</height>
+                    <visible>String.IsEqual(Window(Home).Property(RixFlix.CategoryReady),$INFO[Window(Home).Property(RixFlix.Category)]) + Integer.IsGreater(Window(Home).Property(RixFlix.CategoryCount.Romance),2)</visible>
+                    <control type="label">
+                        <left>80</left><top>0</top><height>55</height><width>1760</width>
+                        <font>font_main_bold</font><label>Romance</label><textcolor>white</textcolor>
+                    </control>
+                    <include content="List_Poster_Row">
+                        <param name="id">8112</param>
+                        <param name="offset_y">10</param>
+                        <top>55</top><left>40</left><width>1880</width><height>435</height>
+                        <preloaditems>0</preloaditems>
+                        <onup>8100</onup><ondown>8100</ondown>
+                        <onback>8900</onback>
+                        <!-- No dynamic target: node.target on each native item owns navigation. -->
+                        <content limit="20">plugin://plugin.video.rixflix.providers/?mode=category_genre&amp;cat=$INFO[Window(Home).Property(RixFlix.Category)]&amp;genre=Romance&amp;limit=20</content>
+                    </include>
+                </control>
+                <control type="group" id="8213">
+                    <height>490</height>
+                    <visible>String.IsEqual(Window(Home).Property(RixFlix.CategoryReady),$INFO[Window(Home).Property(RixFlix.Category)]) + Integer.IsGreater(Window(Home).Property(RixFlix.CategoryCount.ScienceFiction),2)</visible>
+                    <control type="label">
+                        <left>80</left><top>0</top><height>55</height><width>1760</width>
+                        <font>font_main_bold</font><label>Science Fiction</label><textcolor>white</textcolor>
+                    </control>
+                    <include content="List_Poster_Row">
+                        <param name="id">8113</param>
+                        <param name="offset_y">10</param>
+                        <top>55</top><left>40</left><width>1880</width><height>435</height>
+                        <preloaditems>0</preloaditems>
+                        <onup>8100</onup><ondown>8100</ondown>
+                        <onback>8900</onback>
+                        <!-- No dynamic target: node.target on each native item owns navigation. -->
+                        <content limit="20">plugin://plugin.video.rixflix.providers/?mode=category_genre&amp;cat=$INFO[Window(Home).Property(RixFlix.Category)]&amp;genre=Science%20Fiction&amp;limit=20</content>
+                    </include>
+                </control>
+                <control type="group" id="8214">
+                    <height>490</height>
+                    <visible>String.IsEqual(Window(Home).Property(RixFlix.CategoryReady),$INFO[Window(Home).Property(RixFlix.Category)]) + Integer.IsGreater(Window(Home).Property(RixFlix.CategoryCount.Thriller),2)</visible>
+                    <control type="label">
+                        <left>80</left><top>0</top><height>55</height><width>1760</width>
+                        <font>font_main_bold</font><label>Thriller</label><textcolor>white</textcolor>
+                    </control>
+                    <include content="List_Poster_Row">
+                        <param name="id">8114</param>
+                        <param name="offset_y">10</param>
+                        <top>55</top><left>40</left><width>1880</width><height>435</height>
+                        <preloaditems>0</preloaditems>
+                        <onup>8100</onup><ondown>8100</ondown>
+                        <onback>8900</onback>
+                        <!-- No dynamic target: node.target on each native item owns navigation. -->
+                        <content limit="20">plugin://plugin.video.rixflix.providers/?mode=category_genre&amp;cat=$INFO[Window(Home).Property(RixFlix.Category)]&amp;genre=Thriller&amp;limit=20</content>
+                    </include>
+                </control>
+        </control>
+    </include>
+</includes>
