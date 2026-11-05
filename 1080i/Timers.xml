@@ -83,8 +83,8 @@
         <!-- Armed by edit 3000's ondown. The loading test inlines Exp_RixFlix_Search_Loading (no $EXP here). -->
         <!-- Stops on results, on loading ending empty (focus stays on the field), on the viewer moving, or after 5 s. -->
         <start reset="true">!String.IsEmpty(Window(Home).Property(RixFlix.SearchDown))</start>
-        <stop>String.IsEmpty(Window(Home).Property(RixFlix.SearchDown)) | !Window.IsActive(11105) | !Control.HasFocus(3000) | Integer.IsGreater(Container(502).NumItems,0) | ![Container(310).IsUpdating | Container(320).IsUpdating | Container(501).IsUpdating | Container(502).IsUpdating | Container(503).IsUpdating | Container(504).IsUpdating | Container(505).IsUpdating | Container(506).IsUpdating | Container(507).IsUpdating | Container(508).IsUpdating | Container(509).IsUpdating] | Integer.IsGreater(Skin.TimerElapsedSecs(rixflix_search_down),5)</stop>
-        <onstop condition="Window.IsActive(11105) + Control.HasFocus(3000) + Integer.IsGreater(Container(502).NumItems,0)">SetFocus(502)</onstop>
+        <stop>String.IsEmpty(Window(Home).Property(RixFlix.SearchDown)) | !Window.IsActive(11105) | !Control.HasFocus(3000) | [Integer.IsGreater(Container(502).NumItems,0) + String.IsEqual(Container(502).ListItem.Property(RixFlix.SearchText),Window(Home).Property(RixFlix.SearchText))] | ![!String.IsEqual(Window(Home).Property(RixFlix.SearchCompleted),Window(Home).Property(RixFlix.SearchText)) | Container(310).IsUpdating | Container(320).IsUpdating | Container(501).IsUpdating | Container(502).IsUpdating | Container(503).IsUpdating | Container(504).IsUpdating | Container(505).IsUpdating | Container(506).IsUpdating | Container(507).IsUpdating | Container(508).IsUpdating | Container(509).IsUpdating] | Integer.IsGreater(Skin.TimerElapsedSecs(rixflix_search_down),5)</stop>
+        <onstop condition="Window.IsActive(11105) + Control.HasFocus(3000) + [Integer.IsGreater(Container(502).NumItems,0) + String.IsEqual(Container(502).ListItem.Property(RixFlix.SearchText),Window(Home).Property(RixFlix.SearchText))]">SetFocus(502)</onstop>
         <onstop>ClearProperty(RixFlix.SearchDown,Home)</onstop>
     </timer>
 </timers>

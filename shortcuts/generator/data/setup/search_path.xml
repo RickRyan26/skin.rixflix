@@ -2,7 +2,7 @@
     <rules name="widget_path">
         <rule>
             <condition>{item_path}==DefaultSearch-All</condition>
-            <value>plugin://plugin.video.rixflix.providers/?mode=search&amp;amp;q=</value>
+            <value>plugin://plugin.video.rixflix.providers/?mode=search&amp;amp;live=</value>
         </rule>
         <rule>
             <condition>{item_path}==DefaultSearch-MovieActors</condition>
@@ -492,7 +492,7 @@
     <rules name="widget_search_variable">
         <rule>
             <condition>{item_path}==DefaultSearch-All</condition>
-            <value>Path_SearchTerm_SingleEncoded</value>
+            <value>Path_SearchTerm_Live</value>
         </rule>
         <rule>
             <condition>{item_path}==DefaultSearch-MovieActors</condition>

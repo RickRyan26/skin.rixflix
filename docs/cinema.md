@@ -625,3 +625,22 @@ remain intact because visible Play deliberately focuses 301 and dispatches
 `Action(select)` there for plugin paths; replacing its click action would break that
 playback path. This provides a deterministic remote escape without a background timer
 that could steal focus from a real playback transition.
+
+
+### 2026-11-04: local search while typing
+
+Edit 312 and edit 3000 publish `RixFlix.SearchText` with `$ESCINFO`. The mixed
+provider reads that Home property verbatim; `live=1&q=...` is only Kodi's URL
+refresh token, never parsed as user text. This preserves ampersands, plus signs,
+quotes, commas, literal percent escapes and Unicode without encoder plugin jobs.
+Empty and one-character values publish an empty directory. Each returned item
+carries its query identity; both row layouts hide mismatches and Down cannot
+focus a stale row. The completed property also covers an empty result directory.
+Kodi serializes and coalesces directory jobs (4665ec22 DirectoryProvider.cpp);
+an older job can complete but its items cannot be shown for a newer query.
+
+Search's keyboard uses 60% scale at the upper left and no dim overlay, leaving
+the landscape Results row exposed below. Other keyboard dialogs keep their size
+and dim overlay. Down off any bottom key still closes the keyboard onto Search;
+page Back goes Home and keyboard Back first dismisses the keyboard. Discover,
+autocompletion and both encoder content jobs are disconnected from live input.

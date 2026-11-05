@@ -367,7 +367,7 @@ def check():
     search_rules = ET.parse(ROOT / 'shortcuts/generator/data/setup/search_path.xml').getroot()
     rule = next(r for r in search_rules.find("rules[@name='widget_path']")
                 if r.findtext('condition') == '{item_path}==DefaultSearch-All')
-    assert rule.findtext('value') == 'plugin://plugin.video.rixflix.providers/?mode=search&amp;q='
+    assert rule.findtext('value') == 'plugin://plugin.video.rixflix.providers/?mode=search&amp;live='
     search_template = (ROOT / 'shortcuts/generator/data/parts/search_row_standard.xmltemplate').read_text()
     assert '<ondown>7900</ondown>' in search_template
     # 1.12.25: the seek bar outlives a network seek's 2.0-2.8 s refill (no hide/re-show).

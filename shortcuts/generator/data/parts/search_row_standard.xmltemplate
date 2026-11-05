@@ -3,7 +3,7 @@
     <param name="groupid">{widget_group_id}</param>
     <param name="label">{widget_label}</param>
     <param name="include">{widget_include}</param>
-    <param name="visible">{widget_visible}</param>
+    <param name="visible">String.IsEqual(Container({widget_id}).ListItem.Property(RixFlix.SearchText),Window(Home).Property(RixFlix.SearchText)) + {widget_visible}</param>
     <param name="altvisible">{widget_altvisible}</param>
     <param name="busy_isupdating">{widget_altvisible}</param>
     <param name="busy_visible">[Integer.IsEqual(Container({widget_id}).NumItems,0) | Container({widget_id}).IsUpdating]</param>

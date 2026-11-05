@@ -25,7 +25,7 @@
     <!-- The search is still running: the term encoder (310/320) or any result provider
          (501 discover, 502+ the searchwidgets rows) has a directory job in flight. While
          this is true an empty selector (601) means "not answered yet", never "nothing". -->
-    <expression name="Exp_RixFlix_Search_Loading">[Container(310).IsUpdating | Container(320).IsUpdating | Container(501).IsUpdating | Container(502).IsUpdating | Container(503).IsUpdating | Container(504).IsUpdating | Container(505).IsUpdating | Container(506).IsUpdating | Container(507).IsUpdating | Container(508).IsUpdating | Container(509).IsUpdating]</expression>
+    <expression name="Exp_RixFlix_Search_Loading">[!String.IsEqual(Window(Home).Property(RixFlix.SearchCompleted),Window(Home).Property(RixFlix.SearchText)) | Container(310).IsUpdating | Container(320).IsUpdating | Container(501).IsUpdating | Container(502).IsUpdating | Container(503).IsUpdating | Container(504).IsUpdating | Container(505).IsUpdating | Container(506).IsUpdating | Container(507).IsUpdating | Container(508).IsUpdating | Container(509).IsUpdating]</expression>
 
     <!-- Up out of a row view: the nav bar, else the stock views dialog (windows without
          the bar keep the AF3 behaviour). -->

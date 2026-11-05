@@ -4,6 +4,7 @@
     <onload condition="String.IsEmpty(Window(Home).Property(TMDbHelper.UserDiscover.FolderPath))">SetProperty(TMDbHelper.UserDiscover.FolderPath.Name,$LOCALIZE[467] $LOCALIZE[342],Home)</onload>
 
     <onload>ClearProperty(Background.ShowOverlay,Home)</onload>
+    <onload>SetProperty(RixFlix.SearchText,$ESCINFO[Control.GetLabel(3000).index(1)],Home)</onload>
     <!-- Back and bottom Down return Home; discard historical list origins. -->
     <onunload>ClearProperty(RixFlix.SearchReturn.Go,Home)</onunload>
     <onunload>ClearProperty(RixFlix.SearchReturn.Window,Home)</onunload>

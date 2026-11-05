@@ -25,6 +25,11 @@
         <value condition="!String.IsEmpty(Container(320).ListItem.Label) + !String.IsEmpty(Container(310).ListItem.Label) + !Container(320).IsUpdating + !Container(310).IsUpdating">$INFO[Container(320).ListItem.Label]</value>
     </variable>
 
+    <!-- q is a refresh token only. The provider reads SearchText verbatim, so &, +, Unicode and % survive. -->
+    <variable name="Path_SearchTerm_Live">
+        <value>1&amp;q=$INFO[Window(Home).Property(RixFlix.SearchText)]</value>
+    </variable>
+
     <variable name="Path_SearchTerm_SingleEncoded">
         <value condition="!String.IsEmpty(Container(310).ListItem.Label) + !Container(310).IsUpdating">$INFO[Container(310).ListItem.Label]</value>
     </variable>

@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <includes>
     <include name="DialogKeyboard">
-        <include>Part_Dim_Overlay</include>
+        <include condition="!Window.IsVisible(11105)">Part_Dim_Overlay</include>
         <control type="group">
             <include>Dimension_DialogKeysMenu</include>
+            <!-- Leave the local Results row visible beneath the keyboard. -->
+            <animation effect="zoom" start="60" end="60" center="0,0" condition="Window.IsVisible(11105)">Conditional</animation>
             <include>Animation_BounceIn_Dialog</include>
             <include content="Part_Background_Panel">
                 <param name="dialog_size">Dimension_DialogKeysMenu</param>
@@ -42,6 +44,7 @@
                                     <visible>Control.HasFocus(312)</visible>
                                 </control>
                                 <control type="edit" id="312">
+                                    <ontextchange condition="Window.IsVisible(11105)">SetProperty(RixFlix.SearchText,$ESCINFO[Control.GetLabel(312).index(1)],Home)</ontextchange>
                                     <texturenofocus />
                                     <texturefocus />
                                     <align>center</align>
@@ -135,7 +138,7 @@
                             <param name="itemlayout_w">280</param>
                             <param name="itemlayout_include">Layout_DialogSimple</param>
                             <param name="orientation">vertical</param>
-                            <content>plugin://plugin.program.autocompletion?info=autocomplete&amp;&amp;id=$INFO[Control.GetLabel(312).index(1)]</content>
+                            <content />
                             <visible>!Control.IsViible(313)</visible>
                             <visible>!Control.IsViible(314)</visible>
                             <onup>9000</onup>
