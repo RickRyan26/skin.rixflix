@@ -644,3 +644,29 @@ the landscape Results row exposed below. Other keyboard dialogs keep their size
 and dim overlay. Down off any bottom key still closes the keyboard onto Search;
 page Back goes Home and keyboard Back first dismisses the keyboard. Discover,
 autocompletion and both encoder content jobs are disconnected from live input.
+
+
+### 2026-11-04: compact Search keyboard
+
+Rick asked for the search popup to shrink to essentials and lose its right-hand
+suggestion list. Search now resolves a dedicated **880 × 384** panel at (80,64),
+with its text field and a three-row QWERTY grid: 26 letter keys plus Delete, Space,
+123/ABC and Browse, **30 buttons total**. The number/symbol layer reuses those
+letter positions; no extra utility bank, side list, dim overlay or scaled text.
+Bottom-row Down closes onto Search, Browse does the same, and Back dismisses
+the keyboard. Initial search focus is Q.
+
+`DialogKeyboard` resolves exactly one include tree per opening. Non-search
+password/settings dialogs use the complete pre-live-search `DialogKeyboard_Full`
+layout. Never load two hidden keyboard trees with duplicate native IDs. Search
+character IDs **400..425** deliberately avoid Kodi's auto-labelled **100..179**
+range: pinned `GUIDialogKeyboardGeneric::OnClickButton` inserts the description
+of any unreserved button below 500. Buttons 8/32/300/304 keep native Delete,
+Space, Done and Symbols behavior. Both IME labels 313/314 still exist off-screen:
+**native OnInitWindow dereferences 314 unconditionally**, so removing it crashes
+Kodi even though this English search panel has no IME choices.
+
+Kodi `CGUIWindow::NeedLoad` tracks include condition values, so switching from
+Search to a password/settings keyboard reloads the correct control tree rather
+than reusing whichever one was opened first. Generic layout XML is identical to
+skin 1.12.50 (`d0aa5c56`), except for its include name.

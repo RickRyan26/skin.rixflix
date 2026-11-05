@@ -353,6 +353,15 @@ def check():
     assert len(bottom) == 10 and all(
         [(n.text, n.get('condition')) for n in key.findall('ondown')] == [('SendClick(300)', 'Window.IsVisible(11105)')]
         for key in bottom), 'every bottom-row key commits on Down'
+    keyboard = ET.parse(ROOT / '1080i/Dialog_DialogKeyboard.xml').getroot()
+    compact = keyboard.find("include[@name='RixFlix_SearchKeyboard']/control")
+    buttons = [c for c in compact.findall('control') if c.get('type') in ('button', 'radiobutton')]
+    assert len(buttons) == 30 and {int(c.get('id')) for c in buttons} == set(range(400, 426)) | {8, 32, 300, 304}
+    assert compact.findtext('width') == '880' and compact.findtext('height') == '384'
+    assert not compact.findall(".//control[@type='list']"), 'Search has no suggestion list'
+    assert all(compact.find("control[@id='%d']" % i) is not None for i in (312, 313, 314)), 'native edit/IME controls'
+    assert '$ESCINFO' in compact.find("control[@id='312']").findtext('ontextchange')
+    assert keyboard.find("include[@name='DialogKeyboard_Full']") is not None
     options = ET.parse(ROOT / '1080i/Custom_1170_Dialog_Options.xml').getroot()
     opt = options.find('.//include[@content="DialogView"]')
     assert params(opt)['onback'] == params(opt)['top_onup'] == '7900'

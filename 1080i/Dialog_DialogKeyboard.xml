@@ -1,11 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <includes>
+    <!-- Resolve one control tree per opening; duplicate native IDs are unsafe. -->
     <include name="DialogKeyboard">
-        <include condition="!Window.IsVisible(11105)">Part_Dim_Overlay</include>
+        <include condition="Window.IsVisible(11105)">RixFlix_SearchKeyboard</include>
+        <include condition="!Window.IsVisible(11105)">DialogKeyboard_Full</include>
+    </include>
+
+    <include name="DialogKeyboard_Full">
+        <include>Part_Dim_Overlay</include>
         <control type="group">
             <include>Dimension_DialogKeysMenu</include>
-            <!-- Leave the local Results row visible beneath the keyboard. -->
-            <animation effect="zoom" start="60" end="60" center="0,0" condition="Window.IsVisible(11105)">Conditional</animation>
             <include>Animation_BounceIn_Dialog</include>
             <include content="Part_Background_Panel">
                 <param name="dialog_size">Dimension_DialogKeysMenu</param>
@@ -44,7 +48,6 @@
                                     <visible>Control.HasFocus(312)</visible>
                                 </control>
                                 <control type="edit" id="312">
-                                    <ontextchange condition="Window.IsVisible(11105)">SetProperty(RixFlix.SearchText,$ESCINFO[Control.GetLabel(312).index(1)],Home)</ontextchange>
                                     <texturenofocus />
                                     <texturefocus />
                                     <align>center</align>
@@ -138,7 +141,7 @@
                             <param name="itemlayout_w">280</param>
                             <param name="itemlayout_include">Layout_DialogSimple</param>
                             <param name="orientation">vertical</param>
-                            <content />
+                            <content>plugin://plugin.program.autocompletion?info=autocomplete&amp;&amp;id=$INFO[Control.GetLabel(312).index(1)]</content>
                             <visible>!Control.IsViible(313)</visible>
                             <visible>!Control.IsViible(314)</visible>
                             <onup>9000</onup>
@@ -595,5 +598,441 @@
             <ondown condition="Window.IsVisible(11105)">SendClick(300)</ondown>
         </include>
     </include>
+
+
+    <include name="RixFlix_SearchKeyboard">
+        <control type="group" id="8400">
+            <left>80</left><top>64</top><width>880</width><height>384</height>
+            <control type="image">
+                <width>880</width><height>384</height>
+                <texture colordiffuse="rix_cinema_surface" border="24">common/menu.png</texture>
+            </control>
+            <control type="edit" id="312">
+                <left>24</left><top>24</top><width>832</width><height>64</height>
+                <font>font_main</font><textoffsetx>20</textoffsetx><align>left</align>
+                <hinttext>Search titles</hinttext>
+                <textcolor>rix_cinema_paper</textcolor><focusedcolor>rix_cinema_ink</focusedcolor>
+                <texturenofocus colordiffuse="rix_cinema_ink" border="16">common/menu.png</texturenofocus>
+                <texturefocus colordiffuse="rix_cinema_paper" border="16">common/menu.png</texturefocus>
+                <ondown>400</ondown><onup>300</onup><onleft>400</onleft><onright>409</onright>
+                <ontextchange>SetProperty(RixFlix.SearchText,$ESCINFO[Control.GetLabel(312).index(1)],Home)</ontextchange>
+            </control>
+            <!-- Native OnInitWindow dereferences label 314 even without an IME. -->
+            <control type="label" id="313"><left>-2000</left><width>1</width><height>1</height><font>font_mini</font></control>
+            <control type="label" id="314"><left>-2000</left><width>1</width><height>1</height><font>font_mini</font></control>
+            <control type="button" id="400">
+                <left>24</left><top>112</top><width>76</width><height>56</height>
+                <label>$VAR[RixFlix_SearchKey0]</label><font>font_midi</font>
+                <align>center</align><aligny>center</aligny><textoffsetx>0</textoffsetx>
+                <textcolor>rix_cinema_paper</textcolor><focusedcolor>rix_cinema_ink</focusedcolor>
+                <texturenofocus colordiffuse="rix_cinema_ink" border="12">common/menu.png</texturenofocus>
+                <texturefocus colordiffuse="rix_cinema_paper" border="12">common/menu.png</texturefocus>
+                <onleft>409</onleft><onright>401</onright>
+                <onup>312</onup><ondown>410</ondown>
+            </control>
+            <control type="button" id="401">
+                <left>108</left><top>112</top><width>76</width><height>56</height>
+                <label>$VAR[RixFlix_SearchKey1]</label><font>font_midi</font>
+                <align>center</align><aligny>center</aligny><textoffsetx>0</textoffsetx>
+                <textcolor>rix_cinema_paper</textcolor><focusedcolor>rix_cinema_ink</focusedcolor>
+                <texturenofocus colordiffuse="rix_cinema_ink" border="12">common/menu.png</texturenofocus>
+                <texturefocus colordiffuse="rix_cinema_paper" border="12">common/menu.png</texturefocus>
+                <onleft>400</onleft><onright>402</onright>
+                <onup>312</onup><ondown>411</ondown>
+            </control>
+            <control type="button" id="402">
+                <left>192</left><top>112</top><width>76</width><height>56</height>
+                <label>$VAR[RixFlix_SearchKey2]</label><font>font_midi</font>
+                <align>center</align><aligny>center</aligny><textoffsetx>0</textoffsetx>
+                <textcolor>rix_cinema_paper</textcolor><focusedcolor>rix_cinema_ink</focusedcolor>
+                <texturenofocus colordiffuse="rix_cinema_ink" border="12">common/menu.png</texturenofocus>
+                <texturefocus colordiffuse="rix_cinema_paper" border="12">common/menu.png</texturefocus>
+                <onleft>401</onleft><onright>403</onright>
+                <onup>312</onup><ondown>412</ondown>
+            </control>
+            <control type="button" id="403">
+                <left>276</left><top>112</top><width>76</width><height>56</height>
+                <label>$VAR[RixFlix_SearchKey3]</label><font>font_midi</font>
+                <align>center</align><aligny>center</aligny><textoffsetx>0</textoffsetx>
+                <textcolor>rix_cinema_paper</textcolor><focusedcolor>rix_cinema_ink</focusedcolor>
+                <texturenofocus colordiffuse="rix_cinema_ink" border="12">common/menu.png</texturenofocus>
+                <texturefocus colordiffuse="rix_cinema_paper" border="12">common/menu.png</texturefocus>
+                <onleft>402</onleft><onright>404</onright>
+                <onup>312</onup><ondown>413</ondown>
+            </control>
+            <control type="button" id="404">
+                <left>360</left><top>112</top><width>76</width><height>56</height>
+                <label>$VAR[RixFlix_SearchKey4]</label><font>font_midi</font>
+                <align>center</align><aligny>center</aligny><textoffsetx>0</textoffsetx>
+                <textcolor>rix_cinema_paper</textcolor><focusedcolor>rix_cinema_ink</focusedcolor>
+                <texturenofocus colordiffuse="rix_cinema_ink" border="12">common/menu.png</texturenofocus>
+                <texturefocus colordiffuse="rix_cinema_paper" border="12">common/menu.png</texturefocus>
+                <onleft>403</onleft><onright>405</onright>
+                <onup>312</onup><ondown>414</ondown>
+            </control>
+            <control type="button" id="405">
+                <left>444</left><top>112</top><width>76</width><height>56</height>
+                <label>$VAR[RixFlix_SearchKey5]</label><font>font_midi</font>
+                <align>center</align><aligny>center</aligny><textoffsetx>0</textoffsetx>
+                <textcolor>rix_cinema_paper</textcolor><focusedcolor>rix_cinema_ink</focusedcolor>
+                <texturenofocus colordiffuse="rix_cinema_ink" border="12">common/menu.png</texturenofocus>
+                <texturefocus colordiffuse="rix_cinema_paper" border="12">common/menu.png</texturefocus>
+                <onleft>404</onleft><onright>406</onright>
+                <onup>312</onup><ondown>415</ondown>
+            </control>
+            <control type="button" id="406">
+                <left>528</left><top>112</top><width>76</width><height>56</height>
+                <label>$VAR[RixFlix_SearchKey6]</label><font>font_midi</font>
+                <align>center</align><aligny>center</aligny><textoffsetx>0</textoffsetx>
+                <textcolor>rix_cinema_paper</textcolor><focusedcolor>rix_cinema_ink</focusedcolor>
+                <texturenofocus colordiffuse="rix_cinema_ink" border="12">common/menu.png</texturenofocus>
+                <texturefocus colordiffuse="rix_cinema_paper" border="12">common/menu.png</texturefocus>
+                <onleft>405</onleft><onright>407</onright>
+                <onup>312</onup><ondown>416</ondown>
+            </control>
+            <control type="button" id="407">
+                <left>612</left><top>112</top><width>76</width><height>56</height>
+                <label>$VAR[RixFlix_SearchKey7]</label><font>font_midi</font>
+                <align>center</align><aligny>center</aligny><textoffsetx>0</textoffsetx>
+                <textcolor>rix_cinema_paper</textcolor><focusedcolor>rix_cinema_ink</focusedcolor>
+                <texturenofocus colordiffuse="rix_cinema_ink" border="12">common/menu.png</texturenofocus>
+                <texturefocus colordiffuse="rix_cinema_paper" border="12">common/menu.png</texturefocus>
+                <onleft>406</onleft><onright>408</onright>
+                <onup>312</onup><ondown>417</ondown>
+            </control>
+            <control type="button" id="408">
+                <left>696</left><top>112</top><width>76</width><height>56</height>
+                <label>$VAR[RixFlix_SearchKey8]</label><font>font_midi</font>
+                <align>center</align><aligny>center</aligny><textoffsetx>0</textoffsetx>
+                <textcolor>rix_cinema_paper</textcolor><focusedcolor>rix_cinema_ink</focusedcolor>
+                <texturenofocus colordiffuse="rix_cinema_ink" border="12">common/menu.png</texturenofocus>
+                <texturefocus colordiffuse="rix_cinema_paper" border="12">common/menu.png</texturefocus>
+                <onleft>407</onleft><onright>409</onright>
+                <onup>312</onup><ondown>418</ondown>
+            </control>
+            <control type="button" id="409">
+                <left>780</left><top>112</top><width>76</width><height>56</height>
+                <label>$VAR[RixFlix_SearchKey9]</label><font>font_midi</font>
+                <align>center</align><aligny>center</aligny><textoffsetx>0</textoffsetx>
+                <textcolor>rix_cinema_paper</textcolor><focusedcolor>rix_cinema_ink</focusedcolor>
+                <texturenofocus colordiffuse="rix_cinema_ink" border="12">common/menu.png</texturenofocus>
+                <texturefocus colordiffuse="rix_cinema_paper" border="12">common/menu.png</texturefocus>
+                <onleft>408</onleft><onright>400</onright>
+                <onup>312</onup><ondown>8</ondown>
+            </control>
+            <control type="button" id="410">
+                <left>24</left><top>176</top><width>76</width><height>56</height>
+                <label>$VAR[RixFlix_SearchKey10]</label><font>font_midi</font>
+                <align>center</align><aligny>center</aligny><textoffsetx>0</textoffsetx>
+                <textcolor>rix_cinema_paper</textcolor><focusedcolor>rix_cinema_ink</focusedcolor>
+                <texturenofocus colordiffuse="rix_cinema_ink" border="12">common/menu.png</texturenofocus>
+                <texturefocus colordiffuse="rix_cinema_paper" border="12">common/menu.png</texturefocus>
+                <onleft>8</onleft><onright>411</onright>
+                <onup>400</onup><ondown>304</ondown>
+            </control>
+            <control type="button" id="411">
+                <left>108</left><top>176</top><width>76</width><height>56</height>
+                <label>$VAR[RixFlix_SearchKey11]</label><font>font_midi</font>
+                <align>center</align><aligny>center</aligny><textoffsetx>0</textoffsetx>
+                <textcolor>rix_cinema_paper</textcolor><focusedcolor>rix_cinema_ink</focusedcolor>
+                <texturenofocus colordiffuse="rix_cinema_ink" border="12">common/menu.png</texturenofocus>
+                <texturefocus colordiffuse="rix_cinema_paper" border="12">common/menu.png</texturefocus>
+                <onleft>410</onleft><onright>412</onright>
+                <onup>401</onup><ondown>419</ondown>
+            </control>
+            <control type="button" id="412">
+                <left>192</left><top>176</top><width>76</width><height>56</height>
+                <label>$VAR[RixFlix_SearchKey12]</label><font>font_midi</font>
+                <align>center</align><aligny>center</aligny><textoffsetx>0</textoffsetx>
+                <textcolor>rix_cinema_paper</textcolor><focusedcolor>rix_cinema_ink</focusedcolor>
+                <texturenofocus colordiffuse="rix_cinema_ink" border="12">common/menu.png</texturenofocus>
+                <texturefocus colordiffuse="rix_cinema_paper" border="12">common/menu.png</texturefocus>
+                <onleft>411</onleft><onright>413</onright>
+                <onup>402</onup><ondown>420</ondown>
+            </control>
+            <control type="button" id="413">
+                <left>276</left><top>176</top><width>76</width><height>56</height>
+                <label>$VAR[RixFlix_SearchKey13]</label><font>font_midi</font>
+                <align>center</align><aligny>center</aligny><textoffsetx>0</textoffsetx>
+                <textcolor>rix_cinema_paper</textcolor><focusedcolor>rix_cinema_ink</focusedcolor>
+                <texturenofocus colordiffuse="rix_cinema_ink" border="12">common/menu.png</texturenofocus>
+                <texturefocus colordiffuse="rix_cinema_paper" border="12">common/menu.png</texturefocus>
+                <onleft>412</onleft><onright>414</onright>
+                <onup>403</onup><ondown>421</ondown>
+            </control>
+            <control type="button" id="414">
+                <left>360</left><top>176</top><width>76</width><height>56</height>
+                <label>$VAR[RixFlix_SearchKey14]</label><font>font_midi</font>
+                <align>center</align><aligny>center</aligny><textoffsetx>0</textoffsetx>
+                <textcolor>rix_cinema_paper</textcolor><focusedcolor>rix_cinema_ink</focusedcolor>
+                <texturenofocus colordiffuse="rix_cinema_ink" border="12">common/menu.png</texturenofocus>
+                <texturefocus colordiffuse="rix_cinema_paper" border="12">common/menu.png</texturefocus>
+                <onleft>413</onleft><onright>415</onright>
+                <onup>404</onup><ondown>422</ondown>
+            </control>
+            <control type="button" id="415">
+                <left>444</left><top>176</top><width>76</width><height>56</height>
+                <label>$VAR[RixFlix_SearchKey15]</label><font>font_midi</font>
+                <align>center</align><aligny>center</aligny><textoffsetx>0</textoffsetx>
+                <textcolor>rix_cinema_paper</textcolor><focusedcolor>rix_cinema_ink</focusedcolor>
+                <texturenofocus colordiffuse="rix_cinema_ink" border="12">common/menu.png</texturenofocus>
+                <texturefocus colordiffuse="rix_cinema_paper" border="12">common/menu.png</texturefocus>
+                <onleft>414</onleft><onright>416</onright>
+                <onup>405</onup><ondown>423</ondown>
+            </control>
+            <control type="button" id="416">
+                <left>528</left><top>176</top><width>76</width><height>56</height>
+                <label>$VAR[RixFlix_SearchKey16]</label><font>font_midi</font>
+                <align>center</align><aligny>center</aligny><textoffsetx>0</textoffsetx>
+                <textcolor>rix_cinema_paper</textcolor><focusedcolor>rix_cinema_ink</focusedcolor>
+                <texturenofocus colordiffuse="rix_cinema_ink" border="12">common/menu.png</texturenofocus>
+                <texturefocus colordiffuse="rix_cinema_paper" border="12">common/menu.png</texturefocus>
+                <onleft>415</onleft><onright>417</onright>
+                <onup>406</onup><ondown>424</ondown>
+            </control>
+            <control type="button" id="417">
+                <left>612</left><top>176</top><width>76</width><height>56</height>
+                <label>$VAR[RixFlix_SearchKey17]</label><font>font_midi</font>
+                <align>center</align><aligny>center</aligny><textoffsetx>0</textoffsetx>
+                <textcolor>rix_cinema_paper</textcolor><focusedcolor>rix_cinema_ink</focusedcolor>
+                <texturenofocus colordiffuse="rix_cinema_ink" border="12">common/menu.png</texturenofocus>
+                <texturefocus colordiffuse="rix_cinema_paper" border="12">common/menu.png</texturefocus>
+                <onleft>416</onleft><onright>418</onright>
+                <onup>407</onup><ondown>425</ondown>
+            </control>
+            <control type="button" id="418">
+                <left>696</left><top>176</top><width>76</width><height>56</height>
+                <label>$VAR[RixFlix_SearchKey18]</label><font>font_midi</font>
+                <align>center</align><aligny>center</aligny><textoffsetx>0</textoffsetx>
+                <textcolor>rix_cinema_paper</textcolor><focusedcolor>rix_cinema_ink</focusedcolor>
+                <texturenofocus colordiffuse="rix_cinema_ink" border="12">common/menu.png</texturenofocus>
+                <texturefocus colordiffuse="rix_cinema_paper" border="12">common/menu.png</texturefocus>
+                <onleft>417</onleft><onright>8</onright>
+                <onup>408</onup><ondown>32</ondown>
+            </control>
+            <control type="button" id="8">
+                <left>780</left><top>176</top><width>76</width><height>56</height>
+                <label>Delete</label><font>font_mini</font>
+                <align>center</align><aligny>center</aligny><textoffsetx>0</textoffsetx>
+                <textcolor>rix_cinema_paper</textcolor><focusedcolor>rix_cinema_ink</focusedcolor>
+                <texturenofocus colordiffuse="rix_cinema_ink" border="12">common/menu.png</texturenofocus>
+                <texturefocus colordiffuse="rix_cinema_paper" border="12">common/menu.png</texturefocus>
+                <onleft>418</onleft><onright>410</onright>
+                <onup>409</onup><ondown>300</ondown>
+            </control>
+            <control type="radiobutton" id="304">
+                <left>24</left><top>240</top><width>76</width><height>56</height>
+                <label>$VAR[RixFlix_SearchSymbolsLabel]</label><font>font_mini</font>
+                <align>center</align><aligny>center</aligny><textoffsetx>0</textoffsetx>
+                <textcolor>rix_cinema_paper</textcolor><focusedcolor>rix_cinema_ink</focusedcolor>
+                <texturenofocus colordiffuse="rix_cinema_ink" border="12">common/menu.png</texturenofocus>
+                <texturefocus colordiffuse="rix_cinema_paper" border="12">common/menu.png</texturefocus>
+                <onleft>300</onleft><onright>419</onright>
+                <onup>410</onup><ondown>SendClick(300)</ondown><radiowidth>0</radiowidth><radioheight>0</radioheight>
+            </control>
+            <control type="button" id="419">
+                <left>108</left><top>240</top><width>76</width><height>56</height>
+                <label>$VAR[RixFlix_SearchKey19]</label><font>font_midi</font>
+                <align>center</align><aligny>center</aligny><textoffsetx>0</textoffsetx>
+                <textcolor>rix_cinema_paper</textcolor><focusedcolor>rix_cinema_ink</focusedcolor>
+                <texturenofocus colordiffuse="rix_cinema_ink" border="12">common/menu.png</texturenofocus>
+                <texturefocus colordiffuse="rix_cinema_paper" border="12">common/menu.png</texturefocus>
+                <onleft>304</onleft><onright>420</onright>
+                <onup>411</onup><ondown>SendClick(300)</ondown>
+            </control>
+            <control type="button" id="420">
+                <left>192</left><top>240</top><width>76</width><height>56</height>
+                <label>$VAR[RixFlix_SearchKey20]</label><font>font_midi</font>
+                <align>center</align><aligny>center</aligny><textoffsetx>0</textoffsetx>
+                <textcolor>rix_cinema_paper</textcolor><focusedcolor>rix_cinema_ink</focusedcolor>
+                <texturenofocus colordiffuse="rix_cinema_ink" border="12">common/menu.png</texturenofocus>
+                <texturefocus colordiffuse="rix_cinema_paper" border="12">common/menu.png</texturefocus>
+                <onleft>419</onleft><onright>421</onright>
+                <onup>412</onup><ondown>SendClick(300)</ondown>
+            </control>
+            <control type="button" id="421">
+                <left>276</left><top>240</top><width>76</width><height>56</height>
+                <label>$VAR[RixFlix_SearchKey21]</label><font>font_midi</font>
+                <align>center</align><aligny>center</aligny><textoffsetx>0</textoffsetx>
+                <textcolor>rix_cinema_paper</textcolor><focusedcolor>rix_cinema_ink</focusedcolor>
+                <texturenofocus colordiffuse="rix_cinema_ink" border="12">common/menu.png</texturenofocus>
+                <texturefocus colordiffuse="rix_cinema_paper" border="12">common/menu.png</texturefocus>
+                <onleft>420</onleft><onright>422</onright>
+                <onup>413</onup><ondown>SendClick(300)</ondown>
+            </control>
+            <control type="button" id="422">
+                <left>360</left><top>240</top><width>76</width><height>56</height>
+                <label>$VAR[RixFlix_SearchKey22]</label><font>font_midi</font>
+                <align>center</align><aligny>center</aligny><textoffsetx>0</textoffsetx>
+                <textcolor>rix_cinema_paper</textcolor><focusedcolor>rix_cinema_ink</focusedcolor>
+                <texturenofocus colordiffuse="rix_cinema_ink" border="12">common/menu.png</texturenofocus>
+                <texturefocus colordiffuse="rix_cinema_paper" border="12">common/menu.png</texturefocus>
+                <onleft>421</onleft><onright>423</onright>
+                <onup>414</onup><ondown>SendClick(300)</ondown>
+            </control>
+            <control type="button" id="423">
+                <left>444</left><top>240</top><width>76</width><height>56</height>
+                <label>$VAR[RixFlix_SearchKey23]</label><font>font_midi</font>
+                <align>center</align><aligny>center</aligny><textoffsetx>0</textoffsetx>
+                <textcolor>rix_cinema_paper</textcolor><focusedcolor>rix_cinema_ink</focusedcolor>
+                <texturenofocus colordiffuse="rix_cinema_ink" border="12">common/menu.png</texturenofocus>
+                <texturefocus colordiffuse="rix_cinema_paper" border="12">common/menu.png</texturefocus>
+                <onleft>422</onleft><onright>424</onright>
+                <onup>415</onup><ondown>SendClick(300)</ondown>
+            </control>
+            <control type="button" id="424">
+                <left>528</left><top>240</top><width>76</width><height>56</height>
+                <label>$VAR[RixFlix_SearchKey24]</label><font>font_midi</font>
+                <align>center</align><aligny>center</aligny><textoffsetx>0</textoffsetx>
+                <textcolor>rix_cinema_paper</textcolor><focusedcolor>rix_cinema_ink</focusedcolor>
+                <texturenofocus colordiffuse="rix_cinema_ink" border="12">common/menu.png</texturenofocus>
+                <texturefocus colordiffuse="rix_cinema_paper" border="12">common/menu.png</texturefocus>
+                <onleft>423</onleft><onright>425</onright>
+                <onup>416</onup><ondown>SendClick(300)</ondown>
+            </control>
+            <control type="button" id="425">
+                <left>612</left><top>240</top><width>76</width><height>56</height>
+                <label>$VAR[RixFlix_SearchKey25]</label><font>font_midi</font>
+                <align>center</align><aligny>center</aligny><textoffsetx>0</textoffsetx>
+                <textcolor>rix_cinema_paper</textcolor><focusedcolor>rix_cinema_ink</focusedcolor>
+                <texturenofocus colordiffuse="rix_cinema_ink" border="12">common/menu.png</texturenofocus>
+                <texturefocus colordiffuse="rix_cinema_paper" border="12">common/menu.png</texturefocus>
+                <onleft>424</onleft><onright>32</onright>
+                <onup>417</onup><ondown>SendClick(300)</ondown>
+            </control>
+            <control type="button" id="32">
+                <left>696</left><top>240</top><width>76</width><height>56</height>
+                <label>Space</label><font>font_mini</font>
+                <align>center</align><aligny>center</aligny><textoffsetx>0</textoffsetx>
+                <textcolor>rix_cinema_paper</textcolor><focusedcolor>rix_cinema_ink</focusedcolor>
+                <texturenofocus colordiffuse="rix_cinema_ink" border="12">common/menu.png</texturenofocus>
+                <texturefocus colordiffuse="rix_cinema_paper" border="12">common/menu.png</texturefocus>
+                <onleft>425</onleft><onright>300</onright>
+                <onup>418</onup><ondown>SendClick(300)</ondown>
+            </control>
+            <control type="button" id="300">
+                <left>780</left><top>240</top><width>76</width><height>56</height>
+                <label>Browse</label><font>font_mini</font>
+                <align>center</align><aligny>center</aligny><textoffsetx>0</textoffsetx>
+                <textcolor>rix_cinema_paper</textcolor><focusedcolor>rix_cinema_ink</focusedcolor>
+                <texturenofocus colordiffuse="rix_cinema_ink" border="12">common/menu.png</texturenofocus>
+                <texturefocus colordiffuse="rix_cinema_paper" border="12">common/menu.png</texturefocus>
+                <onleft>32</onleft><onright>304</onright>
+                <onup>8</onup><ondown>SendClick(300)</ondown>
+            </control>
+            <control type="label">
+                <left>24</left><top>328</top><width>832</width><height>32</height>
+                <font>font_mini</font><textcolor>rix_cinema_muted</textcolor>
+                <label>Type to search · Down to browse results · Back to close</label>
+            </control>
+        </control>
+    </include>
+    <variable name="RixFlix_SearchKey0">
+        <value condition="Control.IsSelected(304)">1</value>
+        <value>Q</value>
+    </variable>
+    <variable name="RixFlix_SearchKey1">
+        <value condition="Control.IsSelected(304)">2</value>
+        <value>W</value>
+    </variable>
+    <variable name="RixFlix_SearchKey2">
+        <value condition="Control.IsSelected(304)">3</value>
+        <value>E</value>
+    </variable>
+    <variable name="RixFlix_SearchKey3">
+        <value condition="Control.IsSelected(304)">4</value>
+        <value>R</value>
+    </variable>
+    <variable name="RixFlix_SearchKey4">
+        <value condition="Control.IsSelected(304)">5</value>
+        <value>T</value>
+    </variable>
+    <variable name="RixFlix_SearchKey5">
+        <value condition="Control.IsSelected(304)">6</value>
+        <value>Y</value>
+    </variable>
+    <variable name="RixFlix_SearchKey6">
+        <value condition="Control.IsSelected(304)">7</value>
+        <value>U</value>
+    </variable>
+    <variable name="RixFlix_SearchKey7">
+        <value condition="Control.IsSelected(304)">8</value>
+        <value>I</value>
+    </variable>
+    <variable name="RixFlix_SearchKey8">
+        <value condition="Control.IsSelected(304)">9</value>
+        <value>O</value>
+    </variable>
+    <variable name="RixFlix_SearchKey9">
+        <value condition="Control.IsSelected(304)">0</value>
+        <value>P</value>
+    </variable>
+    <variable name="RixFlix_SearchKey10">
+        <value condition="Control.IsSelected(304)">&amp;</value>
+        <value>A</value>
+    </variable>
+    <variable name="RixFlix_SearchKey11">
+        <value condition="Control.IsSelected(304)">+</value>
+        <value>S</value>
+    </variable>
+    <variable name="RixFlix_SearchKey12">
+        <value condition="Control.IsSelected(304)">&#x27;</value>
+        <value>D</value>
+    </variable>
+    <variable name="RixFlix_SearchKey13">
+        <value condition="Control.IsSelected(304)">&quot;</value>
+        <value>F</value>
+    </variable>
+    <variable name="RixFlix_SearchKey14">
+        <value condition="Control.IsSelected(304)">(</value>
+        <value>G</value>
+    </variable>
+    <variable name="RixFlix_SearchKey15">
+        <value condition="Control.IsSelected(304)">)</value>
+        <value>H</value>
+    </variable>
+    <variable name="RixFlix_SearchKey16">
+        <value condition="Control.IsSelected(304)">-</value>
+        <value>J</value>
+    </variable>
+    <variable name="RixFlix_SearchKey17">
+        <value condition="Control.IsSelected(304)">:</value>
+        <value>K</value>
+    </variable>
+    <variable name="RixFlix_SearchKey18">
+        <value condition="Control.IsSelected(304)">/</value>
+        <value>L</value>
+    </variable>
+    <variable name="RixFlix_SearchKey19">
+        <value condition="Control.IsSelected(304)">.</value>
+        <value>Z</value>
+    </variable>
+    <variable name="RixFlix_SearchKey20">
+        <value condition="Control.IsSelected(304)">,</value>
+        <value>X</value>
+    </variable>
+    <variable name="RixFlix_SearchKey21">
+        <value condition="Control.IsSelected(304)">!</value>
+        <value>C</value>
+    </variable>
+    <variable name="RixFlix_SearchKey22">
+        <value condition="Control.IsSelected(304)">?</value>
+        <value>V</value>
+    </variable>
+    <variable name="RixFlix_SearchKey23">
+        <value condition="Control.IsSelected(304)">@</value>
+        <value>B</value>
+    </variable>
+    <variable name="RixFlix_SearchKey24">
+        <value condition="Control.IsSelected(304)">é</value>
+        <value>N</value>
+    </variable>
+    <variable name="RixFlix_SearchKey25">
+        <value condition="Control.IsSelected(304)">%</value>
+        <value>M</value>
+    </variable>
+    <variable name="RixFlix_SearchSymbolsLabel">
+        <value condition="Control.IsSelected(304)">ABC</value><value>123</value>
+    </variable>
 
 </includes>

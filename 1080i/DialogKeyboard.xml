@@ -2,6 +2,7 @@
 <window>
 
     <defaultcontrol always="true">300</defaultcontrol>
+    <onload condition="Window.IsVisible(11105)">SetFocus(400)</onload>
 
     <controls>
         <include>DialogKeyboard</include>
