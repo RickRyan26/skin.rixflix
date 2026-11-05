@@ -377,6 +377,7 @@ def check():
     assert len(buttons) == 30 and {int(c.get('id')) for c in buttons} == set(range(400, 426)) | {8, 32, 300, 304}
     assert compact.findtext('width') == '880' and compact.findtext('height') == '384'
     assert not compact.findall(".//control[@type='list']"), 'Search has no suggestion list'
+    assert not [c for c in buttons if c.get('type') == 'radiobutton'], 'a textureless radiobutton draws On/Off over its label'
     assert all(compact.find("control[@id='%d']" % i) is not None for i in (312, 313, 314)), 'native edit/IME controls'
     assert '$ESCINFO' in compact.find("control[@id='312']").findtext('ontextchange')
     assert keyboard.find("include[@name='DialogKeyboard_Full']") is not None

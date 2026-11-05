@@ -820,9 +820,10 @@
                 <onleft>418</onleft><onright>410</onright>
                 <onup>409</onup><ondown>300</ondown>
             </control>
-            <control type="radiobutton" id="304">
-                <!-- A radiobutton exposes no selected infobool, and a key types its own label, so the numeric
-                     layer's labels follow this property. Native OnSymbols still flips m_keyType. -->
+            <control type="button" id="304">
+                <!-- A plain button: a radiobutton with no radio textures draws Kodi's On/Off label over its
+                     own, which read "123ff". A key types its own label, so the numeric layer's labels follow
+                     this property. Native OnSymbols still flips m_keyType on the click message. -->
                 <onclick condition="String.IsEmpty(Window(Home).Property(RixFlix.SearchSymbols))">SetProperty(RixFlix.SearchSymbols,1,Home)</onclick>
                 <onclick condition="!String.IsEmpty(Window(Home).Property(RixFlix.SearchSymbols))">ClearProperty(RixFlix.SearchSymbols,Home)</onclick>
                 <left>24</left><top>240</top><width>76</width><height>56</height>
@@ -832,7 +833,7 @@
                 <texturenofocus colordiffuse="rix_cinema_ink" border="12">common/menu.png</texturenofocus>
                 <texturefocus colordiffuse="rix_cinema_paper" border="12">common/menu.png</texturefocus>
                 <onleft>300</onleft><onright>419</onright>
-                <onup>410</onup><ondown>SendClick(300)</ondown><radiowidth>0</radiowidth><radioheight>0</radioheight>
+                <onup>410</onup><ondown>SendClick(300)</ondown>
             </control>
             <control type="button" id="419">
                 <left>108</left><top>240</top><width>76</width><height>56</height>
@@ -916,7 +917,7 @@
             </control>
             <control type="button" id="300">
                 <left>780</left><top>240</top><width>76</width><height>56</height>
-                <label>Browse</label><font>font_mini</font>
+                <label>Done</label><font>font_mini</font>
                 <align>center</align><aligny>center</aligny><textoffsetx>0</textoffsetx>
                 <textcolor>rix_cinema_paper</textcolor><focusedcolor>rix_cinema_ink</focusedcolor>
                 <texturenofocus colordiffuse="rix_cinema_ink" border="12">common/menu.png</texturenofocus>
