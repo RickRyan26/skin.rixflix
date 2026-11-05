@@ -248,6 +248,9 @@ def check_hub_conditions():
     """Kodi's InfoExpression treats every `[` as an operator, even inside parentheses, so
     `String.IsEqual(a,$INFO[b])` logs "Misplaced [" and the control stays hidden. The second
     argument takes a bare infolabel. Every category hub row was invisible this way in 1.12.52."""
+    hub = (ROOT / '1080i/Includes_CategoryHub.xml').read_text()
+    assert hub.count('condition="!String.IsEqual(Window(Home).Property(RixFlix.CategoryRow.') == 14, (
+        'every genre row must stay faded until its own category arrives')
     keyboard = (ROOT / '1080i/Dialog_DialogKeyboard.xml').read_text()
     assert 'Control.IsSelected' not in keyboard, 'Kodi has no Control.IsSelected infobool'
     for name in ('Includes_CategoryHub.xml', 'Timers.xml'):

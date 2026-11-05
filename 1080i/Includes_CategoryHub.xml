@@ -43,6 +43,8 @@
                 <control type="group" id="8201">
                     <height>490</height>
                     <visible>String.IsEqual(Window(Home).Property(RixFlix.CategoryReady),Window(Home).Property(RixFlix.Category)) + Integer.IsGreater(Window(Home).Property(RixFlix.CategoryCount.Action),2)</visible>
+                    <!-- Fade, never hide: a hidden row would not load the content that clears this. -->
+                    <animation effect="fade" start="0" end="0" time="0" condition="!String.IsEqual(Window(Home).Property(RixFlix.CategoryRow.Action),Window(Home).Property(RixFlix.Category))">Conditional</animation>
                     <control type="label">
                         <left>80</left><top>0</top><height>55</height><width>1760</width>
                         <font>font_main_bold</font><label>Action</label><textcolor>white</textcolor>
@@ -61,6 +63,8 @@
                 <control type="group" id="8202">
                     <height>490</height>
                     <visible>String.IsEqual(Window(Home).Property(RixFlix.CategoryReady),Window(Home).Property(RixFlix.Category)) + Integer.IsGreater(Window(Home).Property(RixFlix.CategoryCount.Adventure),2)</visible>
+                    <!-- Fade, never hide: a hidden row would not load the content that clears this. -->
+                    <animation effect="fade" start="0" end="0" time="0" condition="!String.IsEqual(Window(Home).Property(RixFlix.CategoryRow.Adventure),Window(Home).Property(RixFlix.Category))">Conditional</animation>
                     <control type="label">
                         <left>80</left><top>0</top><height>55</height><width>1760</width>
                         <font>font_main_bold</font><label>Adventure</label><textcolor>white</textcolor>
@@ -79,6 +83,8 @@
                 <control type="group" id="8203">
                     <height>490</height>
                     <visible>String.IsEqual(Window(Home).Property(RixFlix.CategoryReady),Window(Home).Property(RixFlix.Category)) + Integer.IsGreater(Window(Home).Property(RixFlix.CategoryCount.Animation),2)</visible>
+                    <!-- Fade, never hide: a hidden row would not load the content that clears this. -->
+                    <animation effect="fade" start="0" end="0" time="0" condition="!String.IsEqual(Window(Home).Property(RixFlix.CategoryRow.Animation),Window(Home).Property(RixFlix.Category))">Conditional</animation>
                     <control type="label">
                         <left>80</left><top>0</top><height>55</height><width>1760</width>
                         <font>font_main_bold</font><label>Animation</label><textcolor>white</textcolor>
@@ -97,6 +103,8 @@
                 <control type="group" id="8204">
                     <height>490</height>
                     <visible>String.IsEqual(Window(Home).Property(RixFlix.CategoryReady),Window(Home).Property(RixFlix.Category)) + Integer.IsGreater(Window(Home).Property(RixFlix.CategoryCount.Comedy),2)</visible>
+                    <!-- Fade, never hide: a hidden row would not load the content that clears this. -->
+                    <animation effect="fade" start="0" end="0" time="0" condition="!String.IsEqual(Window(Home).Property(RixFlix.CategoryRow.Comedy),Window(Home).Property(RixFlix.Category))">Conditional</animation>
                     <control type="label">
                         <left>80</left><top>0</top><height>55</height><width>1760</width>
                         <font>font_main_bold</font><label>Comedy</label><textcolor>white</textcolor>
@@ -115,6 +123,8 @@
                 <control type="group" id="8205">
                     <height>490</height>
                     <visible>String.IsEqual(Window(Home).Property(RixFlix.CategoryReady),Window(Home).Property(RixFlix.Category)) + Integer.IsGreater(Window(Home).Property(RixFlix.CategoryCount.Crime),2)</visible>
+                    <!-- Fade, never hide: a hidden row would not load the content that clears this. -->
+                    <animation effect="fade" start="0" end="0" time="0" condition="!String.IsEqual(Window(Home).Property(RixFlix.CategoryRow.Crime),Window(Home).Property(RixFlix.Category))">Conditional</animation>
                     <control type="label">
                         <left>80</left><top>0</top><height>55</height><width>1760</width>
                         <font>font_main_bold</font><label>Crime</label><textcolor>white</textcolor>
@@ -133,6 +143,8 @@
                 <control type="group" id="8206">
                     <height>490</height>
                     <visible>String.IsEqual(Window(Home).Property(RixFlix.CategoryReady),Window(Home).Property(RixFlix.Category)) + Integer.IsGreater(Window(Home).Property(RixFlix.CategoryCount.Documentary),2)</visible>
+                    <!-- Fade, never hide: a hidden row would not load the content that clears this. -->
+                    <animation effect="fade" start="0" end="0" time="0" condition="!String.IsEqual(Window(Home).Property(RixFlix.CategoryRow.Documentary),Window(Home).Property(RixFlix.Category))">Conditional</animation>
                     <control type="label">
                         <left>80</left><top>0</top><height>55</height><width>1760</width>
                         <font>font_main_bold</font><label>Documentary</label><textcolor>white</textcolor>
@@ -151,6 +163,8 @@
                 <control type="group" id="8207">
                     <height>490</height>
                     <visible>String.IsEqual(Window(Home).Property(RixFlix.CategoryReady),Window(Home).Property(RixFlix.Category)) + Integer.IsGreater(Window(Home).Property(RixFlix.CategoryCount.Drama),2)</visible>
+                    <!-- Fade, never hide: a hidden row would not load the content that clears this. -->
+                    <animation effect="fade" start="0" end="0" time="0" condition="!String.IsEqual(Window(Home).Property(RixFlix.CategoryRow.Drama),Window(Home).Property(RixFlix.Category))">Conditional</animation>
                     <control type="label">
                         <left>80</left><top>0</top><height>55</height><width>1760</width>
                         <font>font_main_bold</font><label>Drama</label><textcolor>white</textcolor>
@@ -169,6 +183,8 @@
                 <control type="group" id="8208">
                     <height>490</height>
                     <visible>String.IsEqual(Window(Home).Property(RixFlix.CategoryReady),Window(Home).Property(RixFlix.Category)) + Integer.IsGreater(Window(Home).Property(RixFlix.CategoryCount.Family),2)</visible>
+                    <!-- Fade, never hide: a hidden row would not load the content that clears this. -->
+                    <animation effect="fade" start="0" end="0" time="0" condition="!String.IsEqual(Window(Home).Property(RixFlix.CategoryRow.Family),Window(Home).Property(RixFlix.Category))">Conditional</animation>
                     <control type="label">
                         <left>80</left><top>0</top><height>55</height><width>1760</width>
                         <font>font_main_bold</font><label>Family</label><textcolor>white</textcolor>
@@ -187,6 +203,8 @@
                 <control type="group" id="8209">
                     <height>490</height>
                     <visible>String.IsEqual(Window(Home).Property(RixFlix.CategoryReady),Window(Home).Property(RixFlix.Category)) + Integer.IsGreater(Window(Home).Property(RixFlix.CategoryCount.Fantasy),2)</visible>
+                    <!-- Fade, never hide: a hidden row would not load the content that clears this. -->
+                    <animation effect="fade" start="0" end="0" time="0" condition="!String.IsEqual(Window(Home).Property(RixFlix.CategoryRow.Fantasy),Window(Home).Property(RixFlix.Category))">Conditional</animation>
                     <control type="label">
                         <left>80</left><top>0</top><height>55</height><width>1760</width>
                         <font>font_main_bold</font><label>Fantasy</label><textcolor>white</textcolor>
@@ -205,6 +223,8 @@
                 <control type="group" id="8210">
                     <height>490</height>
                     <visible>String.IsEqual(Window(Home).Property(RixFlix.CategoryReady),Window(Home).Property(RixFlix.Category)) + Integer.IsGreater(Window(Home).Property(RixFlix.CategoryCount.Horror),2)</visible>
+                    <!-- Fade, never hide: a hidden row would not load the content that clears this. -->
+                    <animation effect="fade" start="0" end="0" time="0" condition="!String.IsEqual(Window(Home).Property(RixFlix.CategoryRow.Horror),Window(Home).Property(RixFlix.Category))">Conditional</animation>
                     <control type="label">
                         <left>80</left><top>0</top><height>55</height><width>1760</width>
                         <font>font_main_bold</font><label>Horror</label><textcolor>white</textcolor>
@@ -223,6 +243,8 @@
                 <control type="group" id="8211">
                     <height>490</height>
                     <visible>String.IsEqual(Window(Home).Property(RixFlix.CategoryReady),Window(Home).Property(RixFlix.Category)) + Integer.IsGreater(Window(Home).Property(RixFlix.CategoryCount.Mystery),2)</visible>
+                    <!-- Fade, never hide: a hidden row would not load the content that clears this. -->
+                    <animation effect="fade" start="0" end="0" time="0" condition="!String.IsEqual(Window(Home).Property(RixFlix.CategoryRow.Mystery),Window(Home).Property(RixFlix.Category))">Conditional</animation>
                     <control type="label">
                         <left>80</left><top>0</top><height>55</height><width>1760</width>
                         <font>font_main_bold</font><label>Mystery</label><textcolor>white</textcolor>
@@ -241,6 +263,8 @@
                 <control type="group" id="8212">
                     <height>490</height>
                     <visible>String.IsEqual(Window(Home).Property(RixFlix.CategoryReady),Window(Home).Property(RixFlix.Category)) + Integer.IsGreater(Window(Home).Property(RixFlix.CategoryCount.Romance),2)</visible>
+                    <!-- Fade, never hide: a hidden row would not load the content that clears this. -->
+                    <animation effect="fade" start="0" end="0" time="0" condition="!String.IsEqual(Window(Home).Property(RixFlix.CategoryRow.Romance),Window(Home).Property(RixFlix.Category))">Conditional</animation>
                     <control type="label">
                         <left>80</left><top>0</top><height>55</height><width>1760</width>
                         <font>font_main_bold</font><label>Romance</label><textcolor>white</textcolor>
@@ -259,6 +283,8 @@
                 <control type="group" id="8213">
                     <height>490</height>
                     <visible>String.IsEqual(Window(Home).Property(RixFlix.CategoryReady),Window(Home).Property(RixFlix.Category)) + Integer.IsGreater(Window(Home).Property(RixFlix.CategoryCount.ScienceFiction),2)</visible>
+                    <!-- Fade, never hide: a hidden row would not load the content that clears this. -->
+                    <animation effect="fade" start="0" end="0" time="0" condition="!String.IsEqual(Window(Home).Property(RixFlix.CategoryRow.ScienceFiction),Window(Home).Property(RixFlix.Category))">Conditional</animation>
                     <control type="label">
                         <left>80</left><top>0</top><height>55</height><width>1760</width>
                         <font>font_main_bold</font><label>Science Fiction</label><textcolor>white</textcolor>
@@ -277,6 +303,8 @@
                 <control type="group" id="8214">
                     <height>490</height>
                     <visible>String.IsEqual(Window(Home).Property(RixFlix.CategoryReady),Window(Home).Property(RixFlix.Category)) + Integer.IsGreater(Window(Home).Property(RixFlix.CategoryCount.Thriller),2)</visible>
+                    <!-- Fade, never hide: a hidden row would not load the content that clears this. -->
+                    <animation effect="fade" start="0" end="0" time="0" condition="!String.IsEqual(Window(Home).Property(RixFlix.CategoryRow.Thriller),Window(Home).Property(RixFlix.Category))">Conditional</animation>
                     <control type="label">
                         <left>80</left><top>0</top><height>55</height><width>1760</width>
                         <font>font_main_bold</font><label>Thriller</label><textcolor>white</textcolor>
