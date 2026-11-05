@@ -670,3 +670,9 @@ Kodi `CGUIWindow::NeedLoad` tracks include condition values, so switching from
 Search to a password/settings keyboard reloads the correct control tree rather
 than reusing whichever one was opened first. Generic layout XML is identical to
 skin 1.12.50 (`d0aa5c56`), except for its include name.
+
+The live text handler also excludes `System.HasHiddenInput`: if an add-on ever
+opens a password prompt over Search, its input must not become search text or a
+provider log entry. This is checked at text-change time: Kodi's hidden-input
+infolabel becomes true only after the keyboard is active, so it is unsuitable
+as an include-load condition for choosing the keyboard tree.

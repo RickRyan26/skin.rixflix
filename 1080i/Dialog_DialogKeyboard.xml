@@ -615,7 +615,7 @@
                 <texturenofocus colordiffuse="rix_cinema_ink" border="16">common/menu.png</texturenofocus>
                 <texturefocus colordiffuse="rix_cinema_paper" border="16">common/menu.png</texturefocus>
                 <ondown>400</ondown><onup>300</onup><onleft>400</onleft><onright>409</onright>
-                <ontextchange>SetProperty(RixFlix.SearchText,$ESCINFO[Control.GetLabel(312).index(1)],Home)</ontextchange>
+                <ontextchange condition="!System.HasHiddenInput">SetProperty(RixFlix.SearchText,$ESCINFO[Control.GetLabel(312).index(1)],Home)</ontextchange>
             </control>
             <!-- Native OnInitWindow dereferences label 314 even without an IME. -->
             <control type="label" id="313"><left>-2000</left><width>1</width><height>1</height><font>font_mini</font></control>
