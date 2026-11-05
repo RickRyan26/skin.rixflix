@@ -6,6 +6,7 @@ Grouplist pitch (Size = top + height, focus scroll): xbmc/guilib/GUIControlGroup
 Contrast: https://www.w3.org/WAI/WCAG22/Understanding/contrast-minimum.html
 """
 from pathlib import Path
+import re
 import json
 import xml.etree.ElementTree as ET
 
@@ -243,7 +244,19 @@ def check_static_content_targets():
     assert not dynamic, ('dynamic <content target>', dynamic)
 
 
+def check_hub_conditions():
+    """Kodi's InfoExpression treats every `[` as an operator, even inside parentheses, so
+    `String.IsEqual(a,$INFO[b])` logs "Misplaced [" and the control stays hidden. The second
+    argument takes a bare infolabel. Every category hub row was invisible this way in 1.12.52."""
+    for name in ('Includes_CategoryHub.xml', 'Timers.xml'):
+        for node in ET.parse(ROOT / '1080i' / name).getroot().iter():
+            if node.tag in ('visible', 'start', 'stop', 'reset'):
+                assert not re.search(r'\$(INFO|ESCINFO|VAR)\[', node.text or ''), (
+                    f'{name}: $INFO inside a boolean expression: {node.text}')
+
+
 def check():
+    check_hub_conditions()
     check_static_content_targets()
     constants = {c.get('name'): (c.text or '').strip()
                  for c in ET.parse(ROOT / '1080i/Includes_Constants.xml').getroot().findall('constant')}

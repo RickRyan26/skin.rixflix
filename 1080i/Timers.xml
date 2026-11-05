@@ -97,7 +97,7 @@
     </timer>
     <timer>
         <name>rixflix_category_ready</name>
-        <start reset="true">Window.IsActive(11101) + Control.HasFocus(8901) + String.IsEqual(Window(Home).Property(RixFlix.CategoryReady),$INFO[Window(Home).Property(RixFlix.Category)])</start>
+        <start reset="true">Window.IsActive(11101) + Control.HasFocus(8901) + String.IsEqual(Window(Home).Property(RixFlix.CategoryReady),Window(Home).Property(RixFlix.Category))</start>
         <stop>!Window.IsActive(11101) | !Control.HasFocus(8901)</stop>
         <onstart>SetFocus(8100)</onstart>
     </timer>
