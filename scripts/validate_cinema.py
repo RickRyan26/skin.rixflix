@@ -249,6 +249,10 @@ def check_hub_conditions():
     `String.IsEqual(a,$INFO[b])` logs "Misplaced [" and the control stays hidden. The second
     argument takes a bare infolabel. Every category hub row was invisible this way in 1.12.52."""
     hub = (ROOT / '1080i/Includes_CategoryHub.xml').read_text()
+    # 1.12.62: a condition per category makes Kodi reload the hub, which alone frees the last page's posters.
+    hub_window = (ROOT / '1080i/Custom_1101_Hub.xml').read_text()
+    for category in ('past_year', 'movies', 'shows', 'reference', 'netflix', 'disney', 'hulu', 'max', 'paramount', 'prime'):
+        assert f'Property(RixFlix.Category),{category})">RixFlix_CategoryHub_Reload<' in hub_window, category
     assert hub.count('condition="!String.IsEqual(Window(Home).Property(RixFlix.CategoryRow.') == 14, (
         'every genre row must stay faded until its own category arrives')
     # CAnimation::Calculate (VisibleEffect.cpp): a zero-length effect applies its end while the

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <includes>
+    <include name="RixFlix_CategoryHub_Reload"><description>Reload key only</description></include>
     <include name="RixFlix_CategoryHub">
         <control type="image">
             <texture colordiffuse="ff080808">common/white.png</texture>

@@ -689,3 +689,13 @@ Down off the compact keyboard's bottom row now arms `RixFlix.SearchDown` before 
 `rixflix_search_down` timer waits until the keyboard has closed, then focuses the first result, or
 stays on the field if there are none. The hub's `rixflix_category_ready` timer retries each second,
 because a row accepts focus only once it is visible and loading.
+
+## Category hub memory (1.12.62)
+
+The hub window is `KEEP_IN_MEMORY`, and closing it does not free its rows' poster textures:
+`CGUIWindow::FreeResources` calls `CGUIControlGroup::FreeResources()` with `immediately` false, and
+`CGUIBaseContainer` then keeps its items. Each category therefore stacked on the last.
+`Custom_1101_Hub.xml` carries one no-op conditional include per category key. A changed include
+condition makes `CGUIWindow::NeedLoad` reload the window, so opening a different category frees the
+old page first. The posters stay until that next open, and reopening the same category keeps them. A new
+category key needs a line there; `validate_cinema.py` holds the ten.

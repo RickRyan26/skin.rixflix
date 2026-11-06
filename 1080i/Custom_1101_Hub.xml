@@ -2,6 +2,17 @@
 <window type="window" id="1101">
     <defaultcontrol always="false">8901</defaultcontrol>
     <onunload>ClearProperty(RixFlix.CategoryReturn.Go,Home)</onunload>
+    <!-- A kept-in-memory window never frees its rows' posters on close, so each category stacked on the last. An include condition that changes makes Kodi reload the window (CGUIWindow::NeedLoad), so a new category starts empty and the hub holds one page's posters at most. -->
+    <include condition="String.IsEqual(Window(Home).Property(RixFlix.Category),past_year)">RixFlix_CategoryHub_Reload</include>
+    <include condition="String.IsEqual(Window(Home).Property(RixFlix.Category),movies)">RixFlix_CategoryHub_Reload</include>
+    <include condition="String.IsEqual(Window(Home).Property(RixFlix.Category),shows)">RixFlix_CategoryHub_Reload</include>
+    <include condition="String.IsEqual(Window(Home).Property(RixFlix.Category),reference)">RixFlix_CategoryHub_Reload</include>
+    <include condition="String.IsEqual(Window(Home).Property(RixFlix.Category),netflix)">RixFlix_CategoryHub_Reload</include>
+    <include condition="String.IsEqual(Window(Home).Property(RixFlix.Category),disney)">RixFlix_CategoryHub_Reload</include>
+    <include condition="String.IsEqual(Window(Home).Property(RixFlix.Category),hulu)">RixFlix_CategoryHub_Reload</include>
+    <include condition="String.IsEqual(Window(Home).Property(RixFlix.Category),max)">RixFlix_CategoryHub_Reload</include>
+    <include condition="String.IsEqual(Window(Home).Property(RixFlix.Category),paramount)">RixFlix_CategoryHub_Reload</include>
+    <include condition="String.IsEqual(Window(Home).Property(RixFlix.Category),prime)">RixFlix_CategoryHub_Reload</include>
     <controls>
         <include>RixFlix_CategoryHub</include>
     </controls>
