@@ -253,6 +253,14 @@ def check_hub_conditions():
     hub_window = (ROOT / '1080i/Custom_1101_Hub.xml').read_text()
     for category in ('past_year', 'movies', 'shows', 'reference', 'netflix', 'disney', 'hulu', 'max', 'paramount', 'prime'):
         assert f'Property(RixFlix.Category),{category})">RixFlix_CategoryHub_Reload<' in hub_window, category
+    # 1.12.63: Back reloads the hub with no controls, and only a third window makes that activation real.
+    assert 'Property(RixFlix.Category))">RixFlix_CategoryHub<' in hub_window, 'an empty category must load no rows'
+    timers = (ROOT / '1080i/Timers.xml').read_text()
+    assert ('<onstart>ClearProperty(RixFlix.Category,Home)</onstart>\n'
+            '        <onstart>ActivateWindow(1110)</onstart>\n'
+            '        <onstart>ActivateWindow(1101)</onstart>\n'
+            '        <onstart>ActivateWindow(Home)</onstart>') in timers, 'category Back must free the page before Home'
+    assert 'id="1110"' in (ROOT / '1080i/Custom_1110_HubRelease.xml').read_text()
     assert hub.count('condition="!String.IsEqual(Window(Home).Property(RixFlix.CategoryRow.') == 14, (
         'every genre row must stay faded until its own category arrives')
     # CAnimation::Calculate (VisibleEffect.cpp): a zero-length effect applies its end while the

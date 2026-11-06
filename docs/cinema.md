@@ -690,12 +690,24 @@ Down off the compact keyboard's bottom row now arms `RixFlix.SearchDown` before 
 stays on the field if there are none. The hub's `rixflix_category_ready` timer retries each second,
 because a row accepts focus only once it is visible and loading.
 
-## Category hub memory (1.12.62)
+## Category hub memory (1.12.62, 1.12.63)
 
 The hub window is `KEEP_IN_MEMORY`, and closing it does not free its rows' poster textures:
 `CGUIWindow::FreeResources` calls `CGUIControlGroup::FreeResources()` with `immediately` false, and
 `CGUIBaseContainer` then keeps its items. Each category therefore stacked on the last.
 `Custom_1101_Hub.xml` carries one no-op conditional include per category key. A changed include
 condition makes `CGUIWindow::NeedLoad` reload the window, so opening a different category frees the
-old page first. The posters stay until that next open, and reopening the same category keeps them. A new
-category key needs a line there; `validate_cinema.py` holds the ten.
+old page first. A new category key needs a line there; `validate_cinema.py` holds the ten.
+
+**Back frees the page (1.12.63).** A reload happens only when the window is activated, and the
+`ActivateWindow` builtin ignores the window already open (`GUIBuiltins.cpp`), so `ReplaceWindow(1101)`
+from the hub does nothing. `rixflix_category_return` therefore clears `RixFlix.Category`, then
+activates `1110` (`Custom_1110_HubRelease.xml`, no controls), `1101` and Home. The rows' include is
+conditional on a set category, so that activation loads an empty window and destroys the rows. All
+of it runs in one call stack with no frame between, because none of these windows has a close
+animation; adding one would make it visible. Series Back keeps the category and the page.
+
+Other exits keep the page until the next tile: Kodi's Home action, which skips the timer, and
+playback started from a row, which must return to a live hub. Deleted rows cancel their directory
+jobs without waiting, so Back during a load is safe; a provider script already running finishes on
+its own.

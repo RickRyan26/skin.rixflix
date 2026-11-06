@@ -93,6 +93,9 @@
         <stop>String.IsEmpty(Window(Home).Property(RixFlix.CategoryReturn.Go))</stop>
         <onstart>ClearProperty(RixFlix.CategoryReturn.Go,Home)</onstart>
         <onstart>SetFocus(8901)</onstart>
+        <onstart>ClearProperty(RixFlix.Category,Home)</onstart>
+        <onstart>ActivateWindow(1110)</onstart>
+        <onstart>ActivateWindow(1101)</onstart>
         <onstart>ActivateWindow(Home)</onstart>
     </timer>
     <timer>
