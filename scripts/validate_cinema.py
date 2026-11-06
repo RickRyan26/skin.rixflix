@@ -251,6 +251,11 @@ def check_hub_conditions():
     hub = (ROOT / '1080i/Includes_CategoryHub.xml').read_text()
     assert hub.count('condition="!String.IsEqual(Window(Home).Property(RixFlix.CategoryRow.') == 14, (
         'every genre row must stay faded until its own category arrives')
+    # CAnimation::Calculate (VisibleEffect.cpp): a zero-length effect applies its end while the
+    # condition holds and its START once it clears, so start="0" stays black with loaded rows.
+    assert hub.count('effect="fade" start="100" end="0" time="0" condition="!String.IsEqual(') == 14, (
+        'a genre row fade must rest at start="100" or the row never appears')
+    assert 'start="0" end="0"' not in hub, 'a conditional start="0" fade never comes back'
     keyboard = (ROOT / '1080i/Dialog_DialogKeyboard.xml').read_text()
     assert 'Control.IsSelected' not in keyboard, 'Kodi has no Control.IsSelected infobool'
     for name in ('Includes_CategoryHub.xml', 'Timers.xml'):
@@ -362,8 +367,14 @@ def check():
     assert set(downs) == {'502', '7900', 'SetProperty(RixFlix.SearchDown,1,Home)'}, downs
     assert '!$EXP[Exp_RixFlix_Search_Loading]' in downs['7900'], 'empty-results Down must not fire while loading'
     held = ET.parse(ROOT / '1080i/Timers.xml').getroot().find("timer[name='rixflix_search_down']")
-    assert held is not None and any(n.text == 'SetFocus(502)' for n in held.findall('onstop'))
+    assert held is not None and any(n.text == 'SetFocus(502,0,absolute)' for n in held.findall('onstop'))
+    assert '!Window.IsVisible(DialogKeyboard.xml)' in held.findtext('start'), 'focus cannot move under the keyboard'
     assert held.findall('onstop')[-1].text == 'ClearProperty(RixFlix.SearchDown,Home)'
+    # 1.12.61: Down off the compact keyboard lands on the first result, not back on the field.
+    compact = ET.parse(ROOT / '1080i/Dialog_DialogKeyboard.xml').getroot().find("include[@name='RixFlix_SearchKeyboard']")
+    for key_id in ('32', '8', '304'):
+        routes = [n.text for n in compact.find(f".//control[@id='{key_id}']").findall('ondown')]
+        assert routes == ['SetProperty(RixFlix.SearchDown,1,Home)', 'SendClick(300)'], (key_id, routes)
     # 1.12.49: Down off the keyboard's bottom row is a Done press while search is underneath.
     keys = ET.parse(ROOT / '1080i/Dialog_DialogKeyboard.xml').getroot().find(
         "include[@name='DialogKeyboard_Row_Buttons_SYMBOL']")

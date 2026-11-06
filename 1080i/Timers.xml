@@ -79,12 +79,12 @@
     </timer>
     <timer>
         <name>rixflix_search_down</name>
-        <description>Land a Down pressed while search results load on the results once they arrive.</description>
-        <!-- Armed by edit 3000's ondown. The loading test inlines Exp_RixFlix_Search_Loading (no $EXP here). -->
+        <description>Land a Down from the keyboard, or on the field while results load, on the first result.</description>
+        <!-- Armed by edit 3000's ondown and the keyboard's bottom row; waits for the keyboard to close, because focus cannot move under it. The loading test inlines Exp_RixFlix_Search_Loading (no $EXP here). -->
         <!-- Stops on results, on loading ending empty (focus stays on the field), on the viewer moving, or after 5 s. -->
-        <start reset="true">!String.IsEmpty(Window(Home).Property(RixFlix.SearchDown))</start>
+        <start reset="true">!String.IsEmpty(Window(Home).Property(RixFlix.SearchDown)) + !Window.IsVisible(DialogKeyboard.xml)</start>
         <stop>String.IsEmpty(Window(Home).Property(RixFlix.SearchDown)) | !Window.IsActive(11105) | !Control.HasFocus(3000) | [Integer.IsGreater(Container(502).NumItems,0) + String.IsEqual(Container(502).ListItem.Property(RixFlix.SearchText),Window(Home).Property(RixFlix.SearchText))] | ![!String.IsEqual(Window(Home).Property(RixFlix.SearchCompleted),Window(Home).Property(RixFlix.SearchText)) | Container(310).IsUpdating | Container(320).IsUpdating | Container(501).IsUpdating | Container(502).IsUpdating | Container(503).IsUpdating | Container(504).IsUpdating | Container(505).IsUpdating | Container(506).IsUpdating | Container(507).IsUpdating | Container(508).IsUpdating | Container(509).IsUpdating] | Integer.IsGreater(Skin.TimerElapsedSecs(rixflix_search_down),5)</stop>
-        <onstop condition="Window.IsActive(11105) + Control.HasFocus(3000) + [Integer.IsGreater(Container(502).NumItems,0) + String.IsEqual(Container(502).ListItem.Property(RixFlix.SearchText),Window(Home).Property(RixFlix.SearchText))]">SetFocus(502)</onstop>
+        <onstop condition="Window.IsActive(11105) + Control.HasFocus(3000) + [Integer.IsGreater(Container(502).NumItems,0) + String.IsEqual(Container(502).ListItem.Property(RixFlix.SearchText),Window(Home).Property(RixFlix.SearchText))]">SetFocus(502,0,absolute)</onstop>
         <onstop>ClearProperty(RixFlix.SearchDown,Home)</onstop>
     </timer>
     <timer>
@@ -98,7 +98,7 @@
     <timer>
         <name>rixflix_category_ready</name>
         <start reset="true">Window.IsActive(11101) + Control.HasFocus(8901) + String.IsEqual(Window(Home).Property(RixFlix.CategoryReady),Window(Home).Property(RixFlix.Category))</start>
-        <stop>!Window.IsActive(11101) | !Control.HasFocus(8901)</stop>
+        <stop>!Window.IsActive(11101) | !Control.HasFocus(8901) | Integer.IsGreaterOrEqual(Skin.TimerElapsedSecs(rixflix_category_ready),1)</stop>
         <onstart>SetFocus(8100)</onstart>
     </timer>
 </timers>

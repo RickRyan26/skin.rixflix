@@ -908,7 +908,7 @@
                 <texturenofocus colordiffuse="rix_cinema_key" border="16">common/box.png</texturenofocus>
                 <texturefocus colordiffuse="rix_cinema_paper" border="16">common/box.png</texturefocus>
                 <onleft>304</onleft><onright>8</onright>
-                <onup>421</onup><ondown>SendClick(300)</ondown>
+                <onup>421</onup><ondown>SetProperty(RixFlix.SearchDown,1,Home)</ondown><ondown>SendClick(300)</ondown>
             </control>
             <control type="button" id="8">
                 <left>220</left><top>360</top><width>188</width><height>56</height>
@@ -918,7 +918,7 @@
                 <texturenofocus colordiffuse="rix_cinema_key" border="16">common/box.png</texturenofocus>
                 <texturefocus colordiffuse="rix_cinema_paper" border="16">common/box.png</texturefocus>
                 <onleft>32</onleft><onright>304</onright>
-                <onup>423</onup><ondown>SendClick(300)</ondown>
+                <onup>423</onup><ondown>SetProperty(RixFlix.SearchDown,1,Home)</ondown><ondown>SendClick(300)</ondown>
             </control>
             <control type="button" id="304">
                 <!-- A plain button: a radiobutton with no radio textures draws Kodi's On/Off label over its
@@ -933,9 +933,9 @@
                 <texturenofocus colordiffuse="rix_cinema_key" border="16">common/box.png</texturenofocus>
                 <texturefocus colordiffuse="rix_cinema_paper" border="16">common/box.png</texturefocus>
                 <onleft>8</onleft><onright>32</onright>
-                <onup>426</onup><ondown>SendClick(300)</ondown>
+                <onup>426</onup><ondown>SetProperty(RixFlix.SearchDown,1,Home)</ondown><ondown>SendClick(300)</ondown>
             </control>
-            <!-- Down from the bottom row still commits through native Done; search itself is automatic. -->
+            <!-- Down from the bottom row commits through native Done and lands on the first result; search itself is automatic. -->
             <control type="button" id="300">
                 <left>-2000</left><width>1</width><height>1</height><font>font_mini</font>
                 <visible>false</visible>

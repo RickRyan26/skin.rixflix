@@ -676,3 +676,16 @@ opens a password prompt over Search, its input must not become search text or a
 provider log entry. This is checked at text-change time: Kodi's hidden-input
 infolabel becomes true only after the keyboard is active, so it is unsuitable
 as an include-load condition for choosing the keyboard tree.
+
+### 2026-11-05: rows that load but stay black, and Down onto the first result
+
+Skin 1.12.57 hid stale hub rows with a conditional `fade start="0" end="0"`. For a zero-length
+effect, `CAnimation::Calculate` applies the end while the condition holds and the **start** once it
+clears (`VisibleEffect.cpp`), so every row stayed at alpha 0 with its items loaded: the page read
+"Loading genres…" and then nothing. Use `start="100" end="0"`. No infolabel exposes a control's
+alpha, so the live proof of a hub is a screenshot, never `Control.IsVisible` or `NumItems`.
+
+Down off the compact keyboard's bottom row now arms `RixFlix.SearchDown` before native Done. The
+`rixflix_search_down` timer waits until the keyboard has closed, then focuses the first result, or
+stays on the field if there are none. The hub's `rixflix_category_ready` timer retries each second,
+because a row accepts focus only once it is visible and loading.
