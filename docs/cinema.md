@@ -744,3 +744,13 @@ Other exits keep the page until the next tile: Kodi's Home action, which skips t
 playback started from a row, which must return to a live hub. Deleted rows cancel their directory
 jobs without waiting, so Back during a load is safe; a provider script already running finishes on
 its own.
+
+## 1.12.67: a separate Home quality row
+
+Rick requested source details below the existing date, rating and runtime line.
+Info_Panel now shows the resident service’s RixFlix.Quality property in a separate
+two-line, 26px text box. Its identity must match the displayed movie, show or episode,
+so a delayed response cannot show another card’s technical details.
+The row disappears when facts are unavailable. It adds no artwork, timer or scrolling.
+The Rixflix context service owns resolution, HDR profile, main audio and average
+overall bitrate. For a series it explicitly describes the next episode.
