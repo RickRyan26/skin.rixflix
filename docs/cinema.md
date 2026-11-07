@@ -705,6 +705,8 @@ end at y1063.
 
 **Whole library (1.12.65).** Each row holds every title in its genre. `limit="5000"` on `<content>` is the provider's own ceiling, and Kodi applies the attribute after the plugin returns, so leaving a small value there would quietly re-cap the row. Provider 1.8.7 owns the index format and the first-row ordering.
 
+**Focus column.** Up and Down already keep the column, so these rows need no column logic. `CGUIFixedListContainer::SelectItem` holds the cursor at `focusposition` (slot 0, x=80) and scrolls the row, and only the last three items move the cursor. `Control.Move` also goes through `SelectItem`, so it would scroll a row instead of moving its focus. The same rule means focus reaches the fourth slot, under the title card, only at the end of a row.
+
 **Row titles.** They copy `Widget_Inline_Title`: rotated -90°, line centred on x=40, reading down from the
 card top. The title's pre-rotation rect must stay inside the grouplist's clip (see "Titles" under 1.12.0), so
 each child reserves 20px above its card and the label's top is 0. The focused row's title is full white, and
