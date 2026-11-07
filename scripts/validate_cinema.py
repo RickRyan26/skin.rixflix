@@ -298,6 +298,8 @@ def check_hub_layout(values):
         title = row.find("control[@type='label']")
         assert (title.findtext('left'), title.findtext('top'), title.findtext('angle')) == ('40', '0', '-90'), (
             'row titles sit in the left margin as on Home, inside the grouplist clip')
+        content = lists[0].find('content')
+        assert content.get('limit') == '5000' and 'limit=' not in content.text, 'category rows hold the whole genre'
     # Drawn after the rows, or the rows would cover the fixed title.
     children = list(include)
     assert children.index(group) < len(children) - 2, 'the title card draws over the rows'

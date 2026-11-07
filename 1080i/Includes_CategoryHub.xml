@@ -58,7 +58,7 @@
                         <onup>8100</onup><ondown>8100</ondown>
                         <onback>8900</onback>
                         <!-- No dynamic target: node.target on each native item owns navigation. -->
-                        <content limit="20">plugin://plugin.video.rixflix.providers/?mode=category_genre&amp;cat=$INFO[Window(Home).Property(RixFlix.Category)]&amp;genre=Action&amp;limit=20</content>
+                        <content limit="5000">plugin://plugin.video.rixflix.providers/?mode=category_genre&amp;cat=$INFO[Window(Home).Property(RixFlix.Category)]&amp;genre=Action</content>
                     </include>
                 </control>
                 <control type="group" id="8202">
@@ -79,7 +79,7 @@
                         <onup>8100</onup><ondown>8100</ondown>
                         <onback>8900</onback>
                         <!-- No dynamic target: node.target on each native item owns navigation. -->
-                        <content limit="20">plugin://plugin.video.rixflix.providers/?mode=category_genre&amp;cat=$INFO[Window(Home).Property(RixFlix.Category)]&amp;genre=Adventure&amp;limit=20</content>
+                        <content limit="5000">plugin://plugin.video.rixflix.providers/?mode=category_genre&amp;cat=$INFO[Window(Home).Property(RixFlix.Category)]&amp;genre=Adventure</content>
                     </include>
                 </control>
                 <control type="group" id="8203">
@@ -100,7 +100,7 @@
                         <onup>8100</onup><ondown>8100</ondown>
                         <onback>8900</onback>
                         <!-- No dynamic target: node.target on each native item owns navigation. -->
-                        <content limit="20">plugin://plugin.video.rixflix.providers/?mode=category_genre&amp;cat=$INFO[Window(Home).Property(RixFlix.Category)]&amp;genre=Animation&amp;limit=20</content>
+                        <content limit="5000">plugin://plugin.video.rixflix.providers/?mode=category_genre&amp;cat=$INFO[Window(Home).Property(RixFlix.Category)]&amp;genre=Animation</content>
                     </include>
                 </control>
                 <control type="group" id="8204">
@@ -121,7 +121,7 @@
                         <onup>8100</onup><ondown>8100</ondown>
                         <onback>8900</onback>
                         <!-- No dynamic target: node.target on each native item owns navigation. -->
-                        <content limit="20">plugin://plugin.video.rixflix.providers/?mode=category_genre&amp;cat=$INFO[Window(Home).Property(RixFlix.Category)]&amp;genre=Comedy&amp;limit=20</content>
+                        <content limit="5000">plugin://plugin.video.rixflix.providers/?mode=category_genre&amp;cat=$INFO[Window(Home).Property(RixFlix.Category)]&amp;genre=Comedy</content>
                     </include>
                 </control>
                 <control type="group" id="8205">
@@ -142,7 +142,7 @@
                         <onup>8100</onup><ondown>8100</ondown>
                         <onback>8900</onback>
                         <!-- No dynamic target: node.target on each native item owns navigation. -->
-                        <content limit="20">plugin://plugin.video.rixflix.providers/?mode=category_genre&amp;cat=$INFO[Window(Home).Property(RixFlix.Category)]&amp;genre=Crime&amp;limit=20</content>
+                        <content limit="5000">plugin://plugin.video.rixflix.providers/?mode=category_genre&amp;cat=$INFO[Window(Home).Property(RixFlix.Category)]&amp;genre=Crime</content>
                     </include>
                 </control>
                 <control type="group" id="8206">
@@ -163,7 +163,7 @@
                         <onup>8100</onup><ondown>8100</ondown>
                         <onback>8900</onback>
                         <!-- No dynamic target: node.target on each native item owns navigation. -->
-                        <content limit="20">plugin://plugin.video.rixflix.providers/?mode=category_genre&amp;cat=$INFO[Window(Home).Property(RixFlix.Category)]&amp;genre=Documentary&amp;limit=20</content>
+                        <content limit="5000">plugin://plugin.video.rixflix.providers/?mode=category_genre&amp;cat=$INFO[Window(Home).Property(RixFlix.Category)]&amp;genre=Documentary</content>
                     </include>
                 </control>
                 <control type="group" id="8207">
@@ -184,7 +184,7 @@
                         <onup>8100</onup><ondown>8100</ondown>
                         <onback>8900</onback>
                         <!-- No dynamic target: node.target on each native item owns navigation. -->
-                        <content limit="20">plugin://plugin.video.rixflix.providers/?mode=category_genre&amp;cat=$INFO[Window(Home).Property(RixFlix.Category)]&amp;genre=Drama&amp;limit=20</content>
+                        <content limit="5000">plugin://plugin.video.rixflix.providers/?mode=category_genre&amp;cat=$INFO[Window(Home).Property(RixFlix.Category)]&amp;genre=Drama</content>
                     </include>
                 </control>
                 <control type="group" id="8208">
@@ -205,7 +205,7 @@
                         <onup>8100</onup><ondown>8100</ondown>
                         <onback>8900</onback>
                         <!-- No dynamic target: node.target on each native item owns navigation. -->
-                        <content limit="20">plugin://plugin.video.rixflix.providers/?mode=category_genre&amp;cat=$INFO[Window(Home).Property(RixFlix.Category)]&amp;genre=Family&amp;limit=20</content>
+                        <content limit="5000">plugin://plugin.video.rixflix.providers/?mode=category_genre&amp;cat=$INFO[Window(Home).Property(RixFlix.Category)]&amp;genre=Family</content>
                     </include>
                 </control>
                 <control type="group" id="8209">
@@ -226,7 +226,7 @@
                         <onup>8100</onup><ondown>8100</ondown>
                         <onback>8900</onback>
                         <!-- No dynamic target: node.target on each native item owns navigation. -->
-                        <content limit="20">plugin://plugin.video.rixflix.providers/?mode=category_genre&amp;cat=$INFO[Window(Home).Property(RixFlix.Category)]&amp;genre=Fantasy&amp;limit=20</content>
+                        <content limit="5000">plugin://plugin.video.rixflix.providers/?mode=category_genre&amp;cat=$INFO[Window(Home).Property(RixFlix.Category)]&amp;genre=Fantasy</content>
                     </include>
                 </control>
                 <control type="group" id="8210">
@@ -247,7 +247,7 @@
                         <onup>8100</onup><ondown>8100</ondown>
                         <onback>8900</onback>
                         <!-- No dynamic target: node.target on each native item owns navigation. -->
-                        <content limit="20">plugin://plugin.video.rixflix.providers/?mode=category_genre&amp;cat=$INFO[Window(Home).Property(RixFlix.Category)]&amp;genre=Horror&amp;limit=20</content>
+                        <content limit="5000">plugin://plugin.video.rixflix.providers/?mode=category_genre&amp;cat=$INFO[Window(Home).Property(RixFlix.Category)]&amp;genre=Horror</content>
                     </include>
                 </control>
                 <control type="group" id="8211">
@@ -268,7 +268,7 @@
                         <onup>8100</onup><ondown>8100</ondown>
                         <onback>8900</onback>
                         <!-- No dynamic target: node.target on each native item owns navigation. -->
-                        <content limit="20">plugin://plugin.video.rixflix.providers/?mode=category_genre&amp;cat=$INFO[Window(Home).Property(RixFlix.Category)]&amp;genre=Mystery&amp;limit=20</content>
+                        <content limit="5000">plugin://plugin.video.rixflix.providers/?mode=category_genre&amp;cat=$INFO[Window(Home).Property(RixFlix.Category)]&amp;genre=Mystery</content>
                     </include>
                 </control>
                 <control type="group" id="8212">
@@ -289,7 +289,7 @@
                         <onup>8100</onup><ondown>8100</ondown>
                         <onback>8900</onback>
                         <!-- No dynamic target: node.target on each native item owns navigation. -->
-                        <content limit="20">plugin://plugin.video.rixflix.providers/?mode=category_genre&amp;cat=$INFO[Window(Home).Property(RixFlix.Category)]&amp;genre=Romance&amp;limit=20</content>
+                        <content limit="5000">plugin://plugin.video.rixflix.providers/?mode=category_genre&amp;cat=$INFO[Window(Home).Property(RixFlix.Category)]&amp;genre=Romance</content>
                     </include>
                 </control>
                 <control type="group" id="8213">
@@ -310,7 +310,7 @@
                         <onup>8100</onup><ondown>8100</ondown>
                         <onback>8900</onback>
                         <!-- No dynamic target: node.target on each native item owns navigation. -->
-                        <content limit="20">plugin://plugin.video.rixflix.providers/?mode=category_genre&amp;cat=$INFO[Window(Home).Property(RixFlix.Category)]&amp;genre=Science%20Fiction&amp;limit=20</content>
+                        <content limit="5000">plugin://plugin.video.rixflix.providers/?mode=category_genre&amp;cat=$INFO[Window(Home).Property(RixFlix.Category)]&amp;genre=Science%20Fiction</content>
                     </include>
                 </control>
                 <control type="group" id="8214">
@@ -331,7 +331,7 @@
                         <onup>8100</onup><ondown>8100</ondown>
                         <onback>8900</onback>
                         <!-- No dynamic target: node.target on each native item owns navigation. -->
-                        <content limit="20">plugin://plugin.video.rixflix.providers/?mode=category_genre&amp;cat=$INFO[Window(Home).Property(RixFlix.Category)]&amp;genre=Thriller&amp;limit=20</content>
+                        <content limit="5000">plugin://plugin.video.rixflix.providers/?mode=category_genre&amp;cat=$INFO[Window(Home).Property(RixFlix.Category)]&amp;genre=Thriller</content>
                     </include>
                 </control>
         </control>
