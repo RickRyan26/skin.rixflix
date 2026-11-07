@@ -289,6 +289,12 @@ def check_hub_layout(values):
     assert group.findtext('itemgap') == '0', 'the row height carries the gutter'
     rows = group.findall('control')
     assert len(rows) == 14 and all(row.findtext('height') == 'category_row_h' for row in rows)
+    # 8100 hands focus back to its last child, so a row aimed at it stays stuck on itself.
+    assert (group.findtext('onup'), group.findtext('ondown')) == ('noop', 'noop'), 'a sparse page must not wrap'
+    for number, row in enumerate(rows, 1):
+        moves = row.find("include[@content='List_Premiere_Row']")
+        assert moves.findtext('onup') == (str(8200 + number - 1) if number > 1 else None), f'row {number} Up'
+        assert moves.findtext('ondown') == (str(8200 + number + 1) if number < 14 else None), f'row {number} Down'
     card_top = int(values['category_rows_t']) + int(values['category_list_t']) + int(values['home_row_offset_y'])
     assert card_top == 16, 'first card top'
     assert card_top + 3 * pitch + int(values['home_premiere_item_h']) <= 1064, 'fourth row must fit on screen'

@@ -40,6 +40,8 @@
             <left>0</left><top>category_rows_t</top><width>1920</width><height>category_rows_h</height>
             <orientation>vertical</orientation><itemgap>0</itemgap>
             <scrolltime tween="quadratic">300</scrolltime><onback>8900</onback>
+            <!-- Without these, GUIControlGroupList wraps its first and last rows, so a sparse page's edge row would wrap. -->
+            <onup>noop</onup><ondown>noop</ondown>
                 <control type="group" id="8201">
                     <height>category_row_h</height>
                     <visible>String.IsEqual(Window(Home).Property(RixFlix.CategoryReady),Window(Home).Property(RixFlix.Category)) + Integer.IsGreater(Window(Home).Property(RixFlix.CategoryCount.Action),2)</visible>
@@ -51,11 +53,12 @@
                         <font>font_mini_bold</font><label>Action</label><textcolor>white</textcolor>
                         <animation effect="fade" start="100" end="70" time="150" condition="!Control.HasFocus(8101)">Conditional</animation>
                     </control>
+                    <!-- Move through the row group, not list to list: a hidden group passes the move on, and 8100 would refocus this row. -->
                     <include content="List_Premiere_Row">
                         <param name="id">8101</param>
                         <top>category_list_t</top><width>1856</width><height>home_premiere_itemlayout_h</height>
                         <preloaditems>0</preloaditems>
-                        <onup>8100</onup><ondown>8100</ondown>
+                        <ondown>8202</ondown>
                         <onback>8900</onback>
                         <!-- No dynamic target: node.target on each native item owns navigation. -->
                         <content limit="5000">plugin://plugin.video.rixflix.providers/?mode=category_genre&amp;cat=$INFO[Window(Home).Property(RixFlix.Category)]&amp;genre=Action</content>
@@ -76,7 +79,7 @@
                         <param name="id">8102</param>
                         <top>category_list_t</top><width>1856</width><height>home_premiere_itemlayout_h</height>
                         <preloaditems>0</preloaditems>
-                        <onup>8100</onup><ondown>8100</ondown>
+                        <onup>8201</onup><ondown>8203</ondown>
                         <onback>8900</onback>
                         <!-- No dynamic target: node.target on each native item owns navigation. -->
                         <content limit="5000">plugin://plugin.video.rixflix.providers/?mode=category_genre&amp;cat=$INFO[Window(Home).Property(RixFlix.Category)]&amp;genre=Adventure</content>
@@ -97,7 +100,7 @@
                         <param name="id">8103</param>
                         <top>category_list_t</top><width>1856</width><height>home_premiere_itemlayout_h</height>
                         <preloaditems>0</preloaditems>
-                        <onup>8100</onup><ondown>8100</ondown>
+                        <onup>8202</onup><ondown>8204</ondown>
                         <onback>8900</onback>
                         <!-- No dynamic target: node.target on each native item owns navigation. -->
                         <content limit="5000">plugin://plugin.video.rixflix.providers/?mode=category_genre&amp;cat=$INFO[Window(Home).Property(RixFlix.Category)]&amp;genre=Animation</content>
@@ -118,7 +121,7 @@
                         <param name="id">8104</param>
                         <top>category_list_t</top><width>1856</width><height>home_premiere_itemlayout_h</height>
                         <preloaditems>0</preloaditems>
-                        <onup>8100</onup><ondown>8100</ondown>
+                        <onup>8203</onup><ondown>8205</ondown>
                         <onback>8900</onback>
                         <!-- No dynamic target: node.target on each native item owns navigation. -->
                         <content limit="5000">plugin://plugin.video.rixflix.providers/?mode=category_genre&amp;cat=$INFO[Window(Home).Property(RixFlix.Category)]&amp;genre=Comedy</content>
@@ -139,7 +142,7 @@
                         <param name="id">8105</param>
                         <top>category_list_t</top><width>1856</width><height>home_premiere_itemlayout_h</height>
                         <preloaditems>0</preloaditems>
-                        <onup>8100</onup><ondown>8100</ondown>
+                        <onup>8204</onup><ondown>8206</ondown>
                         <onback>8900</onback>
                         <!-- No dynamic target: node.target on each native item owns navigation. -->
                         <content limit="5000">plugin://plugin.video.rixflix.providers/?mode=category_genre&amp;cat=$INFO[Window(Home).Property(RixFlix.Category)]&amp;genre=Crime</content>
@@ -160,7 +163,7 @@
                         <param name="id">8106</param>
                         <top>category_list_t</top><width>1856</width><height>home_premiere_itemlayout_h</height>
                         <preloaditems>0</preloaditems>
-                        <onup>8100</onup><ondown>8100</ondown>
+                        <onup>8205</onup><ondown>8207</ondown>
                         <onback>8900</onback>
                         <!-- No dynamic target: node.target on each native item owns navigation. -->
                         <content limit="5000">plugin://plugin.video.rixflix.providers/?mode=category_genre&amp;cat=$INFO[Window(Home).Property(RixFlix.Category)]&amp;genre=Documentary</content>
@@ -181,7 +184,7 @@
                         <param name="id">8107</param>
                         <top>category_list_t</top><width>1856</width><height>home_premiere_itemlayout_h</height>
                         <preloaditems>0</preloaditems>
-                        <onup>8100</onup><ondown>8100</ondown>
+                        <onup>8206</onup><ondown>8208</ondown>
                         <onback>8900</onback>
                         <!-- No dynamic target: node.target on each native item owns navigation. -->
                         <content limit="5000">plugin://plugin.video.rixflix.providers/?mode=category_genre&amp;cat=$INFO[Window(Home).Property(RixFlix.Category)]&amp;genre=Drama</content>
@@ -202,7 +205,7 @@
                         <param name="id">8108</param>
                         <top>category_list_t</top><width>1856</width><height>home_premiere_itemlayout_h</height>
                         <preloaditems>0</preloaditems>
-                        <onup>8100</onup><ondown>8100</ondown>
+                        <onup>8207</onup><ondown>8209</ondown>
                         <onback>8900</onback>
                         <!-- No dynamic target: node.target on each native item owns navigation. -->
                         <content limit="5000">plugin://plugin.video.rixflix.providers/?mode=category_genre&amp;cat=$INFO[Window(Home).Property(RixFlix.Category)]&amp;genre=Family</content>
@@ -223,7 +226,7 @@
                         <param name="id">8109</param>
                         <top>category_list_t</top><width>1856</width><height>home_premiere_itemlayout_h</height>
                         <preloaditems>0</preloaditems>
-                        <onup>8100</onup><ondown>8100</ondown>
+                        <onup>8208</onup><ondown>8210</ondown>
                         <onback>8900</onback>
                         <!-- No dynamic target: node.target on each native item owns navigation. -->
                         <content limit="5000">plugin://plugin.video.rixflix.providers/?mode=category_genre&amp;cat=$INFO[Window(Home).Property(RixFlix.Category)]&amp;genre=Fantasy</content>
@@ -244,7 +247,7 @@
                         <param name="id">8110</param>
                         <top>category_list_t</top><width>1856</width><height>home_premiere_itemlayout_h</height>
                         <preloaditems>0</preloaditems>
-                        <onup>8100</onup><ondown>8100</ondown>
+                        <onup>8209</onup><ondown>8211</ondown>
                         <onback>8900</onback>
                         <!-- No dynamic target: node.target on each native item owns navigation. -->
                         <content limit="5000">plugin://plugin.video.rixflix.providers/?mode=category_genre&amp;cat=$INFO[Window(Home).Property(RixFlix.Category)]&amp;genre=Horror</content>
@@ -265,7 +268,7 @@
                         <param name="id">8111</param>
                         <top>category_list_t</top><width>1856</width><height>home_premiere_itemlayout_h</height>
                         <preloaditems>0</preloaditems>
-                        <onup>8100</onup><ondown>8100</ondown>
+                        <onup>8210</onup><ondown>8212</ondown>
                         <onback>8900</onback>
                         <!-- No dynamic target: node.target on each native item owns navigation. -->
                         <content limit="5000">plugin://plugin.video.rixflix.providers/?mode=category_genre&amp;cat=$INFO[Window(Home).Property(RixFlix.Category)]&amp;genre=Mystery</content>
@@ -286,7 +289,7 @@
                         <param name="id">8112</param>
                         <top>category_list_t</top><width>1856</width><height>home_premiere_itemlayout_h</height>
                         <preloaditems>0</preloaditems>
-                        <onup>8100</onup><ondown>8100</ondown>
+                        <onup>8211</onup><ondown>8213</ondown>
                         <onback>8900</onback>
                         <!-- No dynamic target: node.target on each native item owns navigation. -->
                         <content limit="5000">plugin://plugin.video.rixflix.providers/?mode=category_genre&amp;cat=$INFO[Window(Home).Property(RixFlix.Category)]&amp;genre=Romance</content>
@@ -307,7 +310,7 @@
                         <param name="id">8113</param>
                         <top>category_list_t</top><width>1856</width><height>home_premiere_itemlayout_h</height>
                         <preloaditems>0</preloaditems>
-                        <onup>8100</onup><ondown>8100</ondown>
+                        <onup>8212</onup><ondown>8214</ondown>
                         <onback>8900</onback>
                         <!-- No dynamic target: node.target on each native item owns navigation. -->
                         <content limit="5000">plugin://plugin.video.rixflix.providers/?mode=category_genre&amp;cat=$INFO[Window(Home).Property(RixFlix.Category)]&amp;genre=Science%20Fiction</content>
@@ -328,7 +331,7 @@
                         <param name="id">8114</param>
                         <top>category_list_t</top><width>1856</width><height>home_premiere_itemlayout_h</height>
                         <preloaditems>0</preloaditems>
-                        <onup>8100</onup><ondown>8100</ondown>
+                        <onup>8213</onup>
                         <onback>8900</onback>
                         <!-- No dynamic target: node.target on each native item owns navigation. -->
                         <content limit="5000">plugin://plugin.video.rixflix.providers/?mode=category_genre&amp;cat=$INFO[Window(Home).Property(RixFlix.Category)]&amp;genre=Thriller</content>
