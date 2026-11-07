@@ -754,3 +754,7 @@ so a delayed response cannot show another card’s technical details.
 The row disappears when facts are unavailable. It adds no artwork, timer or scrolling.
 The Rixflix context service owns resolution, HDR profile, main audio and average
 overall bitrate. For a series it explicitly describes the next episode.
+
+The first live install exposed that Kodi conditions cannot concatenate $INFO tokens
+as String.IsEqual’s second operand. Version 1.12.68 compares QualityType and
+QualityDBID separately with the container’s native DBTYPE and DBID labels.

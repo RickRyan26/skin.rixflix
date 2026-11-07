@@ -1220,7 +1220,7 @@
                     <label>$INFO[Window(Home).Property(RixFlix.Quality)]</label>
                     <visible>Window.IsActive(home) + [$PARAM[visible_line]]</visible>
                     <visible>!String.IsEmpty(Window(Home).Property(RixFlix.Quality))</visible>
-                    <visible>String.IsEqual(Window(Home).Property(RixFlix.QualityKey),$INFO[$PARAM[container]$PARAM[listitem].DBTYPE]-$INFO[$PARAM[container]$PARAM[listitem].DBID])</visible>
+                    <visible>String.IsEqual(Window(Home).Property(RixFlix.QualityType),$PARAM[container]$PARAM[listitem].DBTYPE) + String.IsEqual(Window(Home).Property(RixFlix.QualityDBID),$PARAM[container]$PARAM[listitem].DBID)</visible>
                 </control>
 
                 <!-- Plot -->
