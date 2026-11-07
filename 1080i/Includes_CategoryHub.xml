@@ -5,11 +5,6 @@
         <control type="image">
             <texture colordiffuse="ff080808">common/white.png</texture>
         </control>
-        <control type="label">
-            <left>80</left><top>55</top><width>1760</width><height>80</height>
-            <font>font_head_bold</font><textcolor>white</textcolor>
-            <label>$INFO[Window(Home).Property(RixFlix.CategoryLabel)]</label>
-        </control>
         <!-- Always load this tiny manifest, even when every genre row is hidden. -->
         <control type="list" id="8999">
             <left>-10</left><width>1</width><height>1</height><enable>false</enable>
@@ -27,34 +22,38 @@
             <onback>8900</onback>
         </control>
         <control type="label">
-            <left>80</left><top>180</top><width>1760</width><height>70</height>
-            <font>font_main_bold</font><textcolor>white</textcolor>
+            <left>0</left><top>500</top><width>1920</width><height>80</height>
+            <align>center</align><aligny>center</aligny>
+            <font>font_main_bold</font><textcolor>main_fg_70</textcolor>
             <label>Loading genres…</label>
             <visible>!String.IsEqual(Window(Home).Property(RixFlix.CategoryReady),Window(Home).Property(RixFlix.Category))</visible>
         </control>
         <control type="label">
-            <left>80</left><top>180</top><width>1760</width><height>70</height>
-            <font>font_main</font><textcolor>white</textcolor>
+            <left>0</left><top>500</top><width>1920</width><height>80</height>
+            <align>center</align><aligny>center</aligny>
+            <font>font_main_bold</font><textcolor>main_fg_70</textcolor>
             <label>No genre has enough titles yet.</label>
             <visible>String.IsEqual(Window(Home).Property(RixFlix.CategoryReady),Window(Home).Property(RixFlix.Category)) + Integer.IsEqual(Window(Home).Property(RixFlix.CategoryRows),0)</visible>
         </control>
+        <!-- Home's landscape rhythm, four full rows on screen: 243px art + 25px gutter. The viewport is exactly four pitches, so GUIControlGroupList always scrolls by whole rows. -->
         <control type="grouplist" id="8100">
-            <left>0</left><top>165</top><width>1920</width><height>900</height>
-            <orientation>vertical</orientation><itemgap>25</itemgap>
-            <scrolltime>250</scrolltime><onback>8900</onback>
+            <left>0</left><top>category_rows_t</top><width>1920</width><height>category_rows_h</height>
+            <orientation>vertical</orientation><itemgap>0</itemgap>
+            <scrolltime tween="quadratic">300</scrolltime><onback>8900</onback>
                 <control type="group" id="8201">
-                    <height>490</height>
+                    <height>category_row_h</height>
                     <visible>String.IsEqual(Window(Home).Property(RixFlix.CategoryReady),Window(Home).Property(RixFlix.Category)) + Integer.IsGreater(Window(Home).Property(RixFlix.CategoryCount.Action),2)</visible>
-                    <!-- Fade, never hide: a hidden row would not load the content that clears this. Start 100: when the condition clears, Kodi returns the fade to its start alpha, so start="0" stays black. -->
-                    <animation effect="fade" start="100" end="0" time="0" condition="!String.IsEqual(Window(Home).Property(RixFlix.CategoryRow.Action),Window(Home).Property(RixFlix.Category))">Conditional</animation>
+                    <!-- Fade, never hide: a hidden row would not load the content that clears this. Start 100: when the condition clears, Kodi plays the fade back to its start alpha, so start="0" stays black. -->
+                    <animation effect="fade" start="100" end="0" time="200" condition="!String.IsEqual(Window(Home).Property(RixFlix.CategoryRow.Action),Window(Home).Property(RixFlix.Category))">Conditional</animation>
                     <control type="label">
-                        <left>80</left><top>0</top><height>55</height><width>1760</width>
-                        <font>font_main_bold</font><label>Action</label><textcolor>white</textcolor>
+                        <left>40</left><top>0</top><width>home_premiere_item_h</width><height>40</height>
+                        <angle>-90</angle><align>left</align><aligny>center</aligny>
+                        <font>font_mini_bold</font><label>Action</label><textcolor>white</textcolor>
+                        <animation effect="fade" start="100" end="70" time="150" condition="!Control.HasFocus(8101)">Conditional</animation>
                     </control>
-                    <include content="List_Poster_Row">
+                    <include content="List_Premiere_Row">
                         <param name="id">8101</param>
-                        <param name="offset_y">10</param>
-                        <top>55</top><left>40</left><width>1880</width><height>435</height>
+                        <top>category_list_t</top><width>1856</width><height>home_premiere_itemlayout_h</height>
                         <preloaditems>0</preloaditems>
                         <onup>8100</onup><ondown>8100</ondown>
                         <onback>8900</onback>
@@ -63,18 +62,19 @@
                     </include>
                 </control>
                 <control type="group" id="8202">
-                    <height>490</height>
+                    <height>category_row_h</height>
                     <visible>String.IsEqual(Window(Home).Property(RixFlix.CategoryReady),Window(Home).Property(RixFlix.Category)) + Integer.IsGreater(Window(Home).Property(RixFlix.CategoryCount.Adventure),2)</visible>
-                    <!-- Fade, never hide: a hidden row would not load the content that clears this. Start 100: when the condition clears, Kodi returns the fade to its start alpha, so start="0" stays black. -->
-                    <animation effect="fade" start="100" end="0" time="0" condition="!String.IsEqual(Window(Home).Property(RixFlix.CategoryRow.Adventure),Window(Home).Property(RixFlix.Category))">Conditional</animation>
+                    <!-- Fade, never hide: a hidden row would not load the content that clears this. Start 100: when the condition clears, Kodi plays the fade back to its start alpha, so start="0" stays black. -->
+                    <animation effect="fade" start="100" end="0" time="200" condition="!String.IsEqual(Window(Home).Property(RixFlix.CategoryRow.Adventure),Window(Home).Property(RixFlix.Category))">Conditional</animation>
                     <control type="label">
-                        <left>80</left><top>0</top><height>55</height><width>1760</width>
-                        <font>font_main_bold</font><label>Adventure</label><textcolor>white</textcolor>
+                        <left>40</left><top>0</top><width>home_premiere_item_h</width><height>40</height>
+                        <angle>-90</angle><align>left</align><aligny>center</aligny>
+                        <font>font_mini_bold</font><label>Adventure</label><textcolor>white</textcolor>
+                        <animation effect="fade" start="100" end="70" time="150" condition="!Control.HasFocus(8102)">Conditional</animation>
                     </control>
-                    <include content="List_Poster_Row">
+                    <include content="List_Premiere_Row">
                         <param name="id">8102</param>
-                        <param name="offset_y">10</param>
-                        <top>55</top><left>40</left><width>1880</width><height>435</height>
+                        <top>category_list_t</top><width>1856</width><height>home_premiere_itemlayout_h</height>
                         <preloaditems>0</preloaditems>
                         <onup>8100</onup><ondown>8100</ondown>
                         <onback>8900</onback>
@@ -83,18 +83,19 @@
                     </include>
                 </control>
                 <control type="group" id="8203">
-                    <height>490</height>
+                    <height>category_row_h</height>
                     <visible>String.IsEqual(Window(Home).Property(RixFlix.CategoryReady),Window(Home).Property(RixFlix.Category)) + Integer.IsGreater(Window(Home).Property(RixFlix.CategoryCount.Animation),2)</visible>
-                    <!-- Fade, never hide: a hidden row would not load the content that clears this. Start 100: when the condition clears, Kodi returns the fade to its start alpha, so start="0" stays black. -->
-                    <animation effect="fade" start="100" end="0" time="0" condition="!String.IsEqual(Window(Home).Property(RixFlix.CategoryRow.Animation),Window(Home).Property(RixFlix.Category))">Conditional</animation>
+                    <!-- Fade, never hide: a hidden row would not load the content that clears this. Start 100: when the condition clears, Kodi plays the fade back to its start alpha, so start="0" stays black. -->
+                    <animation effect="fade" start="100" end="0" time="200" condition="!String.IsEqual(Window(Home).Property(RixFlix.CategoryRow.Animation),Window(Home).Property(RixFlix.Category))">Conditional</animation>
                     <control type="label">
-                        <left>80</left><top>0</top><height>55</height><width>1760</width>
-                        <font>font_main_bold</font><label>Animation</label><textcolor>white</textcolor>
+                        <left>40</left><top>0</top><width>home_premiere_item_h</width><height>40</height>
+                        <angle>-90</angle><align>left</align><aligny>center</aligny>
+                        <font>font_mini_bold</font><label>Animation</label><textcolor>white</textcolor>
+                        <animation effect="fade" start="100" end="70" time="150" condition="!Control.HasFocus(8103)">Conditional</animation>
                     </control>
-                    <include content="List_Poster_Row">
+                    <include content="List_Premiere_Row">
                         <param name="id">8103</param>
-                        <param name="offset_y">10</param>
-                        <top>55</top><left>40</left><width>1880</width><height>435</height>
+                        <top>category_list_t</top><width>1856</width><height>home_premiere_itemlayout_h</height>
                         <preloaditems>0</preloaditems>
                         <onup>8100</onup><ondown>8100</ondown>
                         <onback>8900</onback>
@@ -103,18 +104,19 @@
                     </include>
                 </control>
                 <control type="group" id="8204">
-                    <height>490</height>
+                    <height>category_row_h</height>
                     <visible>String.IsEqual(Window(Home).Property(RixFlix.CategoryReady),Window(Home).Property(RixFlix.Category)) + Integer.IsGreater(Window(Home).Property(RixFlix.CategoryCount.Comedy),2)</visible>
-                    <!-- Fade, never hide: a hidden row would not load the content that clears this. Start 100: when the condition clears, Kodi returns the fade to its start alpha, so start="0" stays black. -->
-                    <animation effect="fade" start="100" end="0" time="0" condition="!String.IsEqual(Window(Home).Property(RixFlix.CategoryRow.Comedy),Window(Home).Property(RixFlix.Category))">Conditional</animation>
+                    <!-- Fade, never hide: a hidden row would not load the content that clears this. Start 100: when the condition clears, Kodi plays the fade back to its start alpha, so start="0" stays black. -->
+                    <animation effect="fade" start="100" end="0" time="200" condition="!String.IsEqual(Window(Home).Property(RixFlix.CategoryRow.Comedy),Window(Home).Property(RixFlix.Category))">Conditional</animation>
                     <control type="label">
-                        <left>80</left><top>0</top><height>55</height><width>1760</width>
-                        <font>font_main_bold</font><label>Comedy</label><textcolor>white</textcolor>
+                        <left>40</left><top>0</top><width>home_premiere_item_h</width><height>40</height>
+                        <angle>-90</angle><align>left</align><aligny>center</aligny>
+                        <font>font_mini_bold</font><label>Comedy</label><textcolor>white</textcolor>
+                        <animation effect="fade" start="100" end="70" time="150" condition="!Control.HasFocus(8104)">Conditional</animation>
                     </control>
-                    <include content="List_Poster_Row">
+                    <include content="List_Premiere_Row">
                         <param name="id">8104</param>
-                        <param name="offset_y">10</param>
-                        <top>55</top><left>40</left><width>1880</width><height>435</height>
+                        <top>category_list_t</top><width>1856</width><height>home_premiere_itemlayout_h</height>
                         <preloaditems>0</preloaditems>
                         <onup>8100</onup><ondown>8100</ondown>
                         <onback>8900</onback>
@@ -123,18 +125,19 @@
                     </include>
                 </control>
                 <control type="group" id="8205">
-                    <height>490</height>
+                    <height>category_row_h</height>
                     <visible>String.IsEqual(Window(Home).Property(RixFlix.CategoryReady),Window(Home).Property(RixFlix.Category)) + Integer.IsGreater(Window(Home).Property(RixFlix.CategoryCount.Crime),2)</visible>
-                    <!-- Fade, never hide: a hidden row would not load the content that clears this. Start 100: when the condition clears, Kodi returns the fade to its start alpha, so start="0" stays black. -->
-                    <animation effect="fade" start="100" end="0" time="0" condition="!String.IsEqual(Window(Home).Property(RixFlix.CategoryRow.Crime),Window(Home).Property(RixFlix.Category))">Conditional</animation>
+                    <!-- Fade, never hide: a hidden row would not load the content that clears this. Start 100: when the condition clears, Kodi plays the fade back to its start alpha, so start="0" stays black. -->
+                    <animation effect="fade" start="100" end="0" time="200" condition="!String.IsEqual(Window(Home).Property(RixFlix.CategoryRow.Crime),Window(Home).Property(RixFlix.Category))">Conditional</animation>
                     <control type="label">
-                        <left>80</left><top>0</top><height>55</height><width>1760</width>
-                        <font>font_main_bold</font><label>Crime</label><textcolor>white</textcolor>
+                        <left>40</left><top>0</top><width>home_premiere_item_h</width><height>40</height>
+                        <angle>-90</angle><align>left</align><aligny>center</aligny>
+                        <font>font_mini_bold</font><label>Crime</label><textcolor>white</textcolor>
+                        <animation effect="fade" start="100" end="70" time="150" condition="!Control.HasFocus(8105)">Conditional</animation>
                     </control>
-                    <include content="List_Poster_Row">
+                    <include content="List_Premiere_Row">
                         <param name="id">8105</param>
-                        <param name="offset_y">10</param>
-                        <top>55</top><left>40</left><width>1880</width><height>435</height>
+                        <top>category_list_t</top><width>1856</width><height>home_premiere_itemlayout_h</height>
                         <preloaditems>0</preloaditems>
                         <onup>8100</onup><ondown>8100</ondown>
                         <onback>8900</onback>
@@ -143,18 +146,19 @@
                     </include>
                 </control>
                 <control type="group" id="8206">
-                    <height>490</height>
+                    <height>category_row_h</height>
                     <visible>String.IsEqual(Window(Home).Property(RixFlix.CategoryReady),Window(Home).Property(RixFlix.Category)) + Integer.IsGreater(Window(Home).Property(RixFlix.CategoryCount.Documentary),2)</visible>
-                    <!-- Fade, never hide: a hidden row would not load the content that clears this. Start 100: when the condition clears, Kodi returns the fade to its start alpha, so start="0" stays black. -->
-                    <animation effect="fade" start="100" end="0" time="0" condition="!String.IsEqual(Window(Home).Property(RixFlix.CategoryRow.Documentary),Window(Home).Property(RixFlix.Category))">Conditional</animation>
+                    <!-- Fade, never hide: a hidden row would not load the content that clears this. Start 100: when the condition clears, Kodi plays the fade back to its start alpha, so start="0" stays black. -->
+                    <animation effect="fade" start="100" end="0" time="200" condition="!String.IsEqual(Window(Home).Property(RixFlix.CategoryRow.Documentary),Window(Home).Property(RixFlix.Category))">Conditional</animation>
                     <control type="label">
-                        <left>80</left><top>0</top><height>55</height><width>1760</width>
-                        <font>font_main_bold</font><label>Documentary</label><textcolor>white</textcolor>
+                        <left>40</left><top>0</top><width>home_premiere_item_h</width><height>40</height>
+                        <angle>-90</angle><align>left</align><aligny>center</aligny>
+                        <font>font_mini_bold</font><label>Documentary</label><textcolor>white</textcolor>
+                        <animation effect="fade" start="100" end="70" time="150" condition="!Control.HasFocus(8106)">Conditional</animation>
                     </control>
-                    <include content="List_Poster_Row">
+                    <include content="List_Premiere_Row">
                         <param name="id">8106</param>
-                        <param name="offset_y">10</param>
-                        <top>55</top><left>40</left><width>1880</width><height>435</height>
+                        <top>category_list_t</top><width>1856</width><height>home_premiere_itemlayout_h</height>
                         <preloaditems>0</preloaditems>
                         <onup>8100</onup><ondown>8100</ondown>
                         <onback>8900</onback>
@@ -163,18 +167,19 @@
                     </include>
                 </control>
                 <control type="group" id="8207">
-                    <height>490</height>
+                    <height>category_row_h</height>
                     <visible>String.IsEqual(Window(Home).Property(RixFlix.CategoryReady),Window(Home).Property(RixFlix.Category)) + Integer.IsGreater(Window(Home).Property(RixFlix.CategoryCount.Drama),2)</visible>
-                    <!-- Fade, never hide: a hidden row would not load the content that clears this. Start 100: when the condition clears, Kodi returns the fade to its start alpha, so start="0" stays black. -->
-                    <animation effect="fade" start="100" end="0" time="0" condition="!String.IsEqual(Window(Home).Property(RixFlix.CategoryRow.Drama),Window(Home).Property(RixFlix.Category))">Conditional</animation>
+                    <!-- Fade, never hide: a hidden row would not load the content that clears this. Start 100: when the condition clears, Kodi plays the fade back to its start alpha, so start="0" stays black. -->
+                    <animation effect="fade" start="100" end="0" time="200" condition="!String.IsEqual(Window(Home).Property(RixFlix.CategoryRow.Drama),Window(Home).Property(RixFlix.Category))">Conditional</animation>
                     <control type="label">
-                        <left>80</left><top>0</top><height>55</height><width>1760</width>
-                        <font>font_main_bold</font><label>Drama</label><textcolor>white</textcolor>
+                        <left>40</left><top>0</top><width>home_premiere_item_h</width><height>40</height>
+                        <angle>-90</angle><align>left</align><aligny>center</aligny>
+                        <font>font_mini_bold</font><label>Drama</label><textcolor>white</textcolor>
+                        <animation effect="fade" start="100" end="70" time="150" condition="!Control.HasFocus(8107)">Conditional</animation>
                     </control>
-                    <include content="List_Poster_Row">
+                    <include content="List_Premiere_Row">
                         <param name="id">8107</param>
-                        <param name="offset_y">10</param>
-                        <top>55</top><left>40</left><width>1880</width><height>435</height>
+                        <top>category_list_t</top><width>1856</width><height>home_premiere_itemlayout_h</height>
                         <preloaditems>0</preloaditems>
                         <onup>8100</onup><ondown>8100</ondown>
                         <onback>8900</onback>
@@ -183,18 +188,19 @@
                     </include>
                 </control>
                 <control type="group" id="8208">
-                    <height>490</height>
+                    <height>category_row_h</height>
                     <visible>String.IsEqual(Window(Home).Property(RixFlix.CategoryReady),Window(Home).Property(RixFlix.Category)) + Integer.IsGreater(Window(Home).Property(RixFlix.CategoryCount.Family),2)</visible>
-                    <!-- Fade, never hide: a hidden row would not load the content that clears this. Start 100: when the condition clears, Kodi returns the fade to its start alpha, so start="0" stays black. -->
-                    <animation effect="fade" start="100" end="0" time="0" condition="!String.IsEqual(Window(Home).Property(RixFlix.CategoryRow.Family),Window(Home).Property(RixFlix.Category))">Conditional</animation>
+                    <!-- Fade, never hide: a hidden row would not load the content that clears this. Start 100: when the condition clears, Kodi plays the fade back to its start alpha, so start="0" stays black. -->
+                    <animation effect="fade" start="100" end="0" time="200" condition="!String.IsEqual(Window(Home).Property(RixFlix.CategoryRow.Family),Window(Home).Property(RixFlix.Category))">Conditional</animation>
                     <control type="label">
-                        <left>80</left><top>0</top><height>55</height><width>1760</width>
-                        <font>font_main_bold</font><label>Family</label><textcolor>white</textcolor>
+                        <left>40</left><top>0</top><width>home_premiere_item_h</width><height>40</height>
+                        <angle>-90</angle><align>left</align><aligny>center</aligny>
+                        <font>font_mini_bold</font><label>Family</label><textcolor>white</textcolor>
+                        <animation effect="fade" start="100" end="70" time="150" condition="!Control.HasFocus(8108)">Conditional</animation>
                     </control>
-                    <include content="List_Poster_Row">
+                    <include content="List_Premiere_Row">
                         <param name="id">8108</param>
-                        <param name="offset_y">10</param>
-                        <top>55</top><left>40</left><width>1880</width><height>435</height>
+                        <top>category_list_t</top><width>1856</width><height>home_premiere_itemlayout_h</height>
                         <preloaditems>0</preloaditems>
                         <onup>8100</onup><ondown>8100</ondown>
                         <onback>8900</onback>
@@ -203,18 +209,19 @@
                     </include>
                 </control>
                 <control type="group" id="8209">
-                    <height>490</height>
+                    <height>category_row_h</height>
                     <visible>String.IsEqual(Window(Home).Property(RixFlix.CategoryReady),Window(Home).Property(RixFlix.Category)) + Integer.IsGreater(Window(Home).Property(RixFlix.CategoryCount.Fantasy),2)</visible>
-                    <!-- Fade, never hide: a hidden row would not load the content that clears this. Start 100: when the condition clears, Kodi returns the fade to its start alpha, so start="0" stays black. -->
-                    <animation effect="fade" start="100" end="0" time="0" condition="!String.IsEqual(Window(Home).Property(RixFlix.CategoryRow.Fantasy),Window(Home).Property(RixFlix.Category))">Conditional</animation>
+                    <!-- Fade, never hide: a hidden row would not load the content that clears this. Start 100: when the condition clears, Kodi plays the fade back to its start alpha, so start="0" stays black. -->
+                    <animation effect="fade" start="100" end="0" time="200" condition="!String.IsEqual(Window(Home).Property(RixFlix.CategoryRow.Fantasy),Window(Home).Property(RixFlix.Category))">Conditional</animation>
                     <control type="label">
-                        <left>80</left><top>0</top><height>55</height><width>1760</width>
-                        <font>font_main_bold</font><label>Fantasy</label><textcolor>white</textcolor>
+                        <left>40</left><top>0</top><width>home_premiere_item_h</width><height>40</height>
+                        <angle>-90</angle><align>left</align><aligny>center</aligny>
+                        <font>font_mini_bold</font><label>Fantasy</label><textcolor>white</textcolor>
+                        <animation effect="fade" start="100" end="70" time="150" condition="!Control.HasFocus(8109)">Conditional</animation>
                     </control>
-                    <include content="List_Poster_Row">
+                    <include content="List_Premiere_Row">
                         <param name="id">8109</param>
-                        <param name="offset_y">10</param>
-                        <top>55</top><left>40</left><width>1880</width><height>435</height>
+                        <top>category_list_t</top><width>1856</width><height>home_premiere_itemlayout_h</height>
                         <preloaditems>0</preloaditems>
                         <onup>8100</onup><ondown>8100</ondown>
                         <onback>8900</onback>
@@ -223,18 +230,19 @@
                     </include>
                 </control>
                 <control type="group" id="8210">
-                    <height>490</height>
+                    <height>category_row_h</height>
                     <visible>String.IsEqual(Window(Home).Property(RixFlix.CategoryReady),Window(Home).Property(RixFlix.Category)) + Integer.IsGreater(Window(Home).Property(RixFlix.CategoryCount.Horror),2)</visible>
-                    <!-- Fade, never hide: a hidden row would not load the content that clears this. Start 100: when the condition clears, Kodi returns the fade to its start alpha, so start="0" stays black. -->
-                    <animation effect="fade" start="100" end="0" time="0" condition="!String.IsEqual(Window(Home).Property(RixFlix.CategoryRow.Horror),Window(Home).Property(RixFlix.Category))">Conditional</animation>
+                    <!-- Fade, never hide: a hidden row would not load the content that clears this. Start 100: when the condition clears, Kodi plays the fade back to its start alpha, so start="0" stays black. -->
+                    <animation effect="fade" start="100" end="0" time="200" condition="!String.IsEqual(Window(Home).Property(RixFlix.CategoryRow.Horror),Window(Home).Property(RixFlix.Category))">Conditional</animation>
                     <control type="label">
-                        <left>80</left><top>0</top><height>55</height><width>1760</width>
-                        <font>font_main_bold</font><label>Horror</label><textcolor>white</textcolor>
+                        <left>40</left><top>0</top><width>home_premiere_item_h</width><height>40</height>
+                        <angle>-90</angle><align>left</align><aligny>center</aligny>
+                        <font>font_mini_bold</font><label>Horror</label><textcolor>white</textcolor>
+                        <animation effect="fade" start="100" end="70" time="150" condition="!Control.HasFocus(8110)">Conditional</animation>
                     </control>
-                    <include content="List_Poster_Row">
+                    <include content="List_Premiere_Row">
                         <param name="id">8110</param>
-                        <param name="offset_y">10</param>
-                        <top>55</top><left>40</left><width>1880</width><height>435</height>
+                        <top>category_list_t</top><width>1856</width><height>home_premiere_itemlayout_h</height>
                         <preloaditems>0</preloaditems>
                         <onup>8100</onup><ondown>8100</ondown>
                         <onback>8900</onback>
@@ -243,18 +251,19 @@
                     </include>
                 </control>
                 <control type="group" id="8211">
-                    <height>490</height>
+                    <height>category_row_h</height>
                     <visible>String.IsEqual(Window(Home).Property(RixFlix.CategoryReady),Window(Home).Property(RixFlix.Category)) + Integer.IsGreater(Window(Home).Property(RixFlix.CategoryCount.Mystery),2)</visible>
-                    <!-- Fade, never hide: a hidden row would not load the content that clears this. Start 100: when the condition clears, Kodi returns the fade to its start alpha, so start="0" stays black. -->
-                    <animation effect="fade" start="100" end="0" time="0" condition="!String.IsEqual(Window(Home).Property(RixFlix.CategoryRow.Mystery),Window(Home).Property(RixFlix.Category))">Conditional</animation>
+                    <!-- Fade, never hide: a hidden row would not load the content that clears this. Start 100: when the condition clears, Kodi plays the fade back to its start alpha, so start="0" stays black. -->
+                    <animation effect="fade" start="100" end="0" time="200" condition="!String.IsEqual(Window(Home).Property(RixFlix.CategoryRow.Mystery),Window(Home).Property(RixFlix.Category))">Conditional</animation>
                     <control type="label">
-                        <left>80</left><top>0</top><height>55</height><width>1760</width>
-                        <font>font_main_bold</font><label>Mystery</label><textcolor>white</textcolor>
+                        <left>40</left><top>0</top><width>home_premiere_item_h</width><height>40</height>
+                        <angle>-90</angle><align>left</align><aligny>center</aligny>
+                        <font>font_mini_bold</font><label>Mystery</label><textcolor>white</textcolor>
+                        <animation effect="fade" start="100" end="70" time="150" condition="!Control.HasFocus(8111)">Conditional</animation>
                     </control>
-                    <include content="List_Poster_Row">
+                    <include content="List_Premiere_Row">
                         <param name="id">8111</param>
-                        <param name="offset_y">10</param>
-                        <top>55</top><left>40</left><width>1880</width><height>435</height>
+                        <top>category_list_t</top><width>1856</width><height>home_premiere_itemlayout_h</height>
                         <preloaditems>0</preloaditems>
                         <onup>8100</onup><ondown>8100</ondown>
                         <onback>8900</onback>
@@ -263,18 +272,19 @@
                     </include>
                 </control>
                 <control type="group" id="8212">
-                    <height>490</height>
+                    <height>category_row_h</height>
                     <visible>String.IsEqual(Window(Home).Property(RixFlix.CategoryReady),Window(Home).Property(RixFlix.Category)) + Integer.IsGreater(Window(Home).Property(RixFlix.CategoryCount.Romance),2)</visible>
-                    <!-- Fade, never hide: a hidden row would not load the content that clears this. Start 100: when the condition clears, Kodi returns the fade to its start alpha, so start="0" stays black. -->
-                    <animation effect="fade" start="100" end="0" time="0" condition="!String.IsEqual(Window(Home).Property(RixFlix.CategoryRow.Romance),Window(Home).Property(RixFlix.Category))">Conditional</animation>
+                    <!-- Fade, never hide: a hidden row would not load the content that clears this. Start 100: when the condition clears, Kodi plays the fade back to its start alpha, so start="0" stays black. -->
+                    <animation effect="fade" start="100" end="0" time="200" condition="!String.IsEqual(Window(Home).Property(RixFlix.CategoryRow.Romance),Window(Home).Property(RixFlix.Category))">Conditional</animation>
                     <control type="label">
-                        <left>80</left><top>0</top><height>55</height><width>1760</width>
-                        <font>font_main_bold</font><label>Romance</label><textcolor>white</textcolor>
+                        <left>40</left><top>0</top><width>home_premiere_item_h</width><height>40</height>
+                        <angle>-90</angle><align>left</align><aligny>center</aligny>
+                        <font>font_mini_bold</font><label>Romance</label><textcolor>white</textcolor>
+                        <animation effect="fade" start="100" end="70" time="150" condition="!Control.HasFocus(8112)">Conditional</animation>
                     </control>
-                    <include content="List_Poster_Row">
+                    <include content="List_Premiere_Row">
                         <param name="id">8112</param>
-                        <param name="offset_y">10</param>
-                        <top>55</top><left>40</left><width>1880</width><height>435</height>
+                        <top>category_list_t</top><width>1856</width><height>home_premiere_itemlayout_h</height>
                         <preloaditems>0</preloaditems>
                         <onup>8100</onup><ondown>8100</ondown>
                         <onback>8900</onback>
@@ -283,18 +293,19 @@
                     </include>
                 </control>
                 <control type="group" id="8213">
-                    <height>490</height>
+                    <height>category_row_h</height>
                     <visible>String.IsEqual(Window(Home).Property(RixFlix.CategoryReady),Window(Home).Property(RixFlix.Category)) + Integer.IsGreater(Window(Home).Property(RixFlix.CategoryCount.ScienceFiction),2)</visible>
-                    <!-- Fade, never hide: a hidden row would not load the content that clears this. Start 100: when the condition clears, Kodi returns the fade to its start alpha, so start="0" stays black. -->
-                    <animation effect="fade" start="100" end="0" time="0" condition="!String.IsEqual(Window(Home).Property(RixFlix.CategoryRow.ScienceFiction),Window(Home).Property(RixFlix.Category))">Conditional</animation>
+                    <!-- Fade, never hide: a hidden row would not load the content that clears this. Start 100: when the condition clears, Kodi plays the fade back to its start alpha, so start="0" stays black. -->
+                    <animation effect="fade" start="100" end="0" time="200" condition="!String.IsEqual(Window(Home).Property(RixFlix.CategoryRow.ScienceFiction),Window(Home).Property(RixFlix.Category))">Conditional</animation>
                     <control type="label">
-                        <left>80</left><top>0</top><height>55</height><width>1760</width>
-                        <font>font_main_bold</font><label>Science Fiction</label><textcolor>white</textcolor>
+                        <left>40</left><top>0</top><width>home_premiere_item_h</width><height>40</height>
+                        <angle>-90</angle><align>left</align><aligny>center</aligny>
+                        <font>font_mini_bold</font><label>Science Fiction</label><textcolor>white</textcolor>
+                        <animation effect="fade" start="100" end="70" time="150" condition="!Control.HasFocus(8113)">Conditional</animation>
                     </control>
-                    <include content="List_Poster_Row">
+                    <include content="List_Premiere_Row">
                         <param name="id">8113</param>
-                        <param name="offset_y">10</param>
-                        <top>55</top><left>40</left><width>1880</width><height>435</height>
+                        <top>category_list_t</top><width>1856</width><height>home_premiere_itemlayout_h</height>
                         <preloaditems>0</preloaditems>
                         <onup>8100</onup><ondown>8100</ondown>
                         <onback>8900</onback>
@@ -303,18 +314,19 @@
                     </include>
                 </control>
                 <control type="group" id="8214">
-                    <height>490</height>
+                    <height>category_row_h</height>
                     <visible>String.IsEqual(Window(Home).Property(RixFlix.CategoryReady),Window(Home).Property(RixFlix.Category)) + Integer.IsGreater(Window(Home).Property(RixFlix.CategoryCount.Thriller),2)</visible>
-                    <!-- Fade, never hide: a hidden row would not load the content that clears this. Start 100: when the condition clears, Kodi returns the fade to its start alpha, so start="0" stays black. -->
-                    <animation effect="fade" start="100" end="0" time="0" condition="!String.IsEqual(Window(Home).Property(RixFlix.CategoryRow.Thriller),Window(Home).Property(RixFlix.Category))">Conditional</animation>
+                    <!-- Fade, never hide: a hidden row would not load the content that clears this. Start 100: when the condition clears, Kodi plays the fade back to its start alpha, so start="0" stays black. -->
+                    <animation effect="fade" start="100" end="0" time="200" condition="!String.IsEqual(Window(Home).Property(RixFlix.CategoryRow.Thriller),Window(Home).Property(RixFlix.Category))">Conditional</animation>
                     <control type="label">
-                        <left>80</left><top>0</top><height>55</height><width>1760</width>
-                        <font>font_main_bold</font><label>Thriller</label><textcolor>white</textcolor>
+                        <left>40</left><top>0</top><width>home_premiere_item_h</width><height>40</height>
+                        <angle>-90</angle><align>left</align><aligny>center</aligny>
+                        <font>font_mini_bold</font><label>Thriller</label><textcolor>white</textcolor>
+                        <animation effect="fade" start="100" end="70" time="150" condition="!Control.HasFocus(8114)">Conditional</animation>
                     </control>
-                    <include content="List_Poster_Row">
+                    <include content="List_Premiere_Row">
                         <param name="id">8114</param>
-                        <param name="offset_y">10</param>
-                        <top>55</top><left>40</left><width>1880</width><height>435</height>
+                        <top>category_list_t</top><width>1856</width><height>home_premiere_itemlayout_h</height>
                         <preloaditems>0</preloaditems>
                         <onup>8100</onup><ondown>8100</ondown>
                         <onback>8900</onback>
@@ -322,6 +334,31 @@
                         <content limit="20">plugin://plugin.video.rixflix.providers/?mode=category_genre&amp;cat=$INFO[Window(Home).Property(RixFlix.Category)]&amp;genre=Thriller&amp;limit=20</content>
                     </include>
                 </control>
+        </control>
+        <!-- Fixed over the rows, so it comes last. A button is the one control whose background follows its label's width, and the grouplist's right alignment keeps its right edge fixed. The first button is the shadow: same label and font, 40px larger every way, like Texture_Shadow_40. Disabled, so neither can take focus. -->
+        <control type="grouplist">
+            <right>-24</right><top>-24</top><width>1000</width><height>156</height>
+            <orientation>horizontal</orientation><align>right</align><itemgap>0</itemgap>
+            <control type="button">
+                <width>auto</width><height>156</height><enable>false</enable>
+                <textoffsetx>76</textoffsetx><font>font_head_bold</font>
+                <textcolor>00000000</textcolor><disabledcolor>00000000</disabledcolor>
+                <texturenofocus colordiffuse="shadow_hard" border="60">shadows/shadow-40.png</texturenofocus>
+                <texturefocus colordiffuse="shadow_hard" border="60">shadows/shadow-40.png</texturefocus>
+                <label>$INFO[Window(Home).Property(RixFlix.CategoryLabel)]</label>
+            </control>
+        </control>
+        <control type="grouplist">
+            <right>16</right><top>16</top><width>1000</width><height>76</height>
+            <orientation>horizontal</orientation><align>right</align><itemgap>0</itemgap>
+            <control type="button">
+                <width>auto</width><height>76</height><enable>false</enable>
+                <textoffsetx>36</textoffsetx><font>font_head_bold</font>
+                <textcolor>white</textcolor><disabledcolor>white</disabledcolor>
+                <texturenofocus colordiffuse="rix_cinema_surface" border="20">common/box.png</texturenofocus>
+                <texturefocus colordiffuse="rix_cinema_surface" border="20">common/box.png</texturefocus>
+                <label>$INFO[Window(Home).Property(RixFlix.CategoryLabel)]</label>
+            </control>
         </control>
     </include>
 </includes>

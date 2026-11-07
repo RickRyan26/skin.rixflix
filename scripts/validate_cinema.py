@@ -263,9 +263,9 @@ def check_hub_conditions():
     assert 'id="1110"' in (ROOT / '1080i/Custom_1110_HubRelease.xml').read_text()
     assert hub.count('condition="!String.IsEqual(Window(Home).Property(RixFlix.CategoryRow.') == 14, (
         'every genre row must stay faded until its own category arrives')
-    # CAnimation::Calculate (VisibleEffect.cpp): a zero-length effect applies its end while the
-    # condition holds and its START once it clears, so start="0" stays black with loaded rows.
-    assert hub.count('effect="fade" start="100" end="0" time="0" condition="!String.IsEqual(') == 14, (
+    # CAnimation::Calculate (VisibleEffect.cpp): once its condition clears a fade returns to its
+    # START, so start="0" stays black with loaded rows.
+    assert hub.count('effect="fade" start="100" end="0" time="200" condition="!String.IsEqual(') == 14, (
         'a genre row fade must rest at start="100" or the row never appears')
     assert 'start="0" end="0"' not in hub, 'a conditional start="0" fade never comes back'
     keyboard = (ROOT / '1080i/Dialog_DialogKeyboard.xml').read_text()
@@ -277,12 +277,44 @@ def check_hub_conditions():
                     f'{name}: $INFO inside a boolean expression: {node.text}')
 
 
+def check_hub_layout(values):
+    """1.12.64: the category page shares Home's landscape cards and pitch, with four full rows."""
+    include = ET.parse(ROOT / '1080i/Includes_CategoryHub.xml').getroot().find("include[@name='RixFlix_CategoryHub']")
+    group = include.find("control[@id='8100']")
+    pitch = int(values['category_row_h'])
+    assert pitch == int(values['home_premiere_item_h']) + 25, 'category pitch must match Home landscape rows'
+    # GUIControlGroupList scrolls a focused child to a viewport edge, so only a whole number of
+    # pitches keeps every scroll aligned to a row.
+    assert int(values['category_rows_h']) == 4 * pitch, 'category viewport must be exactly four rows'
+    assert group.findtext('itemgap') == '0', 'the row height carries the gutter'
+    rows = group.findall('control')
+    assert len(rows) == 14 and all(row.findtext('height') == 'category_row_h' for row in rows)
+    card_top = int(values['category_rows_t']) + int(values['category_list_t']) + int(values['home_row_offset_y'])
+    assert card_top == 16, 'first card top'
+    assert card_top + 3 * pitch + int(values['home_premiere_item_h']) <= 1064, 'fourth row must fit on screen'
+    for row in rows:
+        lists = row.findall("include[@content='List_Premiere_Row']")
+        assert len(lists) == 1, 'every category row uses the Home landscape list'
+        title = row.find("control[@type='label']")
+        assert (title.findtext('left'), title.findtext('top'), title.findtext('angle')) == ('40', '0', '-90'), (
+            'row titles sit in the left margin as on Home, inside the grouplist clip')
+    # Drawn after the rows, or the rows would cover the fixed title.
+    children = list(include)
+    assert children.index(group) < len(children) - 2, 'the title card draws over the rows'
+    card = children[-1]
+    assert card.get('type') == 'grouplist' and card.findtext('align') == 'right'
+    button = card.find("control[@type='button']")
+    assert button.findtext('width') == 'auto' and button.findtext('enable') == 'false', 'the title card takes no focus'
+    assert 'RixFlix.CategoryLabel' in button.findtext('label')
+
+
 def check():
     check_hub_conditions()
     check_static_content_targets()
     constants = {c.get('name'): (c.text or '').strip()
                  for c in ET.parse(ROOT / '1080i/Includes_Constants.xml').getroot().findall('constant')}
     pitch, sizes = check_home_rows(constants)
+    check_hub_layout(constants)
 
     hubs = ET.parse(ROOT / '1080i/Includes_Hubs.xml').getroot()
     template = hubs.find("include[@name='Hub_Spotlight_Button_Cinema']")

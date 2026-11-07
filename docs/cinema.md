@@ -690,6 +690,33 @@ Down off the compact keyboard's bottom row now arms `RixFlix.SearchDown` before 
 stays on the field if there are none. The hub's `rixflix_category_ready` timer retries each second,
 because a row accepts focus only once it is visible and loading.
 
+## Category page layout (1.12.64)
+
+Rick (2026-11-06, photo of the TV): show as much as possible, landscape instead of posters, Home's row
+spacing with row titles on the left, and the category title fixed in a card top right. The poster page
+showed 12 titles and clipped its first row; this one shows 16 full cards plus the start of a fifth in each row.
+
+**Rows.** Each row is `List_Premiere_Row`, Home's own landscape list: 432×243 art, the 16px card gap, the
+same focus box, landscape falling back to fanart plus clearlogo. A grouplist child is one 268px pitch,
+which is Home's 243px art + 25px gutter, with `itemgap` 0. The viewport is exactly four pitches.
+`GUIControlGroupList` scrolls a focused child to a viewport edge, so a whole number of pitches always
+stops on a row boundary; any other height leaves a sliced row after the first scroll. Cards start at y16 and
+end at y1063.
+
+**Row titles.** They copy `Widget_Inline_Title`: rotated -90°, line centred on x=40, reading down from the
+card top. The title's pre-rotation rect must stay inside the grouplist's clip (see "Titles" under 1.12.0), so
+each child reserves 20px above its card and the label's top is 0. The focused row's title is full white, and
+the others rest at 70%, Home's title strength.
+
+**Title card.** It draws last, so it stays fixed over the rows. It uses the toasts' `rix_cinema_surface` and
+`common/box.png`. Only a button's background follows its label's width, so the card is a disabled auto-width
+button in a right-aligned grouplist, and a second one behind it (same label, transparent text, 40px larger
+each way) carries `shadows/shadow-40.png`, because `bordertexture` is image-only. It covers a corner of the
+fourth card in the top row, a deliberate cost: reserving a header strip would lose a third of the fourth row.
+
+**Fade.** The rows' stale-category fade now takes 200 ms, so a page's rows arrive with a soft fade instead of
+popping in. `start="100"` still matters: `time` does not change where the fade rests when its condition clears.
+
 ## Category hub memory (1.12.62, 1.12.63)
 
 The hub window is `KEEP_IN_MEMORY`, and closing it does not free its rows' poster textures:

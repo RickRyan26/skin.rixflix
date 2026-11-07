@@ -216,6 +216,11 @@
     <constant name="home_premiere_itemlayout_w">448</constant>
     <constant name="home_premiere_itemlayout_h">283</constant>
     <constant name="home_premiere_row_h">1140</constant>
+    <!-- Category page: Home's landscape pitch. Card tops are at y16: rows top -4, list top 14, home_row_offset_y 6. The 20px above a card keeps a rotated title's pre-rotation rect inside the grouplist's clip. -->
+    <constant name="category_row_h">268</constant>
+    <constant name="category_rows_h">1072</constant>
+    <constant name="category_rows_t">-4</constant>
+    <constant name="category_list_t">14</constant>
     <constant name="home_category_item_w">300</constant>
     <constant name="home_category_item_h">180</constant>
     <constant name="home_category_itemlayout_w">316</constant>
