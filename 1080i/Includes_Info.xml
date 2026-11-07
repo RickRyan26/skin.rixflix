@@ -1239,7 +1239,8 @@
                     <param name="colordiffuse">$PARAM[colordiffuse]</param>
                     <param name="listitem">$PARAM[listitem]</param>
                     <param name="container">$PARAM[container]</param>
-                    <param name="visible">$PARAM[visible_meta]</param>
+                    <!-- Keep the fixed Home panel above the posters; source facts replace the end-time line. -->
+                    <param name="visible">$PARAM[visible_meta] + ![Window.IsActive(home) + [$PARAM[visible_line]] + !String.IsEmpty(Window(Home).Property(RixFlix.Quality)) + String.IsEqual(Window(Home).Property(RixFlix.QualityType),$PARAM[container]$PARAM[listitem].DBTYPE) + String.IsEqual(Window(Home).Property(RixFlix.QualityDBID),$PARAM[container]$PARAM[listitem].DBID)]</param>
                 </include>
 
             </control>
