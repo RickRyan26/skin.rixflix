@@ -67,9 +67,15 @@ def check_home_rows(constants):
     assert abs(pw / ph - 16 / 9) < 0.01 and ph < sh, 'New Releases: 16:9 landscape, shorter than a poster'
 
     category = layouts.find("include[@name='Layout_Category']/definition/control")
-    text = ET.tostring(category, encoding='unicode').lower()
-    assert not any(c in text for c in CRIMSON), 'Categories carry no red styling'
-    assert 'EXPLORE' not in text.upper() and 'ListItem.Icon' not in ET.tostring(category, encoding='unicode')
+    assert not category.findall(".//control[@type='textbox']"), 'category art supplies the title'
+    assert category.find(".//control[@type='image']/texture").text == '$INFO[ListItem.Art(thumb)]'
+    cw, ch = sizes['Category']
+    assert (cw, ch) == (560, 315)
+    category_list = lists.find("include[@name='List_Category_Row']/definition/include")
+    assert category_list.findtext('movement') == '2'
+    assert 80 + 2 * num('home_category_itemlayout_w') + cw <= 1920 - 16
+    for key in ('past_year', 'movies', 'shows', 'reference', 'netflix', 'disney', 'hulu', 'max', 'paramount', 'prime'):
+        assert (ROOT / 'extras/categories' / (key + '.jpg')).is_file(), key
     for layout in (premiere, category):
         assert not layout.findall('.//animation'), 'Home cards must not add per-item animation'
 
@@ -118,6 +124,18 @@ def check_home_rows(constants):
             '[System.HasActiveModalDialog + Integer.IsGreater(Window.Property(TMDbHelper.WidgetContainer),{widget_id})]]"') in template
     assert '<value name="grouplist_id">602</value>' in base
     info = ET.parse(ROOT / '1080i/Includes_Info.xml').getroot()
+    detail = info.find("include[@name='Info_Panel']/definition/control")
+    source = next(c for c in detail.findall('control') if c.find("control/label") is not None and 'RixFlix.Quality' in c.findtext('control/label'))
+    assert source.findtext('height') == '64'
+    assert '$PARAM[include_details]' in source.findtext('visible')
+    assert 'RixFlix.Quality' not in source.findtext('visible'), 'late facts must not move the plot'
+    line = detail.find("include[@content='Info_Line']")
+    assert params(line)['height'] == '36'
+    assert params(detail.find("include[@content='Info_Meta']"))['visible'] == '$PARAM[visible_meta]'
+    dialog = ET.parse(ROOT / '1080i/DialogVideoInfo.xml').getroot()
+    surface = dialog.find('controls/control')
+    assert surface.find('texture').get('colordiffuse') == 'ff080808'
+    assert surface.findtext('width') == '1920' and surface.findtext('height') == '1080'
     pills = info.find("include[@name='Info_Line_VideoQuality_Resolution']/definition")
     assert [params(i)['label'] for i in pills if params(i).get('label') == 'TV'] == ['TV'], 'shows get a TV pill'
     title = widgets.find("include[@name='Widget_Inline_Title']/definition/control")

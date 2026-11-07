@@ -10,6 +10,11 @@
     <onload>SetProperty(BaseID,$INFO[ListItem.Label]$INFO[ListItem.FolderPath])</onload>
 
     <controls>
+        <!-- Own an opaque surface over custom category windows. -->
+        <control type="image">
+            <left>0</left><top>0</top><width>1920</width><height>1080</height>
+            <texture colordiffuse="ff080808">common/white.png</texture>
+        </control>
 
         <include condition="!String.IsEqual(ListItem.Property(tmdb_type),person)">DialogInfo_VideoButtons</include>
 

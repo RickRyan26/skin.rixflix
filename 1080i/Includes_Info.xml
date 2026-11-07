@@ -478,6 +478,7 @@
     </include>
 
     <include name="Info_Line">
+        <param name="height">80</param>
         <param name="left">40</param>
         <param name="visible">true</param>
         <param name="listitem">ListItem</param>
@@ -486,7 +487,7 @@
             <control type="group">
                 <visible>$PARAM[visible]</visible>
                 <left>$PARAM[left]</left>
-                <height>80</height>
+                <height>$PARAM[height]</height>
 
                 <visible>[String.IsEqual($PARAM[container]$PARAM[listitem].DBType,movie) | String.IsEqual($PARAM[container]$PARAM[listitem].DBType,tvshow) | String.IsEqual($PARAM[container]$PARAM[listitem].DBType,season) | String.IsEqual($PARAM[container]$PARAM[listitem].DBType,episode) | String.IsEqual($PARAM[container]$PARAM[listitem].DBType,video) | String.IsEqual($PARAM[container]$PARAM[listitem].DBType,album) | String.IsEqual($PARAM[container]$PARAM[listitem].DBType,song) | !String.IsEmpty($PARAM[container]$PARAM[listitem].ChannelNumberLabel) | $PARAM[override]]</visible>
 
@@ -1204,23 +1205,24 @@
 
                 <!-- Info -->
                 <include content="Info_Line" condition="$PARAM[include_details]">
+                    <!-- 140 title + 36 metadata + 64 quality + 120 plot + 60 end time = 420. -->
+                    <param name="height">36</param>
                     <param name="colordiffuse">$PARAM[colordiffuse]</param>
                     <param name="container">$PARAM[container]</param>
                     <param name="listitem">$PARAM[listitem]</param>
                     <param name="visible">$PARAM[visible_line]</param>
                 </include>
 
-                <!-- Source facts belong on their own row, below the editorial metadata. -->
-                <control type="textbox">
-                    <left>40</left>
-                    <width>1040</width>
+                <!-- Reserve two lines before lookup completes. Title-only layers never draw facts. -->
+                <control type="group">
                     <height>64</height>
-                    <font>font_mini</font>
-                    <textcolor>$PARAM[colordiffuse]_90</textcolor>
-                    <label>$INFO[Window(Home).Property(RixFlix.Quality)]</label>
-                    <visible>Window.IsActive(home) + [$PARAM[visible_line]]</visible>
-                    <visible>!String.IsEmpty(Window(Home).Property(RixFlix.Quality))</visible>
-                    <visible>String.IsEqual(Window(Home).Property(RixFlix.QualityType),$PARAM[container]$PARAM[listitem].DBTYPE) + String.IsEqual(Window(Home).Property(RixFlix.QualityDBID),$PARAM[container]$PARAM[listitem].DBID)</visible>
+                    <visible>$PARAM[include_details] + [$PARAM[visible_line]] + [String.IsEqual($PARAM[container]$PARAM[listitem].DBTYPE,movie) | String.IsEqual($PARAM[container]$PARAM[listitem].DBTYPE,tvshow) | String.IsEqual($PARAM[container]$PARAM[listitem].DBTYPE,episode)]</visible>
+                    <control type="textbox">
+                        <left>40</left><width>1040</width><height>64</height>
+                        <font>font_mini</font><textcolor>$PARAM[colordiffuse]_90</textcolor>
+                        <label>$INFO[Window(Home).Property(RixFlix.Quality)]</label>
+                        <visible>String.IsEqual(Window(Home).Property(RixFlix.QualityType),$PARAM[container]$PARAM[listitem].DBTYPE) + String.IsEqual(Window(Home).Property(RixFlix.QualityDBID),$PARAM[container]$PARAM[listitem].DBID)</visible>
+                    </control>
                 </control>
 
                 <!-- Plot -->
@@ -1239,8 +1241,7 @@
                     <param name="colordiffuse">$PARAM[colordiffuse]</param>
                     <param name="listitem">$PARAM[listitem]</param>
                     <param name="container">$PARAM[container]</param>
-                    <!-- Keep the fixed Home panel above the posters; source facts replace the end-time line. -->
-                    <param name="visible">$PARAM[visible_meta] + ![Window.IsActive(home) + [$PARAM[visible_line]] + !String.IsEmpty(Window(Home).Property(RixFlix.Quality)) + String.IsEqual(Window(Home).Property(RixFlix.QualityType),$PARAM[container]$PARAM[listitem].DBTYPE) + String.IsEqual(Window(Home).Property(RixFlix.QualityDBID),$PARAM[container]$PARAM[listitem].DBID)]</param>
+                    <param name="visible">$PARAM[visible_meta]</param>
                 </include>
 
             </control>

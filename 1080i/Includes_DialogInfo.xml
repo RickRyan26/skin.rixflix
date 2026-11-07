@@ -162,7 +162,7 @@
             </control>
             <control type="grouplist">
                 <left>-40</left>
-                <top>400</top>
+                <top>440</top>
                 <orientation>vertical</orientation>
                 <include>DialogInfo_Animation_Left</include>
                 <include condition="!String.IsEqual(ListItem.Property(tmdb_type),person)">$PARAM[extended_include]</include>

@@ -221,10 +221,10 @@
     <constant name="category_rows_h">1072</constant>
     <constant name="category_rows_t">-4</constant>
     <constant name="category_list_t">14</constant>
-    <constant name="home_category_item_w">300</constant>
-    <constant name="home_category_item_h">180</constant>
-    <constant name="home_category_itemlayout_w">316</constant>
-    <constant name="home_category_itemlayout_h">220</constant>
+    <constant name="home_category_item_w">560</constant>
+    <constant name="home_category_item_h">315</constant>
+    <constant name="home_category_itemlayout_w">576</constant>
+    <constant name="home_category_itemlayout_h">355</constant>
     <!-- Rotated title: anchored at x=40 (left -40 inside the view_pad group) and at the
          card top (16 = top 20 - 4 for a 40px centred line), reading downward. Kodi clips
          the label's pre-rotation rect to the grouplist (x >= 0), so the rect must start at

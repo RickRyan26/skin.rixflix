@@ -2538,8 +2538,7 @@
         </definition>
     </include>
 
-    <!-- Categories: a plain tile on the same surface and thin focus box as posters.
-         No accent fill, generic icon or call-to-action text. -->
+    <!-- Categories: generated artwork, with native labels retained for navigation. -->
     <include name="Layout_Category">
         <param name="selected">false</param>
         <definition>
@@ -2549,15 +2548,9 @@
                 <include content="Object_ItemBack">
                     <param name="selected">$PARAM[selected]</param>
                 </include>
-                <control type="textbox">
-                    <include content="Dimension_Padding">
-                        <param name="pad">20</param>
-                    </include>
-                    <align>center</align>
-                    <aligny>center</aligny>
-                    <font>font_main_bold</font>
-                    <textcolor>main_fg_90</textcolor>
-                    <label>$INFO[ListItem.Label]</label>
+                <control type="image">
+                    <aspectratio>scale</aspectratio><fadetime>0</fadetime>
+                    <texture background="true" diffuse="diffuse/landscape_w570_h320.png">$INFO[ListItem.Art(thumb)]</texture>
                 </control>
                 <include content="Object_SelectBox" condition="$PARAM[selected]" />
             </control>

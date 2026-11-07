@@ -758,3 +758,21 @@ overall bitrate. For a series it explicitly describes the next episode.
 The first live install exposed that Kodi conditions cannot concatenate $INFO tokens
 as String.IsEqual’s second operand. Version 1.12.68 compares QualityType and
 QualityDBID separately with the container’s native DBTYPE and DBID labels.
+
+
+## 1.12.70: stable source details and category artwork
+
+The Info dialog owns an opaque #080808 full-screen surface, above every custom
+category window. The shared Info_Panel draws source facts only on its details
+layer; the title-only layer no longer creates the duplicate quality row.
+A 64px group reserves quality space for movies, series and episodes before the
+worker replies. Its inner text still requires exact type/id agreement.
+The editorial line uses 36px in Info_Panel, preserving 140 + 36 + 64 + 120 + 60
+= 420px for title, editorial metadata, quality, plot and end time. Other Info_Line
+callers retain their 80px spacing. Info details start at 440px, below the panel.
+
+Categories use ten generated local JPEGs at extras/categories/{key}.jpg, shown as
+560×315 cards with 16px gutters. Native labels and category keys remain available
+to navigation and accessibility. Two movement slots keep the last card within
+1920px. The provider owns the art paths. Decoded artwork is limited to the display
+size; no external image URL or generated text control is required.
