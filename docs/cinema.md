@@ -811,3 +811,16 @@ remaining inset. Its center is transparent; it cannot whitewash the poster.
 The halo draws after the dark shadow and before the crisp outline, preventing
 the shadow from dulling the white glow. White is explicit, independent of accent
 color. No new artwork fetch, Python service or per-frame blur is added.
+
+
+### 1.12.73: main-video seek previews
+
+DialogSeekBar displays a prepared 320px main-video thumbnail above the timeline
+while Player.Seeking. Native hh/mm/ss labels and six second-range conditions
+choose ten-second buckets; there are no script calls or network reads per seek.
+The identity-bound ready prefix is published by the Rixflix image worker. Empty
+prefix preserves the existing bar. special://temp paths use Kodi cached-image
+semantics, avoiding duplicate TextureCache entries. The white bloom and border
+match the selected-card treatment; the target timestamp stays readable below
+the frame. Real generation, active-item binding and native pixel proof belong
+to Rixflix docs/home-theater.md; source validation alone is not native proof.

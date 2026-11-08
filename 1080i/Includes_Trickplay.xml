@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<includes>
+    <!-- Native time formatting selects ten-second buckets. No Python runs on a
+         seek key, and special://temp prevents duplicate TextureCache copies. -->
+    <variable name="RixFlix_TrickplayFrame">
+        <value condition="Integer.IsLess(Player.SeekTime(ss),10)">$INFO[Window(Home).Property(RixFlix.TrickplayPrefix)]$INFO[Player.SeekTime(hh)]/$INFO[Player.SeekTime(mm)]/00.jpg</value>
+        <value condition="Integer.IsLess(Player.SeekTime(ss),20)">$INFO[Window(Home).Property(RixFlix.TrickplayPrefix)]$INFO[Player.SeekTime(hh)]/$INFO[Player.SeekTime(mm)]/10.jpg</value>
+        <value condition="Integer.IsLess(Player.SeekTime(ss),30)">$INFO[Window(Home).Property(RixFlix.TrickplayPrefix)]$INFO[Player.SeekTime(hh)]/$INFO[Player.SeekTime(mm)]/20.jpg</value>
+        <value condition="Integer.IsLess(Player.SeekTime(ss),40)">$INFO[Window(Home).Property(RixFlix.TrickplayPrefix)]$INFO[Player.SeekTime(hh)]/$INFO[Player.SeekTime(mm)]/30.jpg</value>
+        <value condition="Integer.IsLess(Player.SeekTime(ss),50)">$INFO[Window(Home).Property(RixFlix.TrickplayPrefix)]$INFO[Player.SeekTime(hh)]/$INFO[Player.SeekTime(mm)]/40.jpg</value>
+        <value>$INFO[Window(Home).Property(RixFlix.TrickplayPrefix)]$INFO[Player.SeekTime(hh)]/$INFO[Player.SeekTime(mm)]/50.jpg</value>
+    </variable>
+    <include name="RixFlix_TrickplayPreview">
+        <control type="group" id="8990">
+            <left>760</left>
+            <top>490</top>
+            <width>400</width>
+            <height>260</height>
+            <visible>Player.Seeking + [VideoPlayer.Content(movies) | VideoPlayer.Content(episodes)] + !String.IsEmpty(Window(Home).Property(RixFlix.TrickplayPrefix))</visible>
+            <control type="image">
+                <left>-6</left><top>-6</top><width>412</width><height>272</height>
+                <texture border="26" colordiffuse="bbffffff">rixflix/card-focus-glow.png</texture>
+            </control>
+            <control type="image">
+                <width>400</width><height>260</height>
+                <texture border="20" colordiffuse="f0101015">common/white.png</texture>
+            </control>
+            <control type="image">
+                <left>8</left><top>8</top><width>384</width><height>216</height>
+                <aspectratio>keep</aspectratio>
+                <texture background="true">$VAR[RixFlix_TrickplayFrame]</texture>
+            </control>
+            <control type="image">
+                <width>400</width><height>260</height>
+                <texture border="20" colordiffuse="d9ffffff">common/selectbox_thin.png</texture>
+            </control>
+            <control type="label">
+                <left>8</left><top>224</top><width>384</width><height>30</height>
+                <align>center</align><aligny>center</aligny>
+                <font>font_hint_bold</font><textcolor>ffffffff</textcolor>
+                <label>$INFO[Player.SeekTime(hh:mm:ss)]</label>
+            </control>
+        </control>
+    </include>
+</includes>

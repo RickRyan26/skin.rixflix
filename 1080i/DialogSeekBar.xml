@@ -130,5 +130,6 @@
             </control>
         </control>
 
+        <include>RixFlix_TrickplayPreview</include>
     </controls>
 </window>
