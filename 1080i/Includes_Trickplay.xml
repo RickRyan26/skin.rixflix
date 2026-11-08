@@ -23,7 +23,7 @@
             </control>
             <control type="image">
                 <width>400</width><height>260</height>
-                <texture border="20" colordiffuse="f0101015">common/white.png</texture>
+                <texture border="26" colordiffuse="f0101015">rixflix/trickplay-panel.png</texture>
             </control>
             <control type="image">
                 <left>8</left><top>8</top><width>384</width><height>216</height>
