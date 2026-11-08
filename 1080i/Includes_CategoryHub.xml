@@ -21,12 +21,12 @@
             <onfocus>SetProperty(RixFlix.CategoryReturn.Go,1,Home)</onfocus>
             <onback>8900</onback>
         </control>
-        <control type="label">
-            <left>0</left><top>500</top><width>1920</width><height>80</height>
-            <align>center</align><aligny>center</aligny>
-            <font>font_main_bold</font><textcolor>main_fg_70</textcolor>
-            <label>Loading genres…</label>
+        <control type="image" id="8988">
+            <left>660</left><top>460</top><width>600</width><height>160</height>
+            <aspectratio>keep</aspectratio>
+            <texture>special://skin/media/rixflix/rixflix-wordmark.png</texture>
             <visible>!String.IsEqual(Window(Home).Property(RixFlix.CategoryReady),Window(Home).Property(RixFlix.Category))</visible>
+            <animation effect="fade" start="45" end="100" time="900" tween="sine" easing="inout" pulse="true" condition="true">Conditional</animation>
         </control>
         <control type="label">
             <left>0</left><top>500</top><width>1920</width><height>80</height>

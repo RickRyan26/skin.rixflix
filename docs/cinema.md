@@ -776,3 +776,19 @@ Categories use ten generated local JPEGs at extras/categories/{key}.jpg, shown a
 to navigation and accessibility. Two movement slots keep the last card within
 1920px. The provider owns the art paths. Decoded artwork is limited to the display
 size; no external image URL or generated text control is required.
+
+
+## 1.12.71: branded category states
+
+Home Categories (507) shows the existing boot splash while focused. The live
+visibility group (8070) sits above normal backgrounds and below Home content.
+The full-size artwork is lifted 160px so its wordmark clears the 560×315 cards;
+its lower edge rests behind the cards. No background download or generated asset
+is added. Leaving Categories restores the normal media background immediately.
+
+The category manifest's existing pending condition now shows the pause-screen
+rixflix-wordmark.png (8988), centered in a 600×160 box. Native sine fade pulses
+45–100% brightness in 900ms each direction. It stays recognizable at the dim end
+and disappears when the manifest is ready. The empty-category explanation and
+all directory/focus/row-ready conditions keep their existing behavior. Kodi
+4665ec22 VisibleEffect.cpp confirms pulse auto-reverses Conditional animations.

@@ -867,6 +867,15 @@
     <include name="Hub_Window_Background">
         <include>Hub_Window_Refocus_Buttons</include>
         <include>Background</include>
+        <!-- Keep the splash identity above the large category cards. Live visibility follows focus. -->
+        <control type="group" id="8070">
+            <visible>Window.IsActive(home) + Control.HasFocus(507)</visible>
+            <control type="image">
+                <left>0</left><top>-160</top><width>1920</width><height>1080</height>
+                <aspectratio>scale</aspectratio>
+                <texture background="true">special://skin/media/rixflix/rixflix-splash.png</texture>
+            </control>
+        </control>
         <include condition="Skin.HasSetting(HomeSwitcher.Vertical)">Hub_Submenu_Fade</include>
     </include>
     <include name="Hub_Window">
