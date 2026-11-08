@@ -1801,6 +1801,7 @@
         <param name="indicator">false</param>
         <param name="focusbounce">false</param>
         <param name="shadow">true</param>
+        <param name="card_glow">false</param>
         <param name="indicator_reposition">false</param>
         <definition>
             <control type="group">
@@ -1810,6 +1811,13 @@
                     <param name="control">group</param>
                     <include content="Dimension_Padding"><param name="pad">-3</param></include>
                     <include condition="$PARAM[shadow]">Object_Shadow_40</include>
+                    <!-- Compact white bloom: fits the existing 6px row inset and 16px card gap. -->
+                    <include content="Object_Control" condition="$PARAM[card_glow]">
+                        <param name="control">image</param>
+                        <include content="Dimension_Padding"><param name="pad">-3</param></include>
+                        <texture border="26" colordiffuse="ffffffff">rixflix/card-focus-glow.png</texture>
+                        <animation effect="fade" start="0" end="100" time="180" tween="sine" easing="out">Focus</animation>
+                    </include>
                     <control type="image">
                         <include>Texture_SelectBox_Thin</include>
                     </control>

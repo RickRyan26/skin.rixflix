@@ -792,3 +792,22 @@ rixflix-wordmark.png (8988), centered in a 600×160 box. Native sine fade pulses
 and disappears when the manifest is ready. The empty-category explanation and
 all directory/focus/row-ready conditions keep their existing behavior. Kodi
 4665ec22 VisibleEffect.cpp confirms pulse auto-reverses Conditional animations.
+
+
+## 1.12.72: white card focus bloom
+
+The selected poster, landscape (including Premiere) and category layouts opt in
+to Object_SelectBox's card_glow layer. The existing crisp focus line remains on
+top. A small static white alpha texture adds exterior bloom and a short interior
+falloff, with a single 180ms focus fade. It does not loop, scale the cards or
+change dimensions, navigation or row spacing. Text-only selection boxes retain
+their existing treatment.
+
+The texture is generated from rounded-rectangle distance in
+scripts/render_card_glow.py: 128×128 RGBA, 26px nine-slice corners, 64 KiB decoded.
+It extends 6px past the card, fitting Home's 6px top inset and each 16px gutter.
+The sharp border already extends 3px, so the extra outer bloom occupies only the
+remaining inset. Its center is transparent; it cannot whitewash the poster.
+The halo draws after the dark shadow and before the crisp outline, preventing
+the shadow from dulling the white glow. White is explicit, independent of accent
+color. No new artwork fetch, Python service or per-frame blur is added.

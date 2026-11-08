@@ -2109,6 +2109,7 @@
                         <param name="listitem">$PARAM[listitem]</param>
                     </include>
                     <include content="Object_SelectBox" condition="$PARAM[selected]">
+                        <param name="card_glow">true</param>
                         <param name="affix">$PARAM[affix]</param>
                         <param name="listitem">$PARAM[listitem]</param>
                         <param name="indicator">$PARAM[indicator]</param>
@@ -2509,6 +2510,7 @@
                 </include>
 
                 <include content="Object_SelectBox" condition="$PARAM[selected]">
+                        <param name="card_glow">true</param>
                     <param name="affix">$PARAM[affix]</param>
                     <param name="indicator">true</param>
                     <param name="focusbounce">true</param>
@@ -2552,7 +2554,9 @@
                     <aspectratio>scale</aspectratio><fadetime>0</fadetime>
                     <texture background="true" diffuse="diffuse/landscape_w570_h320.png">$INFO[ListItem.Art(thumb)]</texture>
                 </control>
-                <include content="Object_SelectBox" condition="$PARAM[selected]" />
+                <include content="Object_SelectBox" condition="$PARAM[selected]">
+                    <param name="card_glow">true</param>
+                </include>
             </control>
         </definition>
     </include>
