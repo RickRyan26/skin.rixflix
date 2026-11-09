@@ -147,7 +147,8 @@
                 <param name="id">$PARAM[id]</param>
                 <top>510</top>
                 <bottom>-40</bottom>
-                <onup>601</onup>
+                <onup condition="Window.IsActive(11105)">SetFocus(3000)</onup>
+                <onup condition="!Window.IsActive(11105)">601</onup>
                 <include content="Action_Widget_OnBack">
                     <param name="id">$PARAM[id]</param>
                     <param name="grouplistid">500</param>
@@ -159,7 +160,7 @@
 
                 <include>Hub_Grouplist_OnLeftRight</include>
                 <onback condition="Window.IsActive(11105)">7900</onback>
-                <ondown condition="Window.IsActive(11105)">7900</ondown>
+                <ondown condition="Window.IsActive(11105)">SetFocus($PARAM[id])</ondown>
                 <ondown condition="!Window.IsActive(11105)">ActivateWindow(1180)</ondown>
                 <onfocus>SetProperty(TMDbHelper.WidgetContainer,$PARAM[id])</onfocus>
                 <onfocus>ClearProperty(Background.ShowOverlay,Home)</onfocus>

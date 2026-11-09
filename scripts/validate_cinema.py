@@ -487,6 +487,9 @@ def check():
     search_template = (ROOT / 'shortcuts/generator/data/parts/search_row_standard.xmltemplate').read_text()
     assert '<ondown>SetFocus({widget_id})</ondown>' in search_template
     assert '<onup>SetFocus(3000)</onup>' in search_template
+    combined = ET.parse(ROOT / '1080i/Includes_Hubs.xml').getroot().find("include[@name='Hub_Combined_Widget']/definition/include")
+    assert next(n.text for n in combined.findall('ondown') if n.get('condition') == 'Window.IsActive(11105)') == 'SetFocus($PARAM[id])'
+    assert next(n.text for n in combined.findall('onup') if n.get('condition') == 'Window.IsActive(11105)') == 'SetFocus(3000)'
     # 1.12.25: the seek bar outlives a network seek's 2.0-2.8 s refill (no hide/re-show).
     seekbar = (ROOT / '1080i/DialogSeekBar.xml').read_text()
     assert 'Player.HasPerformedSeek(3)' in seekbar and 'HasPerformedSeek(2)' not in seekbar

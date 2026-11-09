@@ -1,5 +1,14 @@
 # Cinema presentation — 1.10.0
 
+## 1.12.76: fix the active combined Search control
+
+The 1.12.75 native retry still failed repeated Down. The earlier fix changed the
+standard-row template, but the deployed generated include uses Hub_Combined_Widget.
+Its Search-specific Down still targeted Home (7900). Change that active control
+to retain its own result on Down and return directly to edit 3000 on Up. Back
+retains the Home target. The cinema validator now inspects both row variants;
+Rixflix's live proof records the generated include and active variant as evidence.
+
 ## 1.12.75: search navigation survives the parent grouplist
 
 The first idle theater deployment of 1.12.74 failed the native repeated-Down
