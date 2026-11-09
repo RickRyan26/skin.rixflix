@@ -1,5 +1,14 @@
 # Cinema presentation — 1.10.0
 
+## 1.12.75: search navigation survives the parent grouplist
+
+The first idle theater deployment of 1.12.74 failed the native repeated-Down
+check. Its numeric row target was overwritten when the parent grouplist added
+the row. Kodi explicitly preserves built-in navigation actions in
+[CGUIControlGroupList::AddControl](https://github.com/xbmc/xbmc/blob/master/xbmc/guilib/GUIControlGroupList.cpp#L284).
+Use SetFocus on Down to retain the result and on Up to return directly to edit
+3000. The native Rixflix search smoke owns the live proof and focused-card capture.
+
 ## 1.12.74: retain search text and make result focus clear
 
 Rick reported that returning Up to Search lost the query, and the first result did

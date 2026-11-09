@@ -12,8 +12,9 @@
     <param name="grouplistid">602</param>
     <param name="refocus">SetFocus(302)</param>
 
-    <!-- There is one results row. A repeated Down stays on the selected result. -->
-    <ondown>{widget_id}</ondown>
+    <!-- Grouplist AddControl overrides numeric navigation; built-ins survive. -->
+    <ondown>SetFocus({widget_id})</ondown>
+    <onup>SetFocus(3000)</onup>
     <onfocus>ClearProperty(HomeSwitcher.IsVisible,Home)</onfocus>
     <onfocus>ClearProperty(InfoPanel.FullSwitch,Home)</onfocus>
 

@@ -485,7 +485,8 @@ def check():
                 if r.findtext('condition') == '{item_path}==DefaultSearch-All')
     assert rule.findtext('value') == 'plugin://plugin.video.rixflix.providers/?mode=search&amp;live='
     search_template = (ROOT / 'shortcuts/generator/data/parts/search_row_standard.xmltemplate').read_text()
-    assert '<ondown>{widget_id}</ondown>' in search_template
+    assert '<ondown>SetFocus({widget_id})</ondown>' in search_template
+    assert '<onup>SetFocus(3000)</onup>' in search_template
     # 1.12.25: the seek bar outlives a network seek's 2.0-2.8 s refill (no hide/re-show).
     seekbar = (ROOT / '1080i/DialogSeekBar.xml').read_text()
     assert 'Player.HasPerformedSeek(3)' in seekbar and 'HasPerformedSeek(2)' not in seekbar
