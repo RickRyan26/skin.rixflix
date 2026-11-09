@@ -1,5 +1,15 @@
 # Cinema presentation — 1.10.0
 
+## 1.12.74: retain search text and make result focus clear
+
+Rick reported that returning Up to Search lost the query, and the first result did
+not look ready to open after Down closed the keyboard. Search no longer replaces
+the live query from the native edit on window load. The companion `opensearch.py`
+restores the last live query into that edit before opening the keyboard, including
+the text from a cancelled keyboard. Search's focused landscape card adds a solid
+white outline and shows “OK to open”. Down on the sole results row keeps the same
+card selected; Back still returns Home and Up still returns to the field.
+
 ## 1.12.50: a Down while results load lands on them, never Home
 
 A commit leaves results row 502 empty for the ~1.3 s it takes to load. On the search field,

@@ -2516,6 +2516,12 @@
                     <param name="focusbounce">true</param>
                     <param name="listitem">$PARAM[listitem]</param>
                 </include>
+                <!-- Search closes its keyboard onto this card. Make the destination explicit. -->
+                <include content="Object_Control" condition="$PARAM[selected]">
+                    <param name="control">image</param>
+                    <texture border="20" colordiffuse="rix_cinema_paper">common/selectbox_thin.png</texture>
+                    <visible>Window.IsActive(11105) + Control.HasFocus(502) + !Window.IsActive(DialogKeyboard.xml)</visible>
+                </include>
             </control>
         </definition>
     </include>

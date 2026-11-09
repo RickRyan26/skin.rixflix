@@ -329,6 +329,16 @@
             <left>40</left>
             <width>760</width>
             <height>50</height>
+            <font>font_mini_bold</font>
+            <label>OK to open</label>
+            <textcolor>rix_cinema_paper</textcolor>
+            <visible>Control.HasFocus(502) + !Window.IsActive(DialogKeyboard.xml)</visible>
+        </control>
+        <control type="label">
+            <top>95</top>
+            <left>40</left>
+            <width>760</width>
+            <height>50</height>
             <font>font_tiny</font>
             <label>Enter part of a title, choose Done, then browse the results</label>
             <textcolor>rix_cinema_muted</textcolor>
