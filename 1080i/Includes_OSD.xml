@@ -635,9 +635,10 @@
 
         <!-- Anchored target, bound through static item properties; no Python control access. -->
 <control type="list" id="8952"><left>0</left><top>0</top><width>1</width><height>1</height><enable>false</enable><visible>!String.IsEmpty(Window(Home).Property(RixFlix.SeekActive))</visible><itemlayout width="1" height="1" /><focusedlayout width="1" height="1" /><content><item><label>Seek target</label><visible>String.IsEqual(Window(Home).Property(RixFlix.SeekTick),0)</visible><property name="RixFlix.SeekFraction">$INFO[Window(Home).Property(RixFlix.SeekFraction)]</property></item><item><label>Seek target</label><visible>String.IsEqual(Window(Home).Property(RixFlix.SeekTick),1)</visible><property name="RixFlix.SeekFraction">$INFO[Window(Home).Property(RixFlix.SeekFraction)]</property></item></content></control>
+<!-- slider_bg is 1360px, nib is 112px. Extend each side by 56/1248 of the segment so its visible travel equals the segment width. -->
 <control type="group" id="8951"><width>100%</width><height>112</height><centertop>50%</centertop><visible>!String.IsEmpty(Window(Home).Property(RixFlix.SeekActive))</visible><control type="group"><left>0%</left><width>10%</width><height>112</height><visible>Integer.IsEqual(Window(Home).Property(RixFlix.SeekChunk),0)</visible><control type="progress">
-            <left>-56</left>
-            <right>-56</right>
+            <left>-4.487179%</left>
+            <right>-4.487179%</right>
             <height>112</height>
             <centertop>50%</centertop>
             <texturebg colordiffuse="00ffffff">progress/slider_bg.png</texturebg>
@@ -645,8 +646,8 @@
             <lefttexture />
             <midtexture />
             <info>Container(8952).ListItem.Property(RixFlix.SeekFraction)</info></control></control><control type="group"><left>10%</left><width>10%</width><height>112</height><visible>Integer.IsEqual(Window(Home).Property(RixFlix.SeekChunk),1)</visible><control type="progress">
-            <left>-56</left>
-            <right>-56</right>
+            <left>-4.487179%</left>
+            <right>-4.487179%</right>
             <height>112</height>
             <centertop>50%</centertop>
             <texturebg colordiffuse="00ffffff">progress/slider_bg.png</texturebg>
@@ -654,8 +655,8 @@
             <lefttexture />
             <midtexture />
             <info>Container(8952).ListItem.Property(RixFlix.SeekFraction)</info></control></control><control type="group"><left>20%</left><width>10%</width><height>112</height><visible>Integer.IsEqual(Window(Home).Property(RixFlix.SeekChunk),2)</visible><control type="progress">
-            <left>-56</left>
-            <right>-56</right>
+            <left>-4.487179%</left>
+            <right>-4.487179%</right>
             <height>112</height>
             <centertop>50%</centertop>
             <texturebg colordiffuse="00ffffff">progress/slider_bg.png</texturebg>
@@ -663,8 +664,8 @@
             <lefttexture />
             <midtexture />
             <info>Container(8952).ListItem.Property(RixFlix.SeekFraction)</info></control></control><control type="group"><left>30%</left><width>10%</width><height>112</height><visible>Integer.IsEqual(Window(Home).Property(RixFlix.SeekChunk),3)</visible><control type="progress">
-            <left>-56</left>
-            <right>-56</right>
+            <left>-4.487179%</left>
+            <right>-4.487179%</right>
             <height>112</height>
             <centertop>50%</centertop>
             <texturebg colordiffuse="00ffffff">progress/slider_bg.png</texturebg>
@@ -672,8 +673,8 @@
             <lefttexture />
             <midtexture />
             <info>Container(8952).ListItem.Property(RixFlix.SeekFraction)</info></control></control><control type="group"><left>40%</left><width>10%</width><height>112</height><visible>Integer.IsEqual(Window(Home).Property(RixFlix.SeekChunk),4)</visible><control type="progress">
-            <left>-56</left>
-            <right>-56</right>
+            <left>-4.487179%</left>
+            <right>-4.487179%</right>
             <height>112</height>
             <centertop>50%</centertop>
             <texturebg colordiffuse="00ffffff">progress/slider_bg.png</texturebg>
@@ -681,8 +682,8 @@
             <lefttexture />
             <midtexture />
             <info>Container(8952).ListItem.Property(RixFlix.SeekFraction)</info></control></control><control type="group"><left>50%</left><width>10%</width><height>112</height><visible>Integer.IsEqual(Window(Home).Property(RixFlix.SeekChunk),5)</visible><control type="progress">
-            <left>-56</left>
-            <right>-56</right>
+            <left>-4.487179%</left>
+            <right>-4.487179%</right>
             <height>112</height>
             <centertop>50%</centertop>
             <texturebg colordiffuse="00ffffff">progress/slider_bg.png</texturebg>
@@ -690,8 +691,8 @@
             <lefttexture />
             <midtexture />
             <info>Container(8952).ListItem.Property(RixFlix.SeekFraction)</info></control></control><control type="group"><left>60%</left><width>10%</width><height>112</height><visible>Integer.IsEqual(Window(Home).Property(RixFlix.SeekChunk),6)</visible><control type="progress">
-            <left>-56</left>
-            <right>-56</right>
+            <left>-4.487179%</left>
+            <right>-4.487179%</right>
             <height>112</height>
             <centertop>50%</centertop>
             <texturebg colordiffuse="00ffffff">progress/slider_bg.png</texturebg>
@@ -699,8 +700,8 @@
             <lefttexture />
             <midtexture />
             <info>Container(8952).ListItem.Property(RixFlix.SeekFraction)</info></control></control><control type="group"><left>70%</left><width>10%</width><height>112</height><visible>Integer.IsEqual(Window(Home).Property(RixFlix.SeekChunk),7)</visible><control type="progress">
-            <left>-56</left>
-            <right>-56</right>
+            <left>-4.487179%</left>
+            <right>-4.487179%</right>
             <height>112</height>
             <centertop>50%</centertop>
             <texturebg colordiffuse="00ffffff">progress/slider_bg.png</texturebg>
@@ -708,8 +709,8 @@
             <lefttexture />
             <midtexture />
             <info>Container(8952).ListItem.Property(RixFlix.SeekFraction)</info></control></control><control type="group"><left>80%</left><width>10%</width><height>112</height><visible>Integer.IsEqual(Window(Home).Property(RixFlix.SeekChunk),8)</visible><control type="progress">
-            <left>-56</left>
-            <right>-56</right>
+            <left>-4.487179%</left>
+            <right>-4.487179%</right>
             <height>112</height>
             <centertop>50%</centertop>
             <texturebg colordiffuse="00ffffff">progress/slider_bg.png</texturebg>
@@ -717,8 +718,8 @@
             <lefttexture />
             <midtexture />
             <info>Container(8952).ListItem.Property(RixFlix.SeekFraction)</info></control></control><control type="group"><left>90%</left><width>10%</width><height>112</height><visible>Integer.IsEqual(Window(Home).Property(RixFlix.SeekChunk),9)</visible><control type="progress">
-            <left>-56</left>
-            <right>-56</right>
+            <left>-4.487179%</left>
+            <right>-4.487179%</right>
             <height>112</height>
             <centertop>50%</centertop>
             <texturebg colordiffuse="00ffffff">progress/slider_bg.png</texturebg>
