@@ -177,4 +177,5 @@
 
     <expression name="Exp_SeasonalTheme_Visible">[!System.ScreenSaverActive + !Window.IsVisible(slideshow) + [[!Window.IsVisible(visualisation) + !VideoPlayer.IsFullscreen] | Window.IsActive(fullscreeninfo)]]</expression>
 
+    <expression name="Exp_RixFlix_Seeking">Player.Seeking | !String.IsEmpty(Window(Home).Property(RixFlix.SeekActive))</expression>
 </includes>

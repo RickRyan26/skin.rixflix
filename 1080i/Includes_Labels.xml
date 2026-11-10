@@ -542,6 +542,7 @@
         <value condition="Player.Rewinding4x">RW 4x</value>
         <value condition="Player.Rewinding2x">RW 2x</value>
         <value condition="Player.Rewinding">RW</value>
+        <value condition="!String.IsEmpty(Window(Home).Property(RixFlix.SeekActive))">$LOCALIZE[773] $INFO[Window(Home).Property(RixFlix.SeekOffset)]</value>
         <value condition="[Player.Seeking | Player.HasPerformedSeek(3)] + !String.IsEmpty(Player.SeekOffset)">$LOCALIZE[773]$INFO[Player.SeekOffset, ,]</value>
         <value condition="Player.Seeking + String.IsEmpty(Player.SeekOffset)">$LOCALIZE[773]$INFO[Player.SeekStepSize, ,]</value>
         <value condition="Player.Caching">$LOCALIZE[439] $INFO[Player.CacheLevel,,%]</value>
@@ -969,6 +970,7 @@
     </variable>
 
     <variable name="Label_OSD_Time">
+        <value condition="!String.IsEmpty(Window(Home).Property(RixFlix.SeekActive))">$INFO[Window(Home).Property(RixFlix.SeekTime)]</value>
         <value condition="Skin.String(Seekbar.TimeDisplay,Remaining)">$INFO[Player.TimeRemaining(hh:mm:ss)]</value>
         <value condition="Skin.String(Seekbar.TimeDisplay,Remaining) + PVR.IsPlayingTV + !String.IsEmpty(PVR.EpgEventRemainingTime)">$INFO[PVR.EpgEventRemainingTime(hh:mm:ss)]</value>
         <value condition="PVR.IsPlayingTV + !String.IsEmpty(PVR.EpgEventElapsedTime)">$INFO[PVR.EpgEventElapsedTime(hh:mm:ss)]</value>
@@ -998,6 +1000,7 @@
         <value condition="Player.Rewinding4x">RW 4x</value>
         <value condition="Player.Rewinding2x">RW 2x</value>
         <value condition="Player.Rewinding">RW</value>
+        <value condition="!String.IsEmpty(Window(Home).Property(RixFlix.SeekActive))">$LOCALIZE[773] $INFO[Window(Home).Property(RixFlix.SeekOffset)]</value>
         <value condition="[Player.Seeking | Player.HasPerformedSeek(3)] + !String.IsEmpty(Player.SeekOffset)">$LOCALIZE[773]$INFO[Player.SeekOffset, ,]</value>
         <value condition="Player.Seeking + String.IsEmpty(Player.SeekOffset)">$LOCALIZE[773]$INFO[Player.SeekStepSize, ,]</value>
         <value condition="Player.Caching">$LOCALIZE[439] $INFO[Player.CacheLevel,,%]</value>

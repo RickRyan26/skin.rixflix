@@ -3,6 +3,7 @@
     <!-- Native time formatting selects ten-second buckets. No Python runs on a
          seek key, and special://temp prevents duplicate TextureCache copies. -->
     <variable name="RixFlix_TrickplayFrame">
+        <value condition="!String.IsEmpty(Window(Home).Property(RixFlix.SeekActive))">$INFO[Window(Home).Property(RixFlix.TrickplayPrefix)]$INFO[Window(Home).Property(RixFlix.SeekFrame)]</value>
         <value condition="Integer.IsLess(Player.SeekTime(ss),10)">$INFO[Window(Home).Property(RixFlix.TrickplayPrefix)]$INFO[Player.SeekTime(hh)]/$INFO[Player.SeekTime(mm)]/00.jpg</value>
         <value condition="Integer.IsLess(Player.SeekTime(ss),20)">$INFO[Window(Home).Property(RixFlix.TrickplayPrefix)]$INFO[Player.SeekTime(hh)]/$INFO[Player.SeekTime(mm)]/10.jpg</value>
         <value condition="Integer.IsLess(Player.SeekTime(ss),30)">$INFO[Window(Home).Property(RixFlix.TrickplayPrefix)]$INFO[Player.SeekTime(hh)]/$INFO[Player.SeekTime(mm)]/20.jpg</value>
@@ -16,7 +17,7 @@
             <top>490</top>
             <width>400</width>
             <height>260</height>
-            <visible>Player.Seeking + [VideoPlayer.Content(movies) | VideoPlayer.Content(episodes)] + !String.IsEmpty(Window(Home).Property(RixFlix.TrickplayPrefix))</visible>
+            <visible>$EXP[Exp_RixFlix_Seeking] + [VideoPlayer.Content(movies) | VideoPlayer.Content(episodes)] + !String.IsEmpty(Window(Home).Property(RixFlix.TrickplayPrefix))</visible>
             <control type="image">
                 <left>-6</left><top>-6</top><width>412</width><height>272</height>
                 <texture border="26" colordiffuse="bbffffff">rixflix/card-focus-glow.png</texture>
@@ -38,7 +39,7 @@
                 <left>8</left><top>224</top><width>384</width><height>30</height>
                 <align>center</align><aligny>center</aligny>
                 <font>font_hint_bold</font><textcolor>ffffffff</textcolor>
-                <label>$INFO[Player.SeekTime(hh:mm:ss)]</label>
+                <label>$VAR[Label_OSD_Time]</label>
             </control>
         </control>
     </include>
