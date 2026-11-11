@@ -239,16 +239,17 @@
                         <param name="visible">[!String.IsEmpty($PARAM[container]$PARAM[listitem].ChannelNumberLabel)] + !String.IsEmpty($PARAM[container]$PARAM[listitem].StartTime)</param>
                     </include>
 
-                    <!-- EndTime -->
+                    <!-- EndTime. With no runtime Kodi computes the end as the current time, so an
+                         unreleased title showed "Ends at <now>"; both lines need a runtime. -->
                     <include content="Info_Meta_Object">
                         <param name="icon">flags/$VAR[Color_Directory]/ratings/ends.png</param>
                         <param name="label">$INFO[$PARAM[container]$PARAM[listitem].EndTimeResume,$LOCALIZE[31600] ,]</param>
-                        <param name="visible">[String.IsEqual($PARAM[container]$PARAM[listitem].DBType,movie) | String.IsEqual($PARAM[container]$PARAM[listitem].DBType,episode) | String.IsEqual($PARAM[container]$PARAM[listitem].DBType,video)] + !String.IsEqual($PARAM[container]$PARAM[listitem].Property(tmdb_type),person) + !String.IsEmpty($PARAM[container]$PARAM[listitem].EndTimeResume)</param>
+                        <param name="visible">[String.IsEqual($PARAM[container]$PARAM[listitem].DBType,movie) | String.IsEqual($PARAM[container]$PARAM[listitem].DBType,episode) | String.IsEqual($PARAM[container]$PARAM[listitem].DBType,video)] + !String.IsEqual($PARAM[container]$PARAM[listitem].Property(tmdb_type),person) + !String.IsEmpty($PARAM[container]$PARAM[listitem].EndTimeResume) + Integer.IsGreater($PARAM[container]$PARAM[listitem].Duration(secs),0)</param>
                     </include>
                     <include content="Info_Meta_Object">
                         <param name="icon">flags/$VAR[Color_Directory]/ratings/ends.png</param>
                         <param name="label">$INFO[$PARAM[container]$PARAM[service].FinishTime,$LOCALIZE[31600] ,]</param>
-                        <param name="visible">[$PARAM[override_tvshow] | $PARAM[override_movie]] + !String.IsEmpty($PARAM[container]$PARAM[listitem].FinishTime)</param>
+                        <param name="visible">[$PARAM[override_tvshow] | $PARAM[override_movie]] + !String.IsEmpty($PARAM[container]$PARAM[listitem].FinishTime) + Integer.IsGreater($PARAM[container]$PARAM[service].Duration(secs),0)</param>
                     </include>
 
                     <!-- Status -->

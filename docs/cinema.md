@@ -1055,3 +1055,12 @@ The page no longer depends on the history: the row stack and all four lists use
 `ActivateWindow(Home)` for Back. Coming Soon is reached only from Home's tile, and a category
 page already returns to Home by name (button `8900`). `validate_cinema.py` asserts it.
 Not yet seen on the box.
+
+### 1.14.6 — "Ends at" needs a runtime
+
+The 03:02 Coming Soon frame showed "Ends at 3:02 AM" for the unreleased series 12 12 12. The
+title has no runtime, and Kodi then computes `EndTimeResume` / `FinishTime` as the current
+time, so the label was the clock. Both end-time lines in the shared `Info_Meta` panel
+(`Includes_Info.xml`) now also require `Duration(secs)` above 0: the list item's for the
+movie/episode line, the service item's for the override line. A title with a runtime is
+unchanged. `validate_cinema.py` asserts both guards. Not yet seen on the box.

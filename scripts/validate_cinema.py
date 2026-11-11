@@ -367,6 +367,17 @@ def check_nested_depth():
                 assert not deep, f"{path.name}: {include.get('name')} holds a <nested /> Kodi never fills"
 
 
+def check_end_time_needs_runtime():
+    """With no runtime Kodi computes EndTimeResume/FinishTime as the current time, so an
+    unreleased Coming Soon title showed "Ends at <now>". Both end-time lines need a runtime."""
+    text = (ROOT / '1080i' / 'Includes_Info.xml').read_text()
+    lines = [line for line in text.splitlines() if 'name="visible"' in line
+             and ('.EndTimeResume)' in line or '.FinishTime)' in line)]
+    assert len(lines) == 2, 'expected the two end-time visibility lines'
+    for line in lines:
+        assert 'Duration(secs),0)' in line, 'an end-time line shows without a runtime'
+
+
 def check_hub_layout(values):
     """1.14.0, the stage: a category page and Coming Soon are Home's row format. One backdrop,
     one Info_Panel above, and two full landscape rows at Home's pitch, from one definition."""
@@ -487,6 +498,7 @@ def check():
     check_hub_conditions()
     check_static_content_targets()
     check_nested_depth()
+    check_end_time_needs_runtime()
     constants = {c.get('name'): (c.text or '').strip()
                  for c in ET.parse(ROOT / '1080i/Includes_Constants.xml').getroot().findall('constant')}
     pitch, sizes = check_home_rows(constants)
