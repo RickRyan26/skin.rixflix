@@ -1097,3 +1097,13 @@ differed was not logged. A Coming Soon preview is keyed `yt-<video id>` and the 
 that id, so the script now also promotes when the active key matches the click. The ignore line
 now logs the active key and whether the hover property matched. The cause of the mismatch is
 not established. Not yet seen on the box.
+
+### 1.14.9 — Coming Soon reopens on its rows
+
+1.14.8 passed its first native proof (`acceptance-EZ1FdfkW`: Back landed on Home's Categories
+row, focus 507 at 0.14 s). The second visit failed (`acceptance-lxu6IFz3`, 05:46). The page
+keeps its focus (`defaultcontrol always="false"`), and after a Back that focus was the hidden
+button 8900. Opening the page again focused 8900, which armed the return and sent the viewer
+straight back Home. The timer now runs `SetFocus(8810)` (the rows group) before
+`ActivateWindow(Home)`, as the category timer parks on 8901. `validate_cinema.py` asserts the
+order. Not yet seen on the box.

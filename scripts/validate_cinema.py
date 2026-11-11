@@ -499,8 +499,11 @@ def check_hub_layout(values):
     assert '<onunload>ClearProperty(RixFlix.CategoryReturn.Go,Home)</onunload>' in soon_text
     assert ('        <start reset="true">Window.IsActive(11138) + !String.IsEmpty(Window(Home).Property(RixFlix.CategoryReturn.Go))</start>\n'
             '        <stop>String.IsEmpty(Window(Home).Property(RixFlix.CategoryReturn.Go))</stop>\n'
-            '        <onstart>ClearProperty(RixFlix.CategoryReturn.Go,Home)</onstart>\n'
-            '        <onstart>ActivateWindow(Home)</onstart>') in (ROOT / '1080i' / 'Timers.xml').read_text()
+            '        <onstart>ClearProperty(RixFlix.CategoryReturn.Go,Home)</onstart>\n') in (ROOT / '1080i' / 'Timers.xml').read_text()
+    soon_timer = next(t for t in ET.parse(ROOT / '1080i' / 'Timers.xml').getroot().findall('timer')
+                      if t.findtext('name') == 'rixflix_coming_soon_return')
+    assert [n.text for n in soon_timer.findall('onstart')][1:] == ['SetFocus(8810)', 'ActivateWindow(Home)'], (
+        'the page must not keep its focus on the return button: the next visit would bounce Home')
     busy = next(c for c in upcoming.find('controls') if c.get('content') == 'RixFlix_PageLoading')
     assert params(busy)['visible'] == 'Container(8820).IsUpdating + Integer.IsEqual(Container(8820).NumItems,0)'
     assert not upcoming.findall(".//control[@type='label']"), 'no loading sentence: the wordmark is the signal'

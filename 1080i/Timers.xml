@@ -110,6 +110,8 @@
         <start reset="true">Window.IsActive(11138) + !String.IsEmpty(Window(Home).Property(RixFlix.CategoryReturn.Go))</start>
         <stop>String.IsEmpty(Window(Home).Property(RixFlix.CategoryReturn.Go))</stop>
         <onstart>ClearProperty(RixFlix.CategoryReturn.Go,Home)</onstart>
+        <!-- The page keeps its focus (always=false). Left on 8900, the next visit would focus 8900 and bounce Home at once (1.14.8, theater 05:46); give the focus back to the rows first, as the category timer parks on 8901. -->
+        <onstart>SetFocus(8810)</onstart>
         <onstart>ActivateWindow(Home)</onstart>
     </timer>
     <timer>
