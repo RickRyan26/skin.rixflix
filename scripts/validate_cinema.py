@@ -463,6 +463,7 @@ def check_hub_layout(values):
         call = call.find("include[@content='RixFlix_Stage_List']")
         given = params(call)
         assert given['id'] == str(8820 + n)
+        assert given['onback'] == 'ActivateWindow(Home)', 'Coming Soon Back names Home, not the window history'
         assert given['up'] == (str(8830 + n - 1) if n else 'noop') and given['down'] == (str(8830 + n + 1) if n < 3 else 'noop')
         assert call.find('content').get('limit') == '5'
         assert f'mode=coming_soon&offset={n*5}&limit=5' in call.findtext('content')

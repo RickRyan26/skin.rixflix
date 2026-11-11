@@ -1041,3 +1041,17 @@ node, so its `<nested />` is direct too. A caller writes the list inside the row
 `scripts/validate_cinema.py` gains `check_nested_depth()`: it fails on any include in `1080i/`
 whose `<nested />` is deeper than Kodi fills. It fails on the 1.14.1 file and passes on this one.
 The 1.14.0 source checks could not see this: they checked that the element existed, not where.
+
+### 1.14.5 — Coming Soon Back names Home
+
+The first native Coming Soon proof on 1.14.2 (theater, 2026-11-11 03:02) passed both trailer
+paths and then failed its last step: `Input.Back` on the page opened Search, not Home. The page
+used `PreviousMenu`, which follows Kodi's window history. Search is opened from Home with
+`ReplaceWindow(1105)`, so Search can sit in that history where Home is expected. Why Home was
+missing from the stack after two fullscreen trailers is not established; the proof now records
+the window ids around Back so the next run shows it.
+
+The page no longer depends on the history: the row stack and all four lists use
+`ActivateWindow(Home)` for Back. Coming Soon is reached only from Home's tile, and a category
+page already returns to Home by name (button `8900`). `validate_cinema.py` asserts it.
+Not yet seen on the box.
