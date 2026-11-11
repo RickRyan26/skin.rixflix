@@ -24,6 +24,7 @@
         <param name="diffuse">diffuse/flixart/flixart.png</param>
         <param name="aspectratio">scale</param>
         <param name="fadetime">background_fadetime</param>
+        <param name="texture">$VAR[Image_Foreground]</param>
         <definition>
             <control type="image">
                 <fadetime>$PARAM[fadetime]</fadetime>
@@ -32,7 +33,7 @@
                 <height>$PARAM[flixart_size_h]</height>
                 <width>$PARAM[flixart_size_w]</width>
                 <aspectratio scalediffuse="false" align="$PARAM[align]" aligny="$PARAM[aligny]">$PARAM[aspectratio]</aspectratio>
-                <texture background="true" diffuse="$PARAM[diffuse]">$VAR[Image_Foreground]</texture>
+                <texture background="true" diffuse="$PARAM[diffuse]">$PARAM[texture]</texture>
                 <animation effect="fade" start="100" end="0" reversible="false" time="300" condition="$EXP[Exp_BackgroundArtwork_IsHidden]">Conditional</animation>
                 <animation effect="fade" start="0" end="100" reversible="false" delay="300" time="background_fadetime" condition="!$EXP[Exp_BackgroundArtwork_IsHidden]">Conditional</animation>
                 <include>Background_NotVideo</include>

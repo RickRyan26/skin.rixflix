@@ -1,10 +1,152 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <includes>
     <include name="RixFlix_CategoryHub_Reload"><description>Reload key only</description></include>
-    <include name="RixFlix_CategoryHub">
+
+    <!-- THE STAGE (1.14.0): Home's landscape-row format for every sub page. Rick 2026-11-11: the
+         category pages and Coming Soon "replicate the homepage's landscape posters rows format
+         with the video information above". One definition serves both pages:
+           RixFlix_Stage_Backdrop  the focused title's fanart, and the hover preview behind it
+           RixFlix_Stage_Info      Home's Info_Panel for the focused card
+           RixFlix_Stage_Rows      the row stack, exactly two Home pitches tall
+           RixFlix_Stage_Row       one List_Premiere_Row (Home's own landscape list)
+           RixFlix_PageLoading     the pulsing RixFlix wordmark
+         Bare Container. is the window's focused container (CGUIInfoManager::GetActiveContainer:
+         a non-media window uses its focused control), so one backdrop and one info panel follow
+         whichever row has focus. Layout reasoning: docs/cinema.md "The stage". -->
+    <variable name="Image_RixFlix_StageArt">
+        <value condition="!String.IsEmpty(Container.ListItem.Art(fanart))">$INFO[Container.ListItem.Art(fanart)]</value>
+        <value condition="!String.IsEmpty(Container.ListItem.Art(tvshow.fanart))">$INFO[Container.ListItem.Art(tvshow.fanart)]</value>
+        <value>$INFO[Container.ListItem.Art(landscape)]</value>
+    </variable>
+
+    <include name="RixFlix_Stage_Backdrop">
         <control type="image">
             <texture colordiffuse="ff080808">common/white.png</texture>
         </control>
+        <!-- Home's own preview box: a cached trailer plays here once the card has had its dwell,
+             and Background_NotVideo fades the fanart out over it (the poster "rotates" to the trailer). -->
+        <include content="Background_Video_FlixArt">
+            <param name="w">home_preview_w</param>
+            <param name="h">home_preview_h</param>
+        </include>
+        <include content="Background_FlixArt">
+            <param name="texture">$VAR[Image_RixFlix_StageArt]</param>
+            <param name="flixart_size_w">home_preview_w</param>
+            <param name="flixart_size_h">home_preview_h</param>
+            <param name="diffuse">diffuse/flixart/flixart_new.png</param>
+        </include>
+        <include>Background_Main_Overlay</include>
+    </include>
+
+    <include name="RixFlix_PageLoading">
+        <param name="id">8988</param>
+        <definition>
+            <control type="image" id="$PARAM[id]">
+                <left>660</left><top>460</top><width>600</width><height>160</height>
+                <aspectratio>keep</aspectratio>
+                <texture>special://skin/media/rixflix/rixflix-wordmark.png</texture>
+                <visible>$PARAM[visible]</visible>
+                <animation effect="fade" start="45" end="100" time="900" tween="sine" easing="inout" pulse="true" condition="true">Conditional</animation>
+            </control>
+        </definition>
+    </include>
+
+    <include name="RixFlix_Stage_Empty">
+        <control type="label">
+            <left>0</left><top>500</top><width>1920</width><height>80</height>
+            <align>center</align><aligny>center</aligny>
+            <font>font_main_bold</font><textcolor>main_fg_70</textcolor>
+            <label>$PARAM[label]</label>
+            <visible>$PARAM[visible]</visible>
+        </control>
+    </include>
+
+    <!-- Home's row panel (Hub_Combined_Info): logo, facts, source line, plot, "Ends at". The
+         poster-row budget (tagline + 2 lines) ends at y500, clear of the first card at y552. -->
+    <include name="RixFlix_Stage_Info">
+        <param name="visible">true</param>
+        <definition>
+            <control type="group">
+                <visible>!$EXP[Exp_InfoDialogs] + [$PARAM[visible]]</visible>
+                <height>540</height>
+                <include>Info_Panel_Dimensions</include>
+                <include content="Info_Panel">
+                    <param name="container">Container.</param>
+                    <!-- The resident publishes RixFlix.Plot.RowPoster for a library card; any other card (Coming Soon) falls back to its own ListItem.Plot inside the same include. -->
+                    <param name="home_plot">true</param>
+                    <param name="home_plot_variant">RowPoster</param>
+                    <param name="home_plot_max_h">120</param>
+                    <param name="home_plot_max_h_heading">80</param>
+                </include>
+            </control>
+        </definition>
+    </include>
+
+    <!-- Two Home pitches (243px art + 25px gutter each): GUIControlGroupList scrolls a focused
+         child to a viewport edge, so only a whole number of pitches stops on a row boundary. -->
+    <include name="RixFlix_Stage_Rows">
+        <param name="onback">PreviousMenu</param>
+        <definition>
+            <control type="grouplist" id="$PARAM[id]">
+                <left>0</left><top>stage_rows_t</top><width>1920</width><height>stage_rows_h</height>
+                <orientation>vertical</orientation><itemgap>0</itemgap>
+                <scrolltime tween="quadratic">300</scrolltime><onback>$PARAM[onback]</onback>
+                <!-- Without these, GUIControlGroupList wraps its first and last rows, so a sparse page's edge row would wrap. -->
+                <onup>noop</onup><ondown>noop</ondown>
+                <nested />
+            </control>
+        </definition>
+    </include>
+
+    <include name="RixFlix_Stage_Row">
+        <param name="visible">true</param>
+        <param name="stale">false</param>
+        <param name="label" />
+        <param name="onback">PreviousMenu</param>
+        <definition>
+            <control type="group" id="$PARAM[group]">
+                <height>category_row_h</height>
+                <visible>$PARAM[visible]</visible>
+                <!-- Fade, never hide: a hidden row would not load the content that clears this. Start 100: when the condition clears, Kodi plays the fade back to its start alpha, so start="0" stays black. -->
+                <animation effect="fade" start="100" end="0" time="200" condition="$PARAM[stale]">Conditional</animation>
+                <control type="label">
+                    <left>40</left><top>0</top><width>home_premiere_item_h</width><height>40</height>
+                    <angle>-90</angle><align>left</align><aligny>center</aligny>
+                    <font>font_mini_bold</font><label>$PARAM[label]</label><textcolor>white</textcolor>
+                    <animation effect="fade" start="100" end="70" time="150" condition="!Control.HasFocus($PARAM[id])">Conditional</animation>
+                </control>
+                <!-- Move through the row group, not list to list: a hidden group passes the move on, and the grouplist would refocus this row. -->
+                <include content="List_Premiere_Row">
+                    <param name="id">$PARAM[id]</param>
+                    <top>category_list_t</top><width>1856</width><height>home_premiere_itemlayout_h</height>
+                    <preloaditems>0</preloaditems>
+                    <onup>$PARAM[up]</onup><ondown>$PARAM[down]</ondown>
+                    <onback>$PARAM[onback]</onback>
+                    <nested />
+                </include>
+            </control>
+        </definition>
+    </include>
+
+    <include name="RixFlix_Category_Row">
+        <definition>
+            <include content="RixFlix_Stage_Row">
+                <param name="id">81$PARAM[n]</param>
+                <param name="group">82$PARAM[n]</param>
+                <param name="label">$PARAM[label]</param>
+                <param name="up">$PARAM[up]</param>
+                <param name="down">$PARAM[down]</param>
+                <param name="onback">8900</param>
+                <param name="visible">String.IsEqual(Window(Home).Property(RixFlix.CategoryReady),Window(Home).Property(RixFlix.Category)) + Integer.IsGreater(Window(Home).Property(RixFlix.CategoryCount.$PARAM[key]),2)</param>
+                <param name="stale">!String.IsEqual(Window(Home).Property(RixFlix.CategoryRow.$PARAM[key]),Window(Home).Property(RixFlix.Category))</param>
+                <!-- No dynamic target: node.target on each native item owns navigation. -->
+                <content limit="5000">plugin://plugin.video.rixflix.providers/?mode=category_genre&amp;cat=$INFO[Window(Home).Property(RixFlix.Category)]&amp;genre=$PARAM[query]</content>
+            </include>
+        </definition>
+    </include>
+
+    <include name="RixFlix_CategoryHub">
+        <include>RixFlix_Stage_Backdrop</include>
         <!-- Always load this tiny manifest, even when every genre row is hidden. -->
         <control type="list" id="8999">
             <left>-10</left><width>1</width><height>1</height><enable>false</enable>
@@ -21,323 +163,77 @@
             <onfocus>SetProperty(RixFlix.CategoryReturn.Go,1,Home)</onfocus>
             <onback>8900</onback>
         </control>
-        <control type="image" id="8988">
-            <left>660</left><top>460</top><width>600</width><height>160</height>
-            <aspectratio>keep</aspectratio>
-            <texture>special://skin/media/rixflix/rixflix-wordmark.png</texture>
-            <visible>!String.IsEqual(Window(Home).Property(RixFlix.CategoryReady),Window(Home).Property(RixFlix.Category))</visible>
-            <animation effect="fade" start="45" end="100" time="900" tween="sine" easing="inout" pulse="true" condition="true">Conditional</animation>
-        </control>
-        <control type="label">
-            <left>0</left><top>500</top><width>1920</width><height>80</height>
-            <align>center</align><aligny>center</aligny>
-            <font>font_main_bold</font><textcolor>main_fg_70</textcolor>
-            <label>No genre has enough titles yet.</label>
-            <visible>String.IsEqual(Window(Home).Property(RixFlix.CategoryReady),Window(Home).Property(RixFlix.Category)) + Integer.IsEqual(Window(Home).Property(RixFlix.CategoryRows),0)</visible>
-        </control>
-        <!-- Home's landscape rhythm, four full rows on screen: 243px art + 25px gutter. The viewport is exactly four pitches, so GUIControlGroupList always scrolls by whole rows. -->
-        <control type="grouplist" id="8100">
-            <left>0</left><top>category_rows_t</top><width>1920</width><height>category_rows_h</height>
-            <orientation>vertical</orientation><itemgap>0</itemgap>
-            <scrolltime tween="quadratic">300</scrolltime><onback>8900</onback>
-            <!-- Without these, GUIControlGroupList wraps its first and last rows, so a sparse page's edge row would wrap. -->
-            <onup>noop</onup><ondown>noop</ondown>
-                <control type="group" id="8201">
-                    <height>category_row_h</height>
-                    <visible>String.IsEqual(Window(Home).Property(RixFlix.CategoryReady),Window(Home).Property(RixFlix.Category)) + Integer.IsGreater(Window(Home).Property(RixFlix.CategoryCount.Action),2)</visible>
-                    <!-- Fade, never hide: a hidden row would not load the content that clears this. Start 100: when the condition clears, Kodi plays the fade back to its start alpha, so start="0" stays black. -->
-                    <animation effect="fade" start="100" end="0" time="200" condition="!String.IsEqual(Window(Home).Property(RixFlix.CategoryRow.Action),Window(Home).Property(RixFlix.Category))">Conditional</animation>
-                    <control type="label">
-                        <left>40</left><top>0</top><width>home_premiere_item_h</width><height>40</height>
-                        <angle>-90</angle><align>left</align><aligny>center</aligny>
-                        <font>font_mini_bold</font><label>Action</label><textcolor>white</textcolor>
-                        <animation effect="fade" start="100" end="70" time="150" condition="!Control.HasFocus(8101)">Conditional</animation>
-                    </control>
-                    <!-- Move through the row group, not list to list: a hidden group passes the move on, and 8100 would refocus this row. -->
-                    <include content="List_Premiere_Row">
-                        <param name="id">8101</param>
-                        <top>category_list_t</top><width>1856</width><height>home_premiere_itemlayout_h</height>
-                        <preloaditems>0</preloaditems>
-                        <ondown>8202</ondown>
-                        <onback>8900</onback>
-                        <!-- No dynamic target: node.target on each native item owns navigation. -->
-                        <content limit="5000">plugin://plugin.video.rixflix.providers/?mode=category_genre&amp;cat=$INFO[Window(Home).Property(RixFlix.Category)]&amp;genre=Action</content>
-                    </include>
-                </control>
-                <control type="group" id="8202">
-                    <height>category_row_h</height>
-                    <visible>String.IsEqual(Window(Home).Property(RixFlix.CategoryReady),Window(Home).Property(RixFlix.Category)) + Integer.IsGreater(Window(Home).Property(RixFlix.CategoryCount.Adventure),2)</visible>
-                    <!-- Fade, never hide: a hidden row would not load the content that clears this. Start 100: when the condition clears, Kodi plays the fade back to its start alpha, so start="0" stays black. -->
-                    <animation effect="fade" start="100" end="0" time="200" condition="!String.IsEqual(Window(Home).Property(RixFlix.CategoryRow.Adventure),Window(Home).Property(RixFlix.Category))">Conditional</animation>
-                    <control type="label">
-                        <left>40</left><top>0</top><width>home_premiere_item_h</width><height>40</height>
-                        <angle>-90</angle><align>left</align><aligny>center</aligny>
-                        <font>font_mini_bold</font><label>Adventure</label><textcolor>white</textcolor>
-                        <animation effect="fade" start="100" end="70" time="150" condition="!Control.HasFocus(8102)">Conditional</animation>
-                    </control>
-                    <include content="List_Premiere_Row">
-                        <param name="id">8102</param>
-                        <top>category_list_t</top><width>1856</width><height>home_premiere_itemlayout_h</height>
-                        <preloaditems>0</preloaditems>
-                        <onup>8201</onup><ondown>8203</ondown>
-                        <onback>8900</onback>
-                        <!-- No dynamic target: node.target on each native item owns navigation. -->
-                        <content limit="5000">plugin://plugin.video.rixflix.providers/?mode=category_genre&amp;cat=$INFO[Window(Home).Property(RixFlix.Category)]&amp;genre=Adventure</content>
-                    </include>
-                </control>
-                <control type="group" id="8203">
-                    <height>category_row_h</height>
-                    <visible>String.IsEqual(Window(Home).Property(RixFlix.CategoryReady),Window(Home).Property(RixFlix.Category)) + Integer.IsGreater(Window(Home).Property(RixFlix.CategoryCount.Animation),2)</visible>
-                    <!-- Fade, never hide: a hidden row would not load the content that clears this. Start 100: when the condition clears, Kodi plays the fade back to its start alpha, so start="0" stays black. -->
-                    <animation effect="fade" start="100" end="0" time="200" condition="!String.IsEqual(Window(Home).Property(RixFlix.CategoryRow.Animation),Window(Home).Property(RixFlix.Category))">Conditional</animation>
-                    <control type="label">
-                        <left>40</left><top>0</top><width>home_premiere_item_h</width><height>40</height>
-                        <angle>-90</angle><align>left</align><aligny>center</aligny>
-                        <font>font_mini_bold</font><label>Animation</label><textcolor>white</textcolor>
-                        <animation effect="fade" start="100" end="70" time="150" condition="!Control.HasFocus(8103)">Conditional</animation>
-                    </control>
-                    <include content="List_Premiere_Row">
-                        <param name="id">8103</param>
-                        <top>category_list_t</top><width>1856</width><height>home_premiere_itemlayout_h</height>
-                        <preloaditems>0</preloaditems>
-                        <onup>8202</onup><ondown>8204</ondown>
-                        <onback>8900</onback>
-                        <!-- No dynamic target: node.target on each native item owns navigation. -->
-                        <content limit="5000">plugin://plugin.video.rixflix.providers/?mode=category_genre&amp;cat=$INFO[Window(Home).Property(RixFlix.Category)]&amp;genre=Animation</content>
-                    </include>
-                </control>
-                <control type="group" id="8204">
-                    <height>category_row_h</height>
-                    <visible>String.IsEqual(Window(Home).Property(RixFlix.CategoryReady),Window(Home).Property(RixFlix.Category)) + Integer.IsGreater(Window(Home).Property(RixFlix.CategoryCount.Comedy),2)</visible>
-                    <!-- Fade, never hide: a hidden row would not load the content that clears this. Start 100: when the condition clears, Kodi plays the fade back to its start alpha, so start="0" stays black. -->
-                    <animation effect="fade" start="100" end="0" time="200" condition="!String.IsEqual(Window(Home).Property(RixFlix.CategoryRow.Comedy),Window(Home).Property(RixFlix.Category))">Conditional</animation>
-                    <control type="label">
-                        <left>40</left><top>0</top><width>home_premiere_item_h</width><height>40</height>
-                        <angle>-90</angle><align>left</align><aligny>center</aligny>
-                        <font>font_mini_bold</font><label>Comedy</label><textcolor>white</textcolor>
-                        <animation effect="fade" start="100" end="70" time="150" condition="!Control.HasFocus(8104)">Conditional</animation>
-                    </control>
-                    <include content="List_Premiere_Row">
-                        <param name="id">8104</param>
-                        <top>category_list_t</top><width>1856</width><height>home_premiere_itemlayout_h</height>
-                        <preloaditems>0</preloaditems>
-                        <onup>8203</onup><ondown>8205</ondown>
-                        <onback>8900</onback>
-                        <!-- No dynamic target: node.target on each native item owns navigation. -->
-                        <content limit="5000">plugin://plugin.video.rixflix.providers/?mode=category_genre&amp;cat=$INFO[Window(Home).Property(RixFlix.Category)]&amp;genre=Comedy</content>
-                    </include>
-                </control>
-                <control type="group" id="8205">
-                    <height>category_row_h</height>
-                    <visible>String.IsEqual(Window(Home).Property(RixFlix.CategoryReady),Window(Home).Property(RixFlix.Category)) + Integer.IsGreater(Window(Home).Property(RixFlix.CategoryCount.Crime),2)</visible>
-                    <!-- Fade, never hide: a hidden row would not load the content that clears this. Start 100: when the condition clears, Kodi plays the fade back to its start alpha, so start="0" stays black. -->
-                    <animation effect="fade" start="100" end="0" time="200" condition="!String.IsEqual(Window(Home).Property(RixFlix.CategoryRow.Crime),Window(Home).Property(RixFlix.Category))">Conditional</animation>
-                    <control type="label">
-                        <left>40</left><top>0</top><width>home_premiere_item_h</width><height>40</height>
-                        <angle>-90</angle><align>left</align><aligny>center</aligny>
-                        <font>font_mini_bold</font><label>Crime</label><textcolor>white</textcolor>
-                        <animation effect="fade" start="100" end="70" time="150" condition="!Control.HasFocus(8105)">Conditional</animation>
-                    </control>
-                    <include content="List_Premiere_Row">
-                        <param name="id">8105</param>
-                        <top>category_list_t</top><width>1856</width><height>home_premiere_itemlayout_h</height>
-                        <preloaditems>0</preloaditems>
-                        <onup>8204</onup><ondown>8206</ondown>
-                        <onback>8900</onback>
-                        <!-- No dynamic target: node.target on each native item owns navigation. -->
-                        <content limit="5000">plugin://plugin.video.rixflix.providers/?mode=category_genre&amp;cat=$INFO[Window(Home).Property(RixFlix.Category)]&amp;genre=Crime</content>
-                    </include>
-                </control>
-                <control type="group" id="8206">
-                    <height>category_row_h</height>
-                    <visible>String.IsEqual(Window(Home).Property(RixFlix.CategoryReady),Window(Home).Property(RixFlix.Category)) + Integer.IsGreater(Window(Home).Property(RixFlix.CategoryCount.Documentary),2)</visible>
-                    <!-- Fade, never hide: a hidden row would not load the content that clears this. Start 100: when the condition clears, Kodi plays the fade back to its start alpha, so start="0" stays black. -->
-                    <animation effect="fade" start="100" end="0" time="200" condition="!String.IsEqual(Window(Home).Property(RixFlix.CategoryRow.Documentary),Window(Home).Property(RixFlix.Category))">Conditional</animation>
-                    <control type="label">
-                        <left>40</left><top>0</top><width>home_premiere_item_h</width><height>40</height>
-                        <angle>-90</angle><align>left</align><aligny>center</aligny>
-                        <font>font_mini_bold</font><label>Documentary</label><textcolor>white</textcolor>
-                        <animation effect="fade" start="100" end="70" time="150" condition="!Control.HasFocus(8106)">Conditional</animation>
-                    </control>
-                    <include content="List_Premiere_Row">
-                        <param name="id">8106</param>
-                        <top>category_list_t</top><width>1856</width><height>home_premiere_itemlayout_h</height>
-                        <preloaditems>0</preloaditems>
-                        <onup>8205</onup><ondown>8207</ondown>
-                        <onback>8900</onback>
-                        <!-- No dynamic target: node.target on each native item owns navigation. -->
-                        <content limit="5000">plugin://plugin.video.rixflix.providers/?mode=category_genre&amp;cat=$INFO[Window(Home).Property(RixFlix.Category)]&amp;genre=Documentary</content>
-                    </include>
-                </control>
-                <control type="group" id="8207">
-                    <height>category_row_h</height>
-                    <visible>String.IsEqual(Window(Home).Property(RixFlix.CategoryReady),Window(Home).Property(RixFlix.Category)) + Integer.IsGreater(Window(Home).Property(RixFlix.CategoryCount.Drama),2)</visible>
-                    <!-- Fade, never hide: a hidden row would not load the content that clears this. Start 100: when the condition clears, Kodi plays the fade back to its start alpha, so start="0" stays black. -->
-                    <animation effect="fade" start="100" end="0" time="200" condition="!String.IsEqual(Window(Home).Property(RixFlix.CategoryRow.Drama),Window(Home).Property(RixFlix.Category))">Conditional</animation>
-                    <control type="label">
-                        <left>40</left><top>0</top><width>home_premiere_item_h</width><height>40</height>
-                        <angle>-90</angle><align>left</align><aligny>center</aligny>
-                        <font>font_mini_bold</font><label>Drama</label><textcolor>white</textcolor>
-                        <animation effect="fade" start="100" end="70" time="150" condition="!Control.HasFocus(8107)">Conditional</animation>
-                    </control>
-                    <include content="List_Premiere_Row">
-                        <param name="id">8107</param>
-                        <top>category_list_t</top><width>1856</width><height>home_premiere_itemlayout_h</height>
-                        <preloaditems>0</preloaditems>
-                        <onup>8206</onup><ondown>8208</ondown>
-                        <onback>8900</onback>
-                        <!-- No dynamic target: node.target on each native item owns navigation. -->
-                        <content limit="5000">plugin://plugin.video.rixflix.providers/?mode=category_genre&amp;cat=$INFO[Window(Home).Property(RixFlix.Category)]&amp;genre=Drama</content>
-                    </include>
-                </control>
-                <control type="group" id="8208">
-                    <height>category_row_h</height>
-                    <visible>String.IsEqual(Window(Home).Property(RixFlix.CategoryReady),Window(Home).Property(RixFlix.Category)) + Integer.IsGreater(Window(Home).Property(RixFlix.CategoryCount.Family),2)</visible>
-                    <!-- Fade, never hide: a hidden row would not load the content that clears this. Start 100: when the condition clears, Kodi plays the fade back to its start alpha, so start="0" stays black. -->
-                    <animation effect="fade" start="100" end="0" time="200" condition="!String.IsEqual(Window(Home).Property(RixFlix.CategoryRow.Family),Window(Home).Property(RixFlix.Category))">Conditional</animation>
-                    <control type="label">
-                        <left>40</left><top>0</top><width>home_premiere_item_h</width><height>40</height>
-                        <angle>-90</angle><align>left</align><aligny>center</aligny>
-                        <font>font_mini_bold</font><label>Family</label><textcolor>white</textcolor>
-                        <animation effect="fade" start="100" end="70" time="150" condition="!Control.HasFocus(8108)">Conditional</animation>
-                    </control>
-                    <include content="List_Premiere_Row">
-                        <param name="id">8108</param>
-                        <top>category_list_t</top><width>1856</width><height>home_premiere_itemlayout_h</height>
-                        <preloaditems>0</preloaditems>
-                        <onup>8207</onup><ondown>8209</ondown>
-                        <onback>8900</onback>
-                        <!-- No dynamic target: node.target on each native item owns navigation. -->
-                        <content limit="5000">plugin://plugin.video.rixflix.providers/?mode=category_genre&amp;cat=$INFO[Window(Home).Property(RixFlix.Category)]&amp;genre=Family</content>
-                    </include>
-                </control>
-                <control type="group" id="8209">
-                    <height>category_row_h</height>
-                    <visible>String.IsEqual(Window(Home).Property(RixFlix.CategoryReady),Window(Home).Property(RixFlix.Category)) + Integer.IsGreater(Window(Home).Property(RixFlix.CategoryCount.Fantasy),2)</visible>
-                    <!-- Fade, never hide: a hidden row would not load the content that clears this. Start 100: when the condition clears, Kodi plays the fade back to its start alpha, so start="0" stays black. -->
-                    <animation effect="fade" start="100" end="0" time="200" condition="!String.IsEqual(Window(Home).Property(RixFlix.CategoryRow.Fantasy),Window(Home).Property(RixFlix.Category))">Conditional</animation>
-                    <control type="label">
-                        <left>40</left><top>0</top><width>home_premiere_item_h</width><height>40</height>
-                        <angle>-90</angle><align>left</align><aligny>center</aligny>
-                        <font>font_mini_bold</font><label>Fantasy</label><textcolor>white</textcolor>
-                        <animation effect="fade" start="100" end="70" time="150" condition="!Control.HasFocus(8109)">Conditional</animation>
-                    </control>
-                    <include content="List_Premiere_Row">
-                        <param name="id">8109</param>
-                        <top>category_list_t</top><width>1856</width><height>home_premiere_itemlayout_h</height>
-                        <preloaditems>0</preloaditems>
-                        <onup>8208</onup><ondown>8210</ondown>
-                        <onback>8900</onback>
-                        <!-- No dynamic target: node.target on each native item owns navigation. -->
-                        <content limit="5000">plugin://plugin.video.rixflix.providers/?mode=category_genre&amp;cat=$INFO[Window(Home).Property(RixFlix.Category)]&amp;genre=Fantasy</content>
-                    </include>
-                </control>
-                <control type="group" id="8210">
-                    <height>category_row_h</height>
-                    <visible>String.IsEqual(Window(Home).Property(RixFlix.CategoryReady),Window(Home).Property(RixFlix.Category)) + Integer.IsGreater(Window(Home).Property(RixFlix.CategoryCount.Horror),2)</visible>
-                    <!-- Fade, never hide: a hidden row would not load the content that clears this. Start 100: when the condition clears, Kodi plays the fade back to its start alpha, so start="0" stays black. -->
-                    <animation effect="fade" start="100" end="0" time="200" condition="!String.IsEqual(Window(Home).Property(RixFlix.CategoryRow.Horror),Window(Home).Property(RixFlix.Category))">Conditional</animation>
-                    <control type="label">
-                        <left>40</left><top>0</top><width>home_premiere_item_h</width><height>40</height>
-                        <angle>-90</angle><align>left</align><aligny>center</aligny>
-                        <font>font_mini_bold</font><label>Horror</label><textcolor>white</textcolor>
-                        <animation effect="fade" start="100" end="70" time="150" condition="!Control.HasFocus(8110)">Conditional</animation>
-                    </control>
-                    <include content="List_Premiere_Row">
-                        <param name="id">8110</param>
-                        <top>category_list_t</top><width>1856</width><height>home_premiere_itemlayout_h</height>
-                        <preloaditems>0</preloaditems>
-                        <onup>8209</onup><ondown>8211</ondown>
-                        <onback>8900</onback>
-                        <!-- No dynamic target: node.target on each native item owns navigation. -->
-                        <content limit="5000">plugin://plugin.video.rixflix.providers/?mode=category_genre&amp;cat=$INFO[Window(Home).Property(RixFlix.Category)]&amp;genre=Horror</content>
-                    </include>
-                </control>
-                <control type="group" id="8211">
-                    <height>category_row_h</height>
-                    <visible>String.IsEqual(Window(Home).Property(RixFlix.CategoryReady),Window(Home).Property(RixFlix.Category)) + Integer.IsGreater(Window(Home).Property(RixFlix.CategoryCount.Mystery),2)</visible>
-                    <!-- Fade, never hide: a hidden row would not load the content that clears this. Start 100: when the condition clears, Kodi plays the fade back to its start alpha, so start="0" stays black. -->
-                    <animation effect="fade" start="100" end="0" time="200" condition="!String.IsEqual(Window(Home).Property(RixFlix.CategoryRow.Mystery),Window(Home).Property(RixFlix.Category))">Conditional</animation>
-                    <control type="label">
-                        <left>40</left><top>0</top><width>home_premiere_item_h</width><height>40</height>
-                        <angle>-90</angle><align>left</align><aligny>center</aligny>
-                        <font>font_mini_bold</font><label>Mystery</label><textcolor>white</textcolor>
-                        <animation effect="fade" start="100" end="70" time="150" condition="!Control.HasFocus(8111)">Conditional</animation>
-                    </control>
-                    <include content="List_Premiere_Row">
-                        <param name="id">8111</param>
-                        <top>category_list_t</top><width>1856</width><height>home_premiere_itemlayout_h</height>
-                        <preloaditems>0</preloaditems>
-                        <onup>8210</onup><ondown>8212</ondown>
-                        <onback>8900</onback>
-                        <!-- No dynamic target: node.target on each native item owns navigation. -->
-                        <content limit="5000">plugin://plugin.video.rixflix.providers/?mode=category_genre&amp;cat=$INFO[Window(Home).Property(RixFlix.Category)]&amp;genre=Mystery</content>
-                    </include>
-                </control>
-                <control type="group" id="8212">
-                    <height>category_row_h</height>
-                    <visible>String.IsEqual(Window(Home).Property(RixFlix.CategoryReady),Window(Home).Property(RixFlix.Category)) + Integer.IsGreater(Window(Home).Property(RixFlix.CategoryCount.Romance),2)</visible>
-                    <!-- Fade, never hide: a hidden row would not load the content that clears this. Start 100: when the condition clears, Kodi plays the fade back to its start alpha, so start="0" stays black. -->
-                    <animation effect="fade" start="100" end="0" time="200" condition="!String.IsEqual(Window(Home).Property(RixFlix.CategoryRow.Romance),Window(Home).Property(RixFlix.Category))">Conditional</animation>
-                    <control type="label">
-                        <left>40</left><top>0</top><width>home_premiere_item_h</width><height>40</height>
-                        <angle>-90</angle><align>left</align><aligny>center</aligny>
-                        <font>font_mini_bold</font><label>Romance</label><textcolor>white</textcolor>
-                        <animation effect="fade" start="100" end="70" time="150" condition="!Control.HasFocus(8112)">Conditional</animation>
-                    </control>
-                    <include content="List_Premiere_Row">
-                        <param name="id">8112</param>
-                        <top>category_list_t</top><width>1856</width><height>home_premiere_itemlayout_h</height>
-                        <preloaditems>0</preloaditems>
-                        <onup>8211</onup><ondown>8213</ondown>
-                        <onback>8900</onback>
-                        <!-- No dynamic target: node.target on each native item owns navigation. -->
-                        <content limit="5000">plugin://plugin.video.rixflix.providers/?mode=category_genre&amp;cat=$INFO[Window(Home).Property(RixFlix.Category)]&amp;genre=Romance</content>
-                    </include>
-                </control>
-                <control type="group" id="8213">
-                    <height>category_row_h</height>
-                    <visible>String.IsEqual(Window(Home).Property(RixFlix.CategoryReady),Window(Home).Property(RixFlix.Category)) + Integer.IsGreater(Window(Home).Property(RixFlix.CategoryCount.ScienceFiction),2)</visible>
-                    <!-- Fade, never hide: a hidden row would not load the content that clears this. Start 100: when the condition clears, Kodi plays the fade back to its start alpha, so start="0" stays black. -->
-                    <animation effect="fade" start="100" end="0" time="200" condition="!String.IsEqual(Window(Home).Property(RixFlix.CategoryRow.ScienceFiction),Window(Home).Property(RixFlix.Category))">Conditional</animation>
-                    <control type="label">
-                        <left>40</left><top>0</top><width>home_premiere_item_h</width><height>40</height>
-                        <angle>-90</angle><align>left</align><aligny>center</aligny>
-                        <font>font_mini_bold</font><label>Science Fiction</label><textcolor>white</textcolor>
-                        <animation effect="fade" start="100" end="70" time="150" condition="!Control.HasFocus(8113)">Conditional</animation>
-                    </control>
-                    <include content="List_Premiere_Row">
-                        <param name="id">8113</param>
-                        <top>category_list_t</top><width>1856</width><height>home_premiere_itemlayout_h</height>
-                        <preloaditems>0</preloaditems>
-                        <onup>8212</onup><ondown>8214</ondown>
-                        <onback>8900</onback>
-                        <!-- No dynamic target: node.target on each native item owns navigation. -->
-                        <content limit="5000">plugin://plugin.video.rixflix.providers/?mode=category_genre&amp;cat=$INFO[Window(Home).Property(RixFlix.Category)]&amp;genre=Science%20Fiction</content>
-                    </include>
-                </control>
-                <control type="group" id="8214">
-                    <height>category_row_h</height>
-                    <visible>String.IsEqual(Window(Home).Property(RixFlix.CategoryReady),Window(Home).Property(RixFlix.Category)) + Integer.IsGreater(Window(Home).Property(RixFlix.CategoryCount.Thriller),2)</visible>
-                    <!-- Fade, never hide: a hidden row would not load the content that clears this. Start 100: when the condition clears, Kodi plays the fade back to its start alpha, so start="0" stays black. -->
-                    <animation effect="fade" start="100" end="0" time="200" condition="!String.IsEqual(Window(Home).Property(RixFlix.CategoryRow.Thriller),Window(Home).Property(RixFlix.Category))">Conditional</animation>
-                    <control type="label">
-                        <left>40</left><top>0</top><width>home_premiere_item_h</width><height>40</height>
-                        <angle>-90</angle><align>left</align><aligny>center</aligny>
-                        <font>font_mini_bold</font><label>Thriller</label><textcolor>white</textcolor>
-                        <animation effect="fade" start="100" end="70" time="150" condition="!Control.HasFocus(8114)">Conditional</animation>
-                    </control>
-                    <include content="List_Premiere_Row">
-                        <param name="id">8114</param>
-                        <top>category_list_t</top><width>1856</width><height>home_premiere_itemlayout_h</height>
-                        <preloaditems>0</preloaditems>
-                        <onup>8213</onup>
-                        <onback>8900</onback>
-                        <!-- No dynamic target: node.target on each native item owns navigation. -->
-                        <content limit="5000">plugin://plugin.video.rixflix.providers/?mode=category_genre&amp;cat=$INFO[Window(Home).Property(RixFlix.Category)]&amp;genre=Thriller</content>
-                    </include>
-                </control>
-        </control>
+        <include content="RixFlix_PageLoading">
+            <param name="id">8988</param>
+            <param name="visible">!String.IsEqual(Window(Home).Property(RixFlix.CategoryReady),Window(Home).Property(RixFlix.Category))</param>
+        </include>
+        <include content="RixFlix_Stage_Empty">
+            <param name="label">No genre has enough titles yet.</param>
+            <param name="visible">String.IsEqual(Window(Home).Property(RixFlix.CategoryReady),Window(Home).Property(RixFlix.Category)) + Integer.IsEqual(Window(Home).Property(RixFlix.CategoryRows),0)</param>
+        </include>
+        <include content="RixFlix_Stage_Info">
+            <param name="visible">String.IsEqual(Window(Home).Property(RixFlix.CategoryReady),Window(Home).Property(RixFlix.Category))</param>
+        </include>
+        <include content="RixFlix_Stage_Rows">
+            <param name="id">8100</param>
+            <param name="onback">8900</param>
+                <include content="RixFlix_Category_Row">
+                    <param name="n">01</param><param name="key">Action</param><param name="label">Action</param><param name="query">Action</param>
+                    <param name="up">noop</param><param name="down">8202</param>
+                </include>
+                <include content="RixFlix_Category_Row">
+                    <param name="n">02</param><param name="key">Adventure</param><param name="label">Adventure</param><param name="query">Adventure</param>
+                    <param name="up">8201</param><param name="down">8203</param>
+                </include>
+                <include content="RixFlix_Category_Row">
+                    <param name="n">03</param><param name="key">Animation</param><param name="label">Animation</param><param name="query">Animation</param>
+                    <param name="up">8202</param><param name="down">8204</param>
+                </include>
+                <include content="RixFlix_Category_Row">
+                    <param name="n">04</param><param name="key">Comedy</param><param name="label">Comedy</param><param name="query">Comedy</param>
+                    <param name="up">8203</param><param name="down">8205</param>
+                </include>
+                <include content="RixFlix_Category_Row">
+                    <param name="n">05</param><param name="key">Crime</param><param name="label">Crime</param><param name="query">Crime</param>
+                    <param name="up">8204</param><param name="down">8206</param>
+                </include>
+                <include content="RixFlix_Category_Row">
+                    <param name="n">06</param><param name="key">Documentary</param><param name="label">Documentary</param><param name="query">Documentary</param>
+                    <param name="up">8205</param><param name="down">8207</param>
+                </include>
+                <include content="RixFlix_Category_Row">
+                    <param name="n">07</param><param name="key">Drama</param><param name="label">Drama</param><param name="query">Drama</param>
+                    <param name="up">8206</param><param name="down">8208</param>
+                </include>
+                <include content="RixFlix_Category_Row">
+                    <param name="n">08</param><param name="key">Family</param><param name="label">Family</param><param name="query">Family</param>
+                    <param name="up">8207</param><param name="down">8209</param>
+                </include>
+                <include content="RixFlix_Category_Row">
+                    <param name="n">09</param><param name="key">Fantasy</param><param name="label">Fantasy</param><param name="query">Fantasy</param>
+                    <param name="up">8208</param><param name="down">8210</param>
+                </include>
+                <include content="RixFlix_Category_Row">
+                    <param name="n">10</param><param name="key">Horror</param><param name="label">Horror</param><param name="query">Horror</param>
+                    <param name="up">8209</param><param name="down">8211</param>
+                </include>
+                <include content="RixFlix_Category_Row">
+                    <param name="n">11</param><param name="key">Mystery</param><param name="label">Mystery</param><param name="query">Mystery</param>
+                    <param name="up">8210</param><param name="down">8212</param>
+                </include>
+                <include content="RixFlix_Category_Row">
+                    <param name="n">12</param><param name="key">Romance</param><param name="label">Romance</param><param name="query">Romance</param>
+                    <param name="up">8211</param><param name="down">8213</param>
+                </include>
+                <include content="RixFlix_Category_Row">
+                    <param name="n">13</param><param name="key">ScienceFiction</param><param name="label">Science Fiction</param><param name="query">Science%20Fiction</param>
+                    <param name="up">8212</param><param name="down">8214</param>
+                </include>
+                <include content="RixFlix_Category_Row">
+                    <param name="n">14</param><param name="key">Thriller</param><param name="label">Thriller</param><param name="query">Thriller</param>
+                    <param name="up">8213</param><param name="down">noop</param>
+                </include>
+        </include>
         <include>RixFlix_CategoryTitleChip</include>
     </include>
     <include name="RixFlix_CategoryTitleChip">

@@ -27,14 +27,25 @@
 
         <control type="button" id="9100">
             <include>Object_Hidden_Button_Definition</include>
-            <onup condition="$EXP[Exp_RixFlix_PreviewUnderBusy]">Action(Up,home)</onup>
-            <ondown condition="$EXP[Exp_RixFlix_PreviewUnderBusy]">Action(Down,home)</ondown>
-            <onleft condition="$EXP[Exp_RixFlix_PreviewUnderBusy]">Action(Left,home)</onleft>
-            <onright condition="$EXP[Exp_RixFlix_PreviewUnderBusy]">Action(Right,home)</onright>
-            <!-- Only while the preview is still the player: a Select stops it first (FIFO
+            <onup condition="$EXP[Exp_RixFlix_PreviewUnderBusy] + Window.IsActive(home)">Action(Up,home)</onup>
+            <onup condition="$EXP[Exp_RixFlix_PreviewUnderBusy] + Window.IsActive(11101)">Action(Up,1101)</onup>
+            <onup condition="$EXP[Exp_RixFlix_PreviewUnderBusy] + Window.IsActive(11138)">Action(Up,1138)</onup>
+            <ondown condition="$EXP[Exp_RixFlix_PreviewUnderBusy] + Window.IsActive(home)">Action(Down,home)</ondown>
+            <ondown condition="$EXP[Exp_RixFlix_PreviewUnderBusy] + Window.IsActive(11101)">Action(Down,1101)</ondown>
+            <ondown condition="$EXP[Exp_RixFlix_PreviewUnderBusy] + Window.IsActive(11138)">Action(Down,1138)</ondown>
+            <onleft condition="$EXP[Exp_RixFlix_PreviewUnderBusy] + Window.IsActive(home)">Action(Left,home)</onleft>
+            <onleft condition="$EXP[Exp_RixFlix_PreviewUnderBusy] + Window.IsActive(11101)">Action(Left,1101)</onleft>
+            <onleft condition="$EXP[Exp_RixFlix_PreviewUnderBusy] + Window.IsActive(11138)">Action(Left,1138)</onleft>
+            <onright condition="$EXP[Exp_RixFlix_PreviewUnderBusy] + Window.IsActive(home)">Action(Right,home)</onright>
+            <onright condition="$EXP[Exp_RixFlix_PreviewUnderBusy] + Window.IsActive(11101)">Action(Right,1101)</onright>
+            <onright condition="$EXP[Exp_RixFlix_PreviewUnderBusy] + Window.IsActive(11138)">Action(Right,1138)</onright>
+            <!-- Action's window argument is the skin's own id (1101), a condition's is Kodi's (11101).
+                 Only while the preview is still the player: a Select stops it first (FIFO
                  before its Action(Select)), so a second OK into a pending movie play's busy
                  dialog stays swallowed instead of starting the title twice. -->
-            <onclick condition="$EXP[Exp_RixFlix_PreviewUnderBusy] + $EXP[Exp_RixFlix_PreviewPlaying]">Action(Select,home)</onclick>
+            <onclick condition="$EXP[Exp_RixFlix_PreviewUnderBusy] + $EXP[Exp_RixFlix_PreviewPlaying] + Window.IsActive(home)">Action(Select,home)</onclick>
+            <onclick condition="$EXP[Exp_RixFlix_PreviewUnderBusy] + $EXP[Exp_RixFlix_PreviewPlaying] + Window.IsActive(11101)">Action(Select,1101)</onclick>
+            <onclick condition="$EXP[Exp_RixFlix_PreviewUnderBusy] + $EXP[Exp_RixFlix_PreviewPlaying] + Window.IsActive(11138)">Action(Select,1138)</onclick>
         </control>
 
     </controls>

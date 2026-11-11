@@ -8,10 +8,18 @@ local = next(t for t in root.findall('timer') if t.findtext('name') == 'rixflix_
 start, stop = local.findtext('start'), local.findtext('stop')
 assert local.find('start').get('reset') == 'false'
 assert 'Skin.HasSetting(RixFlix.EnableLocalNewReleaseTrailers)' in start
-assert all('Control.HasFocus(%d)' % row in start for row in (501, 502, 503, 504)) and 'Window.IsActive(home)' in start
 assert '!Player.HasMedia' in start
-ROWS = '[Control.HasFocus(501) | Control.HasFocus(502) | Control.HasFocus(503) | Control.HasFocus(504)]'
-assert ROWS in start and '!' + ROWS in stop and '!Window.IsActive(home)' in stop
+HOME = '[Window.IsActive(home) + [Control.HasFocus(501) | Control.HasFocus(502) | Control.HasFocus(503) | Control.HasFocus(504)]]'
+STAGE = '[Window.IsActive(11101) + ControlGroup(8100).HasFocus] | [Window.IsActive(11138) + ControlGroup(8810).HasFocus]'
+SURFACE = '[%s | %s]' % (HOME, STAGE)
+# One surface test, shared by start and stop: a row left on any page must end the selection.
+assert SURFACE in start and stop.startswith('!' + SURFACE + ' | ')
+# A card with no library row previews by the provider's key; the two selections never both run.
+keyed = [a for a in local.findall('onstart') if 'LocalTrailerSelection' in (a.text or '')]
+assert sorted(a.get('condition') for a in keyed) == [
+    '!String.IsEmpty(Container.ListItem.Property(RixFlix.TrailerKey))',
+    'String.IsEmpty(Container.ListItem.Property(RixFlix.TrailerKey))']
+assert 'LocalTrailerFocusKey' in stop
 assert 'LocalTrailerFocusID' in stop and 'LocalTrailerFocusType' in stop
 assert 'busydialog' in stop
 assert '$EXP[' not in start + stop
@@ -26,4 +34,4 @@ hubs = ET.parse(ROOT / '1080i/Includes_Hubs.xml').getroot()
 for action in hubs.findall('.//onclick'):
     if action.text == 'PlayerControl(Stop)' and 'AutoplayTrailer' in action.get('condition', ''):
         assert 'Player.Filenameandpath' in action.get('condition'), 'Stop requires exact owned path'
-print('PASS local-only New Releases timer; parked YouTube gate; exact owned Stop')
+print('PASS local-only hover timer on Home, category and Coming Soon rows; parked YouTube gate; exact owned Stop')

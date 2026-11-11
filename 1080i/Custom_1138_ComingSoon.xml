@@ -2,77 +2,46 @@
 <window type="window" id="1138">
     <defaultcontrol always="false">8820</defaultcontrol>
     <controls>
-        <control type="image">
-            <texture colordiffuse="ff080808">common/white.png</texture>
-        </control>
-        <control type="label">
-            <top>480</top><width>1920</width><height>55</height><align>center</align>
-            <font>font_main_bold</font><textcolor>main_fg_70</textcolor>
-            <label>Loading upcoming trailers…</label>
-            <visible>Container(8820).IsUpdating</visible>
-        </control>
-        <control type="label">
-            <top>480</top><width>1920</width><height>55</height><align>center</align>
-            <font>font_main_bold</font><textcolor>main_fg_70</textcolor>
-            <label>No upcoming trailers available right now.</label>
-            <visible>!Container(8820).IsUpdating + Integer.IsEqual(Container(8820).NumItems,0)</visible>
-        </control>
-        <!-- Reuse the category page's exact row pitch, cards, corner mask and focus treatment.
-             Only the rotated genre labels are absent. Each row continues release order. -->
-        <control type="grouplist" id="8810">
-            <left>0</left><top>category_rows_t</top><width>1920</width><height>category_rows_h</height>
-            <orientation>vertical</orientation><itemgap>0</itemgap>
-            <scrolltime tween="quadratic">300</scrolltime><onback>PreviousMenu</onback>
-            <onup>noop</onup><ondown>noop</ondown>
-                <control type="group" id="8830">
-                    <height>category_row_h</height>
-                    <include content="List_Premiere_Row">
-                        <param name="id">8820</param>
-                        <top>category_list_t</top><width>1856</width><height>home_premiere_itemlayout_h</height>
-                        <preloaditems>0</preloaditems>
-                        <onup>noop</onup><ondown>8831</ondown>
-                        <onback>PreviousMenu</onback>
-                        <onclick>RunScript(special://skin/scripts/rixflix_trailer.py,$ESCINFO[Container(8820).ListItem.Trailer],foreground)</onclick>
-                        <content sortby="playlist" limit="5">plugin://plugin.video.rixflix.providers/?mode=coming_soon&amp;offset=0&amp;limit=5</content>
-                    </include>
-                </control>
-                <control type="group" id="8831">
-                    <height>category_row_h</height>
-                    <include content="List_Premiere_Row">
-                        <param name="id">8821</param>
-                        <top>category_list_t</top><width>1856</width><height>home_premiere_itemlayout_h</height>
-                        <preloaditems>0</preloaditems>
-                        <onup>8830</onup><ondown>8832</ondown>
-                        <onback>PreviousMenu</onback>
-                        <onclick>RunScript(special://skin/scripts/rixflix_trailer.py,$ESCINFO[Container(8821).ListItem.Trailer],foreground)</onclick>
-                        <content sortby="playlist" limit="5">plugin://plugin.video.rixflix.providers/?mode=coming_soon&amp;offset=5&amp;limit=5</content>
-                    </include>
-                </control>
-                <control type="group" id="8832">
-                    <height>category_row_h</height>
-                    <include content="List_Premiere_Row">
-                        <param name="id">8822</param>
-                        <top>category_list_t</top><width>1856</width><height>home_premiere_itemlayout_h</height>
-                        <preloaditems>0</preloaditems>
-                        <onup>8831</onup><ondown>8833</ondown>
-                        <onback>PreviousMenu</onback>
-                        <onclick>RunScript(special://skin/scripts/rixflix_trailer.py,$ESCINFO[Container(8822).ListItem.Trailer],foreground)</onclick>
-                        <content sortby="playlist" limit="5">plugin://plugin.video.rixflix.providers/?mode=coming_soon&amp;offset=10&amp;limit=5</content>
-                    </include>
-                </control>
-                <control type="group" id="8833">
-                    <height>category_row_h</height>
-                    <include content="List_Premiere_Row">
-                        <param name="id">8823</param>
-                        <top>category_list_t</top><width>1856</width><height>home_premiere_itemlayout_h</height>
-                        <preloaditems>0</preloaditems>
-                        <onup>8832</onup><ondown>noop</ondown>
-                        <onback>PreviousMenu</onback>
-                        <onclick>RunScript(special://skin/scripts/rixflix_trailer.py,$ESCINFO[Container(8823).ListItem.Trailer],foreground)</onclick>
-                        <content sortby="playlist" limit="5">plugin://plugin.video.rixflix.providers/?mode=coming_soon&amp;offset=15&amp;limit=5</content>
-                    </include>
-                </control>
-        </control>
+        <!-- The same stage as a category page (Includes_CategoryHub.xml): backdrop, Home's info
+             panel, two landscape rows. Four rows of five continue the release order. A card's
+             trailer is cached on the box, so it previews on a rest and OK plays it at once. -->
+        <include>RixFlix_Stage_Backdrop</include>
+        <include content="RixFlix_PageLoading">
+            <param name="id">8888</param>
+            <param name="visible">Container(8820).IsUpdating + Integer.IsEqual(Container(8820).NumItems,0)</param>
+        </include>
+        <include content="RixFlix_Stage_Empty">
+            <param name="label">No upcoming trailers available right now.</param>
+            <param name="visible">!Container(8820).IsUpdating + Integer.IsEqual(Container(8820).NumItems,0)</param>
+        </include>
+        <include>RixFlix_Stage_Info</include>
+        <include content="RixFlix_Stage_Rows">
+            <param name="id">8810</param>
+            <include content="RixFlix_Stage_Row">
+                <param name="id">8820</param><param name="group">8830</param>
+                <param name="up">noop</param><param name="down">8831</param>
+                <onclick>RunScript(special://skin/scripts/rixflix_trailer.py,$ESCINFO[Container(8820).ListItem.Trailer],foreground)</onclick>
+                <content sortby="playlist" limit="5">plugin://plugin.video.rixflix.providers/?mode=coming_soon&amp;offset=0&amp;limit=5</content>
+            </include>
+            <include content="RixFlix_Stage_Row">
+                <param name="id">8821</param><param name="group">8831</param>
+                <param name="up">8830</param><param name="down">8832</param>
+                <onclick>RunScript(special://skin/scripts/rixflix_trailer.py,$ESCINFO[Container(8821).ListItem.Trailer],foreground)</onclick>
+                <content sortby="playlist" limit="5">plugin://plugin.video.rixflix.providers/?mode=coming_soon&amp;offset=5&amp;limit=5</content>
+            </include>
+            <include content="RixFlix_Stage_Row">
+                <param name="id">8822</param><param name="group">8832</param>
+                <param name="up">8831</param><param name="down">8833</param>
+                <onclick>RunScript(special://skin/scripts/rixflix_trailer.py,$ESCINFO[Container(8822).ListItem.Trailer],foreground)</onclick>
+                <content sortby="playlist" limit="5">plugin://plugin.video.rixflix.providers/?mode=coming_soon&amp;offset=10&amp;limit=5</content>
+            </include>
+            <include content="RixFlix_Stage_Row">
+                <param name="id">8823</param><param name="group">8833</param>
+                <param name="up">8832</param><param name="down">noop</param>
+                <onclick>RunScript(special://skin/scripts/rixflix_trailer.py,$ESCINFO[Container(8823).ListItem.Trailer],foreground)</onclick>
+                <content sortby="playlist" limit="5">plugin://plugin.video.rixflix.providers/?mode=coming_soon&amp;offset=15&amp;limit=5</content>
+            </include>
+        </include>
         <include content="RixFlix_CategoryTitleChip">
             <param name="label">Coming Soon</param>
         </include>
