@@ -338,6 +338,11 @@
                     </include>
                 </control>
         </control>
+        <include>RixFlix_CategoryTitleChip</include>
+    </include>
+    <include name="RixFlix_CategoryTitleChip">
+        <param name="label">$INFO[Window(Home).Property(RixFlix.CategoryLabel)]</param>
+        <definition>
         <!-- Fixed over the rows, so it comes last. A button is the one control whose background follows its label's width, and the grouplist's right alignment keeps its right edge fixed. The first button is the shadow: same label and font, 40px larger every way, like Texture_Shadow_40. Disabled, so neither can take focus. -->
         <control type="grouplist">
             <right>-24</right><top>-24</top><width>1000</width><height>156</height>
@@ -348,7 +353,7 @@
                 <textcolor>00000000</textcolor><disabledcolor>00000000</disabledcolor>
                 <texturenofocus colordiffuse="shadow_hard" border="60">shadows/shadow-40.png</texturenofocus>
                 <texturefocus colordiffuse="shadow_hard" border="60">shadows/shadow-40.png</texturefocus>
-                <label>$INFO[Window(Home).Property(RixFlix.CategoryLabel)]</label>
+                <label>$PARAM[label]</label>
             </control>
         </control>
         <control type="grouplist">
@@ -360,8 +365,9 @@
                 <textcolor>white</textcolor><disabledcolor>white</disabledcolor>
                 <texturenofocus colordiffuse="rix_cinema_surface" border="20">common/box.png</texturenofocus>
                 <texturefocus colordiffuse="rix_cinema_surface" border="20">common/box.png</texturefocus>
-                <label>$INFO[Window(Home).Property(RixFlix.CategoryLabel)]</label>
+                <label>$PARAM[label]</label>
             </control>
         </control>
+        </definition>
     </include>
 </includes>

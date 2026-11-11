@@ -76,14 +76,22 @@ def check_home_rows(constants):
     assert 'coming_soon' in category_list.find('onclick').get('condition', '')
     upcoming = ET.parse(ROOT / '1080i/Custom_1138_ComingSoon.xml').getroot()
     assert upcoming.get('id') == '1138'
-    posters = upcoming.find(".//control[@id='8820']")
-    assert posters.find('content').get('limit') == '20'
-    assert posters.findtext('content').endswith('?mode=coming_soon')
-    assert posters.findtext('onclick') == (
-        'RunScript(special://skin/scripts/rixflix_trailer.py,$ESCINFO[Container(8820).ListItem.Trailer],foreground)')
-    upcoming_layout = layouts.find("include[@name='Layout_ComingSoonPoster']/definition")
-    assert upcoming_layout.find("control[@type='image']/visible").text == '$PARAM[focused]'
-    assert upcoming_layout.findall("control[@type='label']")[-1].findtext('font') == 'font_tiny'
+    stack = upcoming.find(".//control[@id='8810']")
+    assert stack.findtext('top') == 'category_rows_t' and stack.findtext('height') == 'category_rows_h'
+    rows = stack.findall("control[@type='group']")
+    assert len(rows) == 4 and not stack.findall(".//control[@type='label']")
+    assert layouts.find("include[@name='Layout_ComingSoonPoster']") is None
+    for n, row in enumerate(rows):
+        assert row.findtext('height') == 'category_row_h'
+        cards = row.find("include[@content='List_Premiere_Row']")
+        assert cards is not None and cards.findtext('top') == 'category_list_t'
+        assert cards.find('content').get('limit') == '5'
+        assert f'mode=coming_soon&offset={n*5}&limit=5' in cards.findtext('content')
+        assert cards.findtext('onclick') == (
+            f'RunScript(special://skin/scripts/rixflix_trailer.py,$ESCINFO[Container({8820+n}).ListItem.Trailer],foreground)')
+    chip = upcoming.find(".//include[@content='RixFlix_CategoryTitleChip']")
+    assert chip.findtext("param[@name='label']") == 'Coming Soon'
+    assert (ROOT / 'extras/categories/coming_soon.jpg').is_file()
     assert category_list.findtext('movement') == '2'
     assert 80 + 2 * num('home_category_itemlayout_w') + cw <= 1920 - 16
     for key in ('past_year', 'movies', 'shows', 'reference', 'netflix', 'disney', 'hulu', 'max', 'paramount', 'prime'):
@@ -338,12 +346,17 @@ def check_hub_layout(values):
         assert content.get('limit') == '5000' and 'limit=' not in content.text, 'category rows hold the whole genre'
     # Drawn after the rows, or the rows would cover the fixed title.
     children = list(include)
-    assert children.index(group) < len(children) - 2, 'the title card draws over the rows'
-    card = children[-1]
+    title = children[-1]
+    assert children.index(group) < children.index(title), 'the title card draws over the rows'
+    assert title.tag == 'include' and title.text == 'RixFlix_CategoryTitleChip'
+    chip = ET.parse(ROOT / '1080i/Includes_CategoryHub.xml').getroot().find(
+        "include[@name='RixFlix_CategoryTitleChip']")
+    assert 'RixFlix.CategoryLabel' in chip.findtext("param[@name='label']")
+    card = chip.find('definition')[-1]
     assert card.get('type') == 'grouplist' and card.findtext('align') == 'right'
     button = card.find("control[@type='button']")
     assert button.findtext('width') == 'auto' and button.findtext('enable') == 'false', 'the title card takes no focus'
-    assert 'RixFlix.CategoryLabel' in button.findtext('label')
+    assert button.findtext('label') == '$PARAM[label]'
 
 
 def check():

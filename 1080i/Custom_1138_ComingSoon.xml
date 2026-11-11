@@ -6,15 +6,6 @@
             <texture colordiffuse="ff080808">common/white.png</texture>
         </control>
         <control type="label">
-            <left>110</left><top>40</top><width>1700</width><height>55</height>
-            <font>font_main_bold</font><textcolor>white</textcolor><label>Coming Soon</label>
-        </control>
-        <control type="label">
-            <left>110</left><top>100</top><width>1700</width><height>36</height>
-            <font>font_mini</font><textcolor>main_fg_70</textcolor>
-            <label>Select a poster to watch its trailer · Metadata from TMDb</label>
-        </control>
-        <control type="label">
             <top>480</top><width>1920</width><height>55</height><align>center</align>
             <font>font_main_bold</font><textcolor>main_fg_70</textcolor>
             <label>Loading upcoming trailers…</label>
@@ -26,21 +17,64 @@
             <label>No upcoming trailers available right now.</label>
             <visible>!Container(8820).IsUpdating + Integer.IsEqual(Container(8820).NumItems,0)</visible>
         </control>
-        <control type="panel" id="8820">
-            <left>72</left><top>163</top><width>1776</width><height>804</height>
-            <orientation>vertical</orientation>
-            <scrolltime tween="quadratic">240</scrolltime>
-            <onback>PreviousMenu</onback>
-            <onclick condition="String.StartsWith(Container(8820).ListItem.Trailer,plugin://plugin.video.youtube/play/?video_id=)">RunScript(special://skin/scripts/rixflix_trailer.py,$ESCINFO[Container(8820).ListItem.Trailer],foreground)</onclick>
-            <itemlayout width="296" height="402">
-                <include>Layout_ComingSoonPoster</include>
-            </itemlayout>
-            <focusedlayout width="296" height="402">
-                <include content="Layout_ComingSoonPoster">
-                    <param name="focused">true</param>
-                </include>
-            </focusedlayout>
-            <content sortby="playlist" limit="20">plugin://plugin.video.rixflix.providers/?mode=coming_soon</content>
+        <!-- Reuse the category page's exact row pitch, cards, corner mask and focus treatment.
+             Only the rotated genre labels are absent. Each row continues release order. -->
+        <control type="grouplist" id="8810">
+            <left>0</left><top>category_rows_t</top><width>1920</width><height>category_rows_h</height>
+            <orientation>vertical</orientation><itemgap>0</itemgap>
+            <scrolltime tween="quadratic">300</scrolltime><onback>PreviousMenu</onback>
+            <onup>noop</onup><ondown>noop</ondown>
+                <control type="group" id="8830">
+                    <height>category_row_h</height>
+                    <include content="List_Premiere_Row">
+                        <param name="id">8820</param>
+                        <top>category_list_t</top><width>1856</width><height>home_premiere_itemlayout_h</height>
+                        <preloaditems>0</preloaditems>
+                        <onup>noop</onup><ondown>8831</ondown>
+                        <onback>PreviousMenu</onback>
+                        <onclick>RunScript(special://skin/scripts/rixflix_trailer.py,$ESCINFO[Container(8820).ListItem.Trailer],foreground)</onclick>
+                        <content sortby="playlist" limit="5">plugin://plugin.video.rixflix.providers/?mode=coming_soon&amp;offset=0&amp;limit=5</content>
+                    </include>
+                </control>
+                <control type="group" id="8831">
+                    <height>category_row_h</height>
+                    <include content="List_Premiere_Row">
+                        <param name="id">8821</param>
+                        <top>category_list_t</top><width>1856</width><height>home_premiere_itemlayout_h</height>
+                        <preloaditems>0</preloaditems>
+                        <onup>8830</onup><ondown>8832</ondown>
+                        <onback>PreviousMenu</onback>
+                        <onclick>RunScript(special://skin/scripts/rixflix_trailer.py,$ESCINFO[Container(8821).ListItem.Trailer],foreground)</onclick>
+                        <content sortby="playlist" limit="5">plugin://plugin.video.rixflix.providers/?mode=coming_soon&amp;offset=5&amp;limit=5</content>
+                    </include>
+                </control>
+                <control type="group" id="8832">
+                    <height>category_row_h</height>
+                    <include content="List_Premiere_Row">
+                        <param name="id">8822</param>
+                        <top>category_list_t</top><width>1856</width><height>home_premiere_itemlayout_h</height>
+                        <preloaditems>0</preloaditems>
+                        <onup>8831</onup><ondown>8833</ondown>
+                        <onback>PreviousMenu</onback>
+                        <onclick>RunScript(special://skin/scripts/rixflix_trailer.py,$ESCINFO[Container(8822).ListItem.Trailer],foreground)</onclick>
+                        <content sortby="playlist" limit="5">plugin://plugin.video.rixflix.providers/?mode=coming_soon&amp;offset=10&amp;limit=5</content>
+                    </include>
+                </control>
+                <control type="group" id="8833">
+                    <height>category_row_h</height>
+                    <include content="List_Premiere_Row">
+                        <param name="id">8823</param>
+                        <top>category_list_t</top><width>1856</width><height>home_premiere_itemlayout_h</height>
+                        <preloaditems>0</preloaditems>
+                        <onup>8832</onup><ondown>noop</ondown>
+                        <onback>PreviousMenu</onback>
+                        <onclick>RunScript(special://skin/scripts/rixflix_trailer.py,$ESCINFO[Container(8823).ListItem.Trailer],foreground)</onclick>
+                        <content sortby="playlist" limit="5">plugin://plugin.video.rixflix.providers/?mode=coming_soon&amp;offset=15&amp;limit=5</content>
+                    </include>
+                </control>
         </control>
+        <include content="RixFlix_CategoryTitleChip">
+            <param name="label">Coming Soon</param>
+        </include>
     </controls>
 </window>
