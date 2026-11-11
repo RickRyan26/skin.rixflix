@@ -676,6 +676,12 @@ def check():
     assert timer is not None and timer.findall('onstart')[-1].text == 'ActivateWindow(Home)'
     assert any(n.text == 'Dialog.Close(1170,true)' for n in timer.findall('onstart'))
     search_rows = json.loads((ROOT / 'shortcuts/skinvariables-shortcut-searchwidgets.json').read_text())
+    # 1.14.3: the Results heading must follow the LIVE text. Edit 3000 stays empty while the
+    # keyboard is open, so a first search (empty field) drew no poster until it closed.
+    search_item = (ROOT / 'shortcuts/generator/data/parts/search_item.xmltemplate').read_text()
+    assert ('!String.IsEmpty(Control.GetLabel(3000).index(1)) | '
+            '!String.IsEmpty(Window(Home).Property(RixFlix.SearchText))') in search_item, \
+        'Results heading must show for text typed in the keyboard'
     assert len(search_rows) == 1 and search_rows[0]['path'] == 'DefaultSearch-All'
     assert search_rows[0]['widget_limit'] == '20'
     # Rick 2026-10-20: horizontal results, so tall posters stop covering the row beneath.

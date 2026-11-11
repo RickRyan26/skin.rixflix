@@ -1,5 +1,21 @@
 # Cinema presentation — 1.10.0
 
+## 1.14.3: the first search shows its posters while you type
+
+Rick (2026-11-10): on a first search nothing appeared under the keyboard; closing it
+showed the results at once. Later searches worked.
+
+- **Cause.** The Results row shows only while its switcher item (list 601) is visible,
+  and that item required `Control.GetLabel(3000)` to be non-empty. Edit 3000 is the
+  Search field; Kodi writes the keyboard's text into it only when the keyboard closes.
+  With an empty field (a first search) the item, the "Results" heading and row 502 all
+  stayed hidden. With an old query in the field they showed, which hid the fault.
+- **Proof.** `search/typing-first-open.png` (field seeded) draws the row;
+  `search/typing-paused-behind.png` (field cleared first) does not, though the provider
+  logged `local query='AB' results=20`. The paused video was not the cause.
+- **Fix.** The item is also visible when `Window(Home).Property(RixFlix.SearchText)`,
+  the live text, is non-empty (`shortcuts/generator/data/parts/search_item.xmltemplate`).
+
 ## 1.14.0: the stage (category pages and Coming Soon)
 
 Rick, 2026-11-11: the category sub pages and Coming Soon must "DRYly replicate the homepage's
