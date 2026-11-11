@@ -1108,6 +1108,60 @@
         </control>
     </include>
 
+    <!-- RixFlix Home plot (Rick 2026-11-10): use the room above the rows, and end a cut
+         description with "...". Kodi drops overflow lines silently (GUITextLayout), so the
+         resident service (context.rixflix.gotoshow/quality.py home_plot) publishes the focused
+         item's plot already cut to whole words + "..." for $PARAM[variant], keyed by DBTYPE/DBID.
+         Until it matches, the native plot shows in the same box. Auto-height textboxes let
+         "Ends at" follow a short plot. Max heights: Inter 28 x 1.16 = 39.44px per line and a
+         42px cell, so N lines need a max in [N*39.44, (N+1)*39.3): 80/120/160/200 = 2/3/4/5.
+         The heading rule (episode line, else tagline) must match quality.py plot_heading(). -->
+    <include name="RixFlix_Home_Plot">
+        <param name="visible">true</param>
+        <param name="listitem">ListItem</param>
+        <param name="width">800</param>
+        <definition>
+            <control type="label">
+                <visible>$PARAM[visible]</visible>
+                <visible>!String.IsEqual($PARAM[container]$PARAM[listitem].DBType,episode) + !String.IsEmpty($PARAM[container]$PARAM[listitem].Tagline)</visible>
+                <left>40</left><width>$PARAM[width]</width><height>40</height>
+                <font>font_main_bold</font><textcolor>$PARAM[colordiffuse]_90</textcolor>
+                <label>$INFO[$PARAM[container]$PARAM[listitem].Tagline]</label>
+            </control>
+            <control type="label">
+                <visible>$PARAM[visible]</visible>
+                <visible>String.IsEqual($PARAM[container]$PARAM[listitem].DBType,episode)</visible>
+                <left>40</left><width>$PARAM[width]</width><height>40</height>
+                <font>font_main_bold</font><textcolor>$PARAM[colordiffuse]_90</textcolor>
+                <label>$INFO[$PARAM[container]$PARAM[listitem].Season,,x]$INFO[$PARAM[container]$PARAM[listitem].Episode,,. ]$INFO[$PARAM[container]$PARAM[listitem].Title]</label>
+            </control>
+            <control type="textbox">
+                <visible>$PARAM[visible]</visible>
+                <visible>String.IsEqual(Window(Home).Property(RixFlix.PlotType),$PARAM[container]$PARAM[listitem].DBTYPE) + String.IsEqual(Window(Home).Property(RixFlix.PlotDBID),$PARAM[container]$PARAM[listitem].DBID)</visible>
+                <left>40</left><width>$PARAM[width]</width>
+                <height max="$PARAM[max_h]">auto</height>
+                <font>font_main_plot</font><textcolor>$PARAM[colordiffuse]_90</textcolor>
+                <label>$INFO[Window(Home).Property(RixFlix.Plot.$PARAM[variant])]</label>
+            </control>
+            <control type="textbox">
+                <visible>$PARAM[visible]</visible>
+                <visible>![String.IsEqual(Window(Home).Property(RixFlix.PlotType),$PARAM[container]$PARAM[listitem].DBTYPE) + String.IsEqual(Window(Home).Property(RixFlix.PlotDBID),$PARAM[container]$PARAM[listitem].DBID)] + ![!String.IsEqual($PARAM[container]$PARAM[listitem].DBType,episode) + !String.IsEmpty($PARAM[container]$PARAM[listitem].Tagline)] + ![String.IsEqual($PARAM[container]$PARAM[listitem].DBType,episode)]</visible>
+                <left>40</left><width>$PARAM[width]</width>
+                <height max="$PARAM[max_h]">auto</height>
+                <font>font_main_plot</font><textcolor>$PARAM[colordiffuse]_90</textcolor>
+                <label>$INFO[$PARAM[container]$PARAM[listitem].Plot]</label>
+            </control>
+            <control type="textbox">
+                <visible>$PARAM[visible]</visible>
+                <visible>![String.IsEqual(Window(Home).Property(RixFlix.PlotType),$PARAM[container]$PARAM[listitem].DBTYPE) + String.IsEqual(Window(Home).Property(RixFlix.PlotDBID),$PARAM[container]$PARAM[listitem].DBID)] + [[!String.IsEqual($PARAM[container]$PARAM[listitem].DBType,episode) + !String.IsEmpty($PARAM[container]$PARAM[listitem].Tagline)] | [String.IsEqual($PARAM[container]$PARAM[listitem].DBType,episode)]]</visible>
+                <left>40</left><width>$PARAM[width]</width>
+                <height max="$PARAM[max_h_heading]">auto</height>
+                <font>font_main_plot</font><textcolor>$PARAM[colordiffuse]_90</textcolor>
+                <label>$INFO[$PARAM[container]$PARAM[listitem].Plot]</label>
+            </control>
+        </definition>
+    </include>
+
     <include name="Info_Plot">
         <param name="visible">true</param>
         <param name="listitem">ListItem</param>
@@ -1176,6 +1230,7 @@
         <param name="visible_plot">true</param>
         <param name="visible_meta">true</param>
         <param name="listitem">ListItem</param>
+        <param name="home_plot">false</param>
         <definition>
 
             <control type="grouplist">
@@ -1227,7 +1282,17 @@
                 </control>
 
                 <!-- Plot -->
-                <include content="Info_Plot" condition="$PARAM[include_details]">
+                <include content="RixFlix_Home_Plot" condition="$PARAM[include_details] + $PARAM[home_plot]">
+                    <param name="colordiffuse">$PARAM[colordiffuse]</param>
+                    <param name="container">$PARAM[container]</param>
+                    <param name="listitem">$PARAM[listitem]</param>
+                    <param name="width">$PARAM[plotwidth]</param>
+                    <param name="visible">$PARAM[visible_plot]</param>
+                    <param name="variant">$PARAM[home_plot_variant]</param>
+                    <param name="max_h">$PARAM[home_plot_max_h]</param>
+                    <param name="max_h_heading">$PARAM[home_plot_max_h_heading]</param>
+                </include>
+                <include content="Info_Plot" condition="$PARAM[include_details] + ![$PARAM[home_plot]]">
                     <param name="colordiffuse">$PARAM[colordiffuse]</param>
                     <param name="container">$PARAM[container]</param>
                     <param name="listitem">$PARAM[listitem]</param>

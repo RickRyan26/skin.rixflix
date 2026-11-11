@@ -296,6 +296,11 @@
                     <param name="visible_meta">true</param>
                     <param name="include_title">false</param>
                     <param name="container">Container($PARAM[id]).</param>
+                    <!-- Five plot lines incl. the tagline: Ends-at bottom <= y580, row cards at y644. -->
+                    <param name="home_plot">true</param>
+                    <param name="home_plot_variant">Row</param>
+                    <param name="home_plot_max_h">200</param>
+                    <param name="home_plot_max_h_heading">160</param>
                 </include>
             </control>
         </control>
@@ -486,6 +491,11 @@
             <include>Info_Panel_Dimensions</include>
             <include content="Info_Panel">
                 <param name="container">Container(301).</param>
+                <!-- Four plot lines incl. the tagline: one more than before, still clear of Play. -->
+                <param name="home_plot">true</param>
+                <param name="home_plot_variant">Spot</param>
+                <param name="home_plot_max_h">160</param>
+                <param name="home_plot_max_h_heading">120</param>
                 <param name="visible_line">String.IsEmpty(Window(Home).Property(Background.ShowOverlay))</param>
                 <param name="visible_plot">String.IsEmpty(Window(Home).Property(Background.ShowOverlay))</param>
                 <param name="visible_meta">String.IsEmpty(Window(Home).Property(Background.ShowOverlay))</param>
