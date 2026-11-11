@@ -852,3 +852,54 @@ semantics, avoiding duplicate TextureCache entries. The white bloom and border
 match the selected-card treatment; the target timestamp stays readable below
 the frame. Real generation, active-item binding and native pixel proof belong
 to Rixflix docs/home-theater.md; source validation alone is not native proof.
+
+## 1.13.0: Search's Request row
+
+Rick (2026-11-10): Search should also show Seerr-side titles in a row titled
+"Request" under the results. OK requests the title, a held OK opens the usual
+Info page, and a requested poster carries a chip.
+
+**Row.** `Search_Request_Row` (Includes_Search.xml) is list **540** in group 541,
+built from `List_Request_Row` / `Layout_Request`: the Results row's landscape card
+plus a crimson chip and the same explicit white focus outline. Its content is
+`$VAR[Path_RequestSearch]`: provider mode `request_search`, with `rev` and `q` as
+refresh tokens. The provider reads the typed text from `RixFlix.SearchText`,
+exactly as the live Results row does. The target is static and the order is
+`playlist`, as for every provider row.
+
+**Position.** The row shares the Results geometry (list top 510). A conditional
+slide holds it 380 px lower, so the header and the top of the cards peek from the
+bottom edge under Results. `Exp_RixFlix_Request_Raised` removes the slide while
+the row has focus, or when the completed search found nothing in the library.
+It never rises while results still load, so the row does not bounce per letter.
+With focus on 540, groups 500 and 600 fade out, the info panel follows 540, and
+the "No Results" labels and the item-count footer are hidden.
+
+**Navigation.** Down from Results runs the unchanged `SetFocus($PARAM[id])` and
+then, when `Exp_RixFlix_Request_Ready`, `SetFocus(540)`. Rixflix's search bench
+reads the first action by its exact `Window.IsActive(11105)` condition, so keep
+it first and unchanged. Down on 540 keeps the row; Up returns to 502, or to the
+field when Results is empty; Back goes Home through 7900. Down from the field
+goes to 540 when the library has nothing but the Request row is ready, and the
+held-Down timer lands there in the same case.
+
+**Click and Info.** `<onclick>` is `RunPlugin` on the item's own path (provider
+mode `request`). An explicit onclick replaces the list provider's default action,
+so nothing can play or browse the item. The items carry a movie/tvshow media type
+and no database id: the held-OK route opens DialogVideoInfo for them unchanged.
+There, `Action_DialogInfo_PlayMedia` and `Label_DialogInfo_PlayButton` test
+`RixFlix.RequestKey` first: the button reads "Request" (or the chip text) and
+runs the same request. Control 8000 skips `SendClick(8)` for these items.
+
+**Chip.** The provider sets `RixFlix.RequestChip` ("Requested", "In library").
+After a request it changes `RixFlix.RequestRev`; the content path changes, the
+row reloads, and Kodi restores the selection by item path, so focus stays on the
+poster that now carries the chip.
+
+**Upkeep.** The window's `<onload>` runs provider mode `request_open` off the
+GUI thread. It refreshes request state and advances the title index when due.
+
+Source checks: `scripts/validate_cinema.py` PASS, including the row's static
+target, single RunPlugin click, navigation targets and the unchanged 11105 Down.
+The layout was written without a render; native placement, focus and the chip
+need appliance proof, recorded in Rixflix `docs/home-theater.md`.
