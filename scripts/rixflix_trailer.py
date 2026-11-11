@@ -26,6 +26,9 @@ UNAVAILABLE_PROPERTY = "RixFlix.UnavailableTrailer"
 RESOLVING_PROPERTY = "RixFlix.TrailerResolving"
 ON_DEMAND_PROPERTY = "RixFlix.OnDemandTrailerResolved"
 VIDEO_ID = re.compile(r"^[A-Za-z0-9_-]{11}$")
+# Native Paper Tiger extraction returned 176 formats in 18.69 s. The old
+# 15 s deadline killed a valid cold fallback; cached playback skips this path.
+FOREGROUND_RESOLVE_SECONDS = 30
 # The trailer cache's root and ledgers (owner: Rixflix am9/rixflix-trailer-cache.py; the
 # resident's local_trailer.cached_file applies the same rule). index.json holds the Home
 # rows, keyed by library id; extra/index.json holds every other trailer, keyed yt-<id>.
@@ -186,7 +189,7 @@ def main():
                 check=True,
                 capture_output=True,
                 text=True,
-                timeout=15,
+                timeout=FOREGROUND_RESOLVE_SECONDS if mode == "foreground" else 15,
             )
             manifest = hls_manifest(json.loads(result.stdout))
         if mode == "background":

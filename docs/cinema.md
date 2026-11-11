@@ -983,3 +983,14 @@ Source checks: `scripts/validate_cinema.py` PASS, including the row's static
 target, single RunPlugin click, navigation targets and the unchanged 11105 Down.
 The layout was written without a render; native placement, focus and the chip
 need appliance proof, recorded in Rixflix `docs/home-theater.md`.
+
+### 1.14.1 — cold foreground trailer deadline
+
+The theater's Paper Tiger trailer timed out twice at the old 15-second
+extraction deadline. An extraction-only comparison on November 11 resolved
+it successfully in 18.69 seconds (176 formats); the first upcoming series
+took 7.95 seconds and the previously played control took 7.64 seconds.
+All three are public official trailers. The cold foreground fallback now
+allows 30 seconds. Cached MP4 playback bypasses extraction. Cancellation,
+exact player ownership and the separate 20-second playback-start deadline
+remain in place. The diagnostic receipt is recorded in Rixflix's theater doc.
