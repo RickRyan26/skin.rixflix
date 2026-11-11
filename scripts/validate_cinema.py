@@ -81,6 +81,9 @@ def check_home_rows(constants):
     assert posters.findtext('content').endswith('?mode=coming_soon')
     assert posters.findtext('onclick') == (
         'RunScript(special://skin/scripts/rixflix_trailer.py,$ESCINFO[Container(8820).ListItem.Trailer],foreground)')
+    upcoming_layout = layouts.find("include[@name='Layout_ComingSoonPoster']/definition")
+    assert upcoming_layout.find("control[@type='image']/visible").text == '$PARAM[focused]'
+    assert upcoming_layout.findall("control[@type='label']")[-1].findtext('font') == 'font_tiny'
     assert category_list.findtext('movement') == '2'
     assert 80 + 2 * num('home_category_itemlayout_w') + cw <= 1920 - 16
     for key in ('past_year', 'movies', 'shows', 'reference', 'netflix', 'disney', 'hulu', 'max', 'paramount', 'prime'):

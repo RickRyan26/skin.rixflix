@@ -2576,8 +2576,9 @@
     <include name="Layout_ComingSoonPoster">
         <param name="focused">false</param>
         <definition>
-            <control type="image" condition="$PARAM[focused]">
+            <control type="image">
                 <left>34</left><width>228</width><height>338</height>
+                <visible>$PARAM[focused]</visible>
                 <texture colordiffuse="ffe50914">common/white.png</texture>
             </control>
             <control type="image">
@@ -2591,7 +2592,7 @@
             </control>
             <control type="label">
                 <left>38</left><top>370</top><width>220</width><height>26</height>
-                <font>font_mini</font><textcolor>main_fg_70</textcolor>
+                <font>font_tiny</font><textcolor>main_fg_70</textcolor>
                 <label>$INFO[ListItem.Property(RixFlix.ComingSoonKind)] · $INFO[ListItem.Label2]</label>
             </control>
         </definition>
