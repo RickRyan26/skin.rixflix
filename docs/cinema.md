@@ -1,5 +1,15 @@
 # Cinema presentation — 1.10.0
 
+## 1.14.4: the Request row loads after Results, not beside it
+
+With both rows keyed on SearchText, every letter started two Python interpreters at
+once on the AM9. Search smoke keypress-to-results rose from 0.75-1.0 s (row not
+loading) to 1.0-1.3 s, and the Request job itself read 230-470 ms. `Path_RequestSearch`
+now takes `RixFlix.SearchCompleted` as its refresh token: the provider publishes that
+when the Results search for the text is done, so the Request lookup starts then. The
+provider still reads SearchText for the query and drops a superseded run. Provider
+1.9.2 drops its 150 ms head-start wait, which this ordering replaces.
+
 ## 1.14.3: the first search shows its posters while you type
 
 Rick (2026-11-10): on a first search nothing appeared under the keyboard; closing it

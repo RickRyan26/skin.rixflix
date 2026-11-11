@@ -31,9 +31,11 @@
     </variable>
 
     <!-- Request row. rev changes after a request so the row reloads and the poster gains its chip; -->
-    <!-- q is a refresh token only, exactly as for the live Results row above. -->
+    <!-- q is a refresh token only. It is SearchCompleted, not SearchText (1.14.4): the row
+         reloads when the Results search for that text has FINISHED, so the second Python
+         start never competes with the library search for the AM9's CPU. -->
     <variable name="Path_RequestSearch">
-        <value>plugin://plugin.video.rixflix.providers/?mode=request_search&amp;rev=$INFO[Window(Home).Property(RixFlix.RequestRev)]&amp;live=1&amp;q=$INFO[Window(Home).Property(RixFlix.SearchText)]</value>
+        <value>plugin://plugin.video.rixflix.providers/?mode=request_search&amp;rev=$INFO[Window(Home).Property(RixFlix.RequestRev)]&amp;live=1&amp;q=$INFO[Window(Home).Property(RixFlix.SearchCompleted)]</value>
     </variable>
     <variable name="Path_SearchTerm_SingleEncoded">
         <value condition="!String.IsEmpty(Container(310).ListItem.Label) + !Container(310).IsUpdating">$INFO[Container(310).ListItem.Label]</value>

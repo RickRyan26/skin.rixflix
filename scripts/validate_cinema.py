@@ -618,7 +618,7 @@ def check():
     request_path = paths.findtext("variable[@name='Path_RequestSearch']/value")
     # The provider reads the text before "&q=" as its query string; q is a refresh token.
     assert request_path.startswith('plugin://plugin.video.rixflix.providers/?mode=request_search&rev=')
-    assert request_path.split('&q=')[0].endswith('&live=1') and request_path.endswith('q=$INFO[Window(Home).Property(RixFlix.SearchText)]')
+    assert request_path.split('&q=')[0].endswith('&live=1') and request_path.endswith('q=$INFO[Window(Home).Property(RixFlix.SearchCompleted)]'), 'Request must load after Results, not beside it'
     combined = ET.parse(ROOT / '1080i/Includes_Hubs.xml').getroot().find("include[@name='Hub_Combined_Widget']/definition/include")
     hops = [(n.get('condition'), n.text) for n in combined.findall('ondown') if n.get('condition', '').startswith('Window.IsActive(11105)')]
     # Order matters: the row keeps itself first, then hands on when a Request row is ready.
