@@ -477,7 +477,11 @@ def check():
     assert [n.text for n in row.findall('onclick')] == ['RunPlugin($INFO[Container(540).ListItem.FileNameAndPath])']
     assert [n.text for n in row.findall('ondown')] == ['SetFocus(540)'] and row.findtext('onback') == '7900'
     assert {n.text for n in row.findall('onup')} == {'SetFocus(502)', 'SetFocus(3000)'}
-    assert row.findtext('visible') == request.findtext('visible') == '$EXP[Exp_RixFlix_Request_Ready]'
+    # 1.13.3: no <visible> on the row or its group. Kodi never loads a hidden container, so a
+    # visibility keyed on the row's own items left it empty on the theater box.
+    assert row.find('visible') is None and request.find('visible') is None, 'Request row must stay loadable'
+    assert any(n.get('condition') == '!$EXP[Exp_RixFlix_Request_Ready]' and n.get('effect') == 'fade'
+               for n in request.findall('animation')), 'an unready Request row must be faded out'
     paths = ET.parse(ROOT / '1080i/Includes_Paths.xml').getroot()
     request_path = paths.findtext("variable[@name='Path_RequestSearch']/value")
     # The provider reads the text before "&q=" as its query string; q is a refresh token.

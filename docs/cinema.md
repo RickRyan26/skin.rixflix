@@ -1,5 +1,19 @@
 # Cinema presentation — 1.10.0
 
+## 1.13.3: the Request row loads on every query
+
+On the theater box the Request row (list 540) stayed empty. The Kodi log showed the
+provider's `request_search` running only twice in a whole search smoke, and not once
+while a viewer typed five letters, although the Results row ran for every letter.
+
+- **Cause.** The row and its group 541 were `<visible>` only when list 540 had items for
+  the typed text. Kodi does not load the content of a hidden container, so after the
+  first empty answer the row never asked again.
+- **Fix.** Neither carries a `<visible>` now. Group 541 fades to 0 while
+  `Exp_RixFlix_Request_Ready` is false, so the list always loads. Every route into 540
+  already requires `Exp_RixFlix_Request_Ready`, so a faded row cannot take focus.
+- **Rule.** Never key a container's visibility on its own items.
+
 ## 1.13.2: Categories splash covers the full screen
 
 The Categories background was lifted 160px but retained its 1080px height,

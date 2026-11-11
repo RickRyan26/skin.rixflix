@@ -156,7 +156,10 @@
          Down keeps the row, Up returns to Results or the field, Back goes Home. -->
     <include name="Search_Request_Row">
         <control type="group" id="541">
-            <visible>$EXP[Exp_RixFlix_Request_Ready]</visible>
+            <!-- Never a <visible> keyed on list 540's own items, here or on the list: Kodi
+                 does not load a hidden container, so the row stayed empty for every query
+                 after its first empty answer (theater, 2026-11-10). Fade it out instead. -->
+            <animation effect="fade" start="100" end="0" time="0" condition="!$EXP[Exp_RixFlix_Request_Ready]">Conditional</animation>
             <animation effect="slide" start="0,0" end="0,380" time="300" tween="quadratic" condition="!$EXP[Exp_RixFlix_Request_Raised]">Conditional</animation>
             <control type="group">
                 <top>520</top>
@@ -190,7 +193,6 @@
                 <onfocus>ClearProperty(InfoPanel.FullSwitch,Home)</onfocus>
                 <onclick>RunPlugin($INFO[Container(540).ListItem.FileNameAndPath])</onclick>
                 <content sortby="playlist" target="videos" limit="20">$VAR[Path_RequestSearch]</content>
-                <visible allowhiddenfocus="true">$EXP[Exp_RixFlix_Request_Ready]</visible>
             </include>
         </control>
     </include>
