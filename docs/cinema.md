@@ -1,5 +1,13 @@
 # Cinema presentation — 1.10.0
 
+## 1.13.2: Categories splash covers the full screen
+
+The Categories background was lifted 160px but retained its 1080px height,
+leaving the bottom 160px uncovered. Its image now extends to 1240px, so the
+lifted rectangle ends at the screen bottom. Kodi scale fills that rectangle
+with proportional cropping. The logo stays above the cards; the existing
+startup splash already fills its screen. No new texture or resident control.
+
 ## 1.12.76: fix the active combined Search control
 
 The 1.12.75 native retry still failed repeated Down. The earlier fix changed the
