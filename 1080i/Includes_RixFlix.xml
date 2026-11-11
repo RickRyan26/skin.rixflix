@@ -25,6 +25,13 @@
     <!-- The search is still running: the term encoder (310/320) or any result provider
          (501 discover, 502+ the searchwidgets rows) has a directory job in flight. While
          this is true an empty selector (601) means "not answered yet", never "nothing". -->
+    <!-- Search's Request row (540): Seerr-side titles for the same query, under Results. -->
+    <!-- Ready = its cards belong to the text now in the field. Raised = it takes the     -->
+    <!-- Results position: while it has focus, or when the library has nothing for the    -->
+    <!-- query (never while results still load, or the row would bounce on every letter). -->
+    <expression name="Exp_RixFlix_Results_Ready">[Integer.IsGreater(Container(502).NumItems,0) + String.IsEqual(Container(502).ListItem.Property(RixFlix.SearchText),Window(Home).Property(RixFlix.SearchText))]</expression>
+    <expression name="Exp_RixFlix_Request_Ready">[Integer.IsGreater(Container(540).NumItems,0) + String.IsEqual(Container(540).ListItem.Property(RixFlix.SearchText),Window(Home).Property(RixFlix.SearchText))]</expression>
+    <expression name="Exp_RixFlix_Request_Raised">[Control.HasFocus(540) | [!$EXP[Exp_RixFlix_Results_Ready] + String.IsEqual(Window(Home).Property(RixFlix.SearchCompleted),Window(Home).Property(RixFlix.SearchText)) + !Container(502).IsUpdating]]</expression>
     <expression name="Exp_RixFlix_Search_Loading">[!String.IsEqual(Window(Home).Property(RixFlix.SearchCompleted),Window(Home).Property(RixFlix.SearchText)) | Container(310).IsUpdating | Container(320).IsUpdating | Container(501).IsUpdating | Container(502).IsUpdating | Container(503).IsUpdating | Container(504).IsUpdating | Container(505).IsUpdating | Container(506).IsUpdating | Container(507).IsUpdating | Container(508).IsUpdating | Container(509).IsUpdating]</expression>
 
     <!-- Up out of a row view: the nav bar, else the stock views dialog (windows without

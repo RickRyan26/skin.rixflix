@@ -459,8 +459,47 @@ def check():
     assert edit.findtext('onback') == '7900'
     # 1.12.50: a Down while results load is held for 502, never sent Home.
     downs = {n.text: n.get('condition', '') for n in edit.findall('ondown')}
-    assert set(downs) == {'502', '7900', 'SetProperty(RixFlix.SearchDown,1,Home)'}, downs
+    assert set(downs) == {'502', '7900', 'SetProperty(RixFlix.SearchDown,1,Home)', 'SetFocus(540)'}, downs
     assert '!$EXP[Exp_RixFlix_Search_Loading]' in downs['7900'], 'empty-results Down must not fire while loading'
+    # 1.13.0 Request row (540): Seerr-side titles under Results. Home is only the Down target
+    # when neither row has anything; the Request row is reached, never skipped.
+    assert '!$EXP[Exp_RixFlix_Request_Ready]' in downs['7900'], 'Down must not go Home past a ready Request row'
+    assert '!$EXP[Exp_RixFlix_Search_Loading]' in downs['SetFocus(540)'] and '!$EXP[Exp_RixFlix_Results_Ready]' in downs['SetFocus(540)']
+    request = search_root.find("include[@name='Search_Request_Row']/control")
+    row = request.find("include[@content='List_Request_Row']")
+    assert row.findtext("param[@name='id']") == '540'
+    content = row.find('content')
+    # Static target and playlist order, as every RixFlix provider row (see deploy.sh's
+    # dynamic-target and sortby checks); only the path follows the typed text.
+    assert (content.text, content.get('target'), content.get('sortby'), content.get('limit')) == (
+        '$VAR[Path_RequestSearch]', 'videos', 'playlist', '20'), content.attrib
+    # A click asks Seerr through the provider. Nothing here may play or browse the item.
+    assert [n.text for n in row.findall('onclick')] == ['RunPlugin($INFO[Container(540).ListItem.FileNameAndPath])']
+    assert [n.text for n in row.findall('ondown')] == ['SetFocus(540)'] and row.findtext('onback') == '7900'
+    assert {n.text for n in row.findall('onup')} == {'SetFocus(502)', 'SetFocus(3000)'}
+    assert row.findtext('visible') == request.findtext('visible') == '$EXP[Exp_RixFlix_Request_Ready]'
+    paths = ET.parse(ROOT / '1080i/Includes_Paths.xml').getroot()
+    request_path = paths.findtext("variable[@name='Path_RequestSearch']/value")
+    # The provider reads the text before "&q=" as its query string; q is a refresh token.
+    assert request_path.startswith('plugin://plugin.video.rixflix.providers/?mode=request_search&rev=')
+    assert request_path.split('&q=')[0].endswith('&live=1') and request_path.endswith('q=$INFO[Window(Home).Property(RixFlix.SearchText)]')
+    combined = ET.parse(ROOT / '1080i/Includes_Hubs.xml').getroot().find("include[@name='Hub_Combined_Widget']/definition/include")
+    hops = [(n.get('condition'), n.text) for n in combined.findall('ondown') if n.get('condition', '').startswith('Window.IsActive(11105)')]
+    # Order matters: the row keeps itself first, then hands on when a Request row is ready.
+    assert hops == [('Window.IsActive(11105)', 'SetFocus($PARAM[id])'),
+                    ('Window.IsActive(11105) + $EXP[Exp_RixFlix_Request_Ready]', 'SetFocus(540)')], hops
+    layouts_root = ET.parse(ROOT / '1080i/Includes_Layouts.xml').getroot()
+    card = layouts_root.find("include[@name='Layout_Request']/definition/control")
+    assert card.find("include[@content='Layout_Landscape']") is not None
+    chip = [g for g in card.findall("control[@type='group']") if 'RixFlix.RequestChip' in (g.findtext('visible') or '')]
+    assert len(chip) == 1 and chip[0].find("control[@type='label']").findtext('label') == '$INFO[ListItem.Property(RixFlix.RequestChip)]'
+    assert chip[0].find("control[@type='image']/texture").get('colordiffuse')[2:] in CRIMSON
+    actions = ET.parse(ROOT / '1080i/Includes_Actions.xml').getroot().find("variable[@name='Action_DialogInfo_PlayMedia']")
+    first = actions.find('value')
+    assert 'RixFlix.RequestKey' in first.get('condition') and first.text == 'RunPlugin($INFO[ListItem.FileNameAndPath])', \
+        'Info on a Request title must request, not play'
+    window = ET.parse(ROOT / '1080i/Custom_1105_Search.xml').getroot()
+    assert 'RunPlugin(plugin://plugin.video.rixflix.providers/?mode=request_open)' in [n.text for n in window.findall('onload')]
     held = ET.parse(ROOT / '1080i/Timers.xml').getroot().find("timer[name='rixflix_search_down']")
     assert held is not None and any(n.text == 'SetFocus(502,0,absolute)' for n in held.findall('onstop'))
     assert '!Window.IsVisible(DialogKeyboard.xml)' in held.findtext('start'), 'focus cannot move under the keyboard'

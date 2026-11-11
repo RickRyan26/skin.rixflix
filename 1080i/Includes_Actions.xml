@@ -31,6 +31,8 @@
     </include>
 
     <variable name="Action_DialogInfo_PlayMedia">
+        <!-- Request-row title: ask Seerr (the provider refuses a second request), never play. -->
+        <value condition="!String.IsEmpty(ListItem.Property(RixFlix.RequestKey))">RunPlugin($INFO[ListItem.FileNameAndPath])</value>
         <!-- Play FileNameAndPath -->
         <value condition="!String.IsEmpty(ListItem.FileNameAndPath) + !$EXP[Exp_IsFolder]">RunScript(plugin.video.themoviedb.helper,close_dialog=1190,"playmedia=$INFO[ListItem.FileNameAndPath]")</value>
 

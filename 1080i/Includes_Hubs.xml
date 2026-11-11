@@ -161,6 +161,8 @@
                 <include>Hub_Grouplist_OnLeftRight</include>
                 <onback condition="Window.IsActive(11105)">7900</onback>
                 <ondown condition="Window.IsActive(11105)">SetFocus($PARAM[id])</ondown>
+                <!-- Then on to the Request row when it has titles for this query. -->
+                <ondown condition="Window.IsActive(11105) + $EXP[Exp_RixFlix_Request_Ready]">SetFocus(540)</ondown>
                 <ondown condition="!Window.IsActive(11105)">ActivateWindow(1180)</ondown>
                 <onfocus>SetProperty(TMDbHelper.WidgetContainer,$PARAM[id])</onfocus>
                 <onfocus>ClearProperty(Background.ShowOverlay,Home)</onfocus>

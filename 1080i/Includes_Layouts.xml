@@ -2546,6 +2546,51 @@
         </definition>
     </include>
 
+    <!-- Search's Request row: a stock landscape card, a chip once the title is requested
+         (the provider sets RixFlix.RequestChip), and the same explicit focus outline the
+         Results row draws. No progress or watched badges: nothing here is in the library. -->
+    <include name="Layout_Request">
+        <param name="selected">false</param>
+        <definition>
+            <control type="group">
+                <width>$PARAM[item_w]</width>
+                <height>$PARAM[item_h]</height>
+                <include content="Layout_Landscape">
+                    <param name="selected">$PARAM[selected]</param>
+                    <param name="item_w">$PARAM[item_w]</param>
+                    <param name="item_h">$PARAM[item_h]</param>
+                    <param name="id">$PARAM[id]</param>
+                    <param name="indicator">false</param>
+                    <param name="badges">false</param>
+                </include>
+                <control type="group">
+                    <visible>!String.IsEmpty(ListItem.Property(RixFlix.RequestChip))</visible>
+                    <left>12</left>
+                    <top>12</top>
+                    <width>176</width>
+                    <height>40</height>
+                    <control type="image">
+                        <texture colordiffuse="ffe50914" border="20">common/box.png</texture>
+                    </control>
+                    <control type="label">
+                        <width>176</width>
+                        <height>40</height>
+                        <align>center</align>
+                        <aligny>center</aligny>
+                        <font>font_mini_bold</font>
+                        <textcolor>ffffffff</textcolor>
+                        <label>$INFO[ListItem.Property(RixFlix.RequestChip)]</label>
+                    </control>
+                </control>
+                <include content="Object_Control" condition="$PARAM[selected]">
+                    <param name="control">image</param>
+                    <texture border="20" colordiffuse="rix_cinema_paper">common/selectbox_thin.png</texture>
+                    <visible>Window.IsActive(11105) + Control.HasFocus(540) + !Window.IsActive(DialogKeyboard.xml)</visible>
+                </include>
+            </control>
+        </definition>
+    </include>
+
     <!-- Categories: generated artwork, with native labels retained for navigation. -->
     <include name="Layout_Category">
         <param name="selected">false</param>

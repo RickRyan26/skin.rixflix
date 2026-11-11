@@ -613,7 +613,15 @@
         <value>$LOCALIZE[31329]</value>
     </variable>
 
+    <variable name="Label_Search_Request_Help">
+        <value condition="!String.IsEmpty(Container(540).ListItem.Property(RixFlix.RequestChip))">$INFO[Container(540).ListItem.Property(RixFlix.RequestChip)]  •  Hold OK for details</value>
+        <value>OK to request  •  Hold OK for details</value>
+    </variable>
+
     <variable name="Label_DialogInfo_PlayButton">
+        <!-- A Request-row title is not playable: its button asks Seerr for it instead. -->
+        <value condition="!String.IsEmpty(ListItem.Property(RixFlix.RequestChip))">$INFO[ListItem.Property(RixFlix.RequestChip)]</value>
+        <value condition="!String.IsEmpty(ListItem.Property(RixFlix.RequestKey))">Request</value>
         <value condition="$EXP[Exp_IsFolder]">$LOCALIZE[1024]</value>
         <value>$LOCALIZE[208]</value>
     </variable>
