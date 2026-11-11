@@ -1,5 +1,63 @@
 # Cinema presentation — 1.10.0
 
+## 1.14.0: the stage (category pages and Coming Soon)
+
+Rick, 2026-11-11: the category sub pages and Coming Soon must "DRYly replicate the homepage's
+landscape posters rows format with the video information above", and Coming Soon must use the
+pulsing RixFlix loading indicator. Both pages are now one definition in
+`1080i/Includes_CategoryHub.xml`.
+
+| Include | What it draws |
+|---|---|
+| `RixFlix_Stage_Backdrop` | The focused card's fanart in Home's 1600×900 preview box, with Home's preview video window under it |
+| `RixFlix_Stage_Info` | Home's `Info_Panel` for the focused card: logo, facts, source line, plot, "Ends at" |
+| `RixFlix_Stage_Rows` | The row stack, exactly two Home pitches tall |
+| `RixFlix_Stage_Row` | One `List_Premiere_Row`, Home's own landscape list |
+| `RixFlix_Category_Row` | A genre row: `RixFlix_Stage_Row` plus the genre's visible, stale and content rules |
+| `RixFlix_PageLoading` | The pulsing wordmark. Coming Soon's "Loading upcoming trailers…" sentence is gone |
+
+A category page is fourteen `RixFlix_Category_Row` calls of one line each; Coming Soon is four
+`RixFlix_Stage_Row` calls. The fourteen hand-copied row blocks (and four more in Coming Soon) are deleted.
+
+**One panel, one backdrop.** Bare `Container.` is the window's focused container
+(`CGUIInfoManager::GetActiveContainer`: a non-media window uses its focused control). So one
+`Info_Panel` and one fanart image follow whichever row has focus. Home needs a panel per row because
+its rows are generated; a stage page does not. The backdrop reads the card's own art, so it does not
+wait for TMDb Helper's service monitor, and Coming Soon (window 1138) needs no entry in
+`TMDbHelper.UseLocalWindowIDs`.
+
+**Geometry.** The viewport is two pitches (536px) at y532. Card tops are y552 and y820, and the
+second row ends at y1063, where the old four-row page's last row ended. The panel uses Home's
+poster-row budget (tagline + two lines, "Ends at" bottom y500), which clears the first card. Home's
+landscape rows use the five-line budget (bottom y580) because their cards start at y644; the stage
+trades two plot lines for a second full row. `GUIControlGroupList` scrolls a focused child to a
+viewport edge, so only a whole number of pitches stops on a row boundary; that rule is why the
+viewport is two rows and not Home's one row plus a slice.
+
+**Plot source.** The resident service publishes `RixFlix.Plot.RowPoster` for a library card on window
+11101, as it does on Home. A Coming Soon card has no library row: the provider tags it media type
+`video`, so `RixFlix_Home_Plot` falls back to the card's own `ListItem.Plot` and the 64px source line
+is not reserved. Its bold line is the provider's tagline ("Movie · Coming December 5").
+
+**Trailers rotate in over the poster.** The hover timer (`rixflix_local_new_release_trailer`) now
+covers three surfaces: Home 501-504, a category page (grouplist 8100) and Coming Soon (8810). After
+the resident's 2.5 s dwell, a trailer the box has cached plays in the backdrop's video window, and
+`Background_NotVideo` fades the fanart out over it. A card with no cached trailer keeps its fanart.
+A library card is selected as `DBTYPE-DBID`; a Coming Soon card by the provider's
+`RixFlix.TrailerKey` (`yt-<YouTube id>`). `DialogBusy` forwards arrows and OK to all three windows
+while a preview opens; a builtin's window argument is the skin's id (`1101`), a condition's is
+Kodi's (`11101`).
+
+**OK on a Coming Soon card.** `scripts/rixflix_trailer.py` first looks for the trailer in the box
+cache and plays that file fullscreen with no resolver. If this card's preview is already playing,
+the same player goes fullscreen (the resident promotes it); Back stops it and returns to the page.
+Only an uncached trailer is resolved through yt-dlp. Detail: `docs/trailer-playback.md`.
+
+**Not verified live.** The theater had a paused movie when this landed (2026-11-11 01:00 PST), so
+no deploy or screenshot was possible. `validate_cinema.py`, `check_local_trailer_timer.py` and
+`check_trailer_handoff.py` pass. The first idle deploy's Coming Soon proof and category smoke are
+the live acceptance.
+
 ## 1.13.3: the Request row loads on every query
 
 On the theater box the Request row (list 540) stayed empty. The Kodi log showed the

@@ -76,19 +76,7 @@ def check_home_rows(constants):
     assert 'coming_soon' in category_list.find('onclick').get('condition', '')
     upcoming = ET.parse(ROOT / '1080i/Custom_1138_ComingSoon.xml').getroot()
     assert upcoming.get('id') == '1138'
-    stack = upcoming.find(".//control[@id='8810']")
-    assert stack.findtext('top') == 'category_rows_t' and stack.findtext('height') == 'category_rows_h'
-    rows = stack.findall("control[@type='group']")
-    assert len(rows) == 4 and not stack.findall(".//control[@type='label']")
     assert layouts.find("include[@name='Layout_ComingSoonPoster']") is None
-    for n, row in enumerate(rows):
-        assert row.findtext('height') == 'category_row_h'
-        cards = row.find("include[@content='List_Premiere_Row']")
-        assert cards is not None and cards.findtext('top') == 'category_list_t'
-        assert cards.find('content').get('limit') == '5'
-        assert f'mode=coming_soon&offset={n*5}&limit=5' in cards.findtext('content')
-        assert cards.findtext('onclick') == (
-            f'RunScript(special://skin/scripts/rixflix_trailer.py,$ESCINFO[Container({8820+n}).ListItem.Trailer],foreground)')
     chip = upcoming.find(".//include[@content='RixFlix_CategoryTitleChip']")
     assert chip.findtext("param[@name='label']") == 'Coming Soon'
     assert (ROOT / 'extras/categories/coming_soon.jpg').is_file()
@@ -344,56 +332,124 @@ def check_hub_conditions():
             '        <onstart>ActivateWindow(1101)</onstart>\n'
             '        <onstart>ActivateWindow(Home)</onstart>') in timers, 'category Back must free the page before Home'
     assert 'id="1110"' in (ROOT / '1080i/Custom_1110_HubRelease.xml').read_text()
-    assert hub.count('condition="!String.IsEqual(Window(Home).Property(RixFlix.CategoryRow.') == 14, (
+    # 1.14.0: one row definition. The genre row hands it the stale test; the fade itself is shared.
+    assert hub.count('<param name="stale">!String.IsEqual(Window(Home).Property(RixFlix.CategoryRow.$PARAM[key]),'
+                     'Window(Home).Property(RixFlix.Category))</param>') == 1, (
         'every genre row must stay faded until its own category arrives')
     # CAnimation::Calculate (VisibleEffect.cpp): once its condition clears a fade returns to its
     # START, so start="0" stays black with loaded rows.
-    assert hub.count('effect="fade" start="100" end="0" time="200" condition="!String.IsEqual(') == 14, (
-        'a genre row fade must rest at start="100" or the row never appears')
+    assert hub.count('effect="fade" start="100" end="0" time="200" condition="$PARAM[stale]"') == 1, (
+        'a row fade must rest at start="100" or the row never appears')
     assert 'start="0" end="0"' not in hub, 'a conditional start="0" fade never comes back'
     keyboard = (ROOT / '1080i/Dialog_DialogKeyboard.xml').read_text()
     assert 'Control.IsSelected' not in keyboard, 'Kodi has no Control.IsSelected infobool'
     for name in ('Includes_CategoryHub.xml', 'Timers.xml'):
         for node in ET.parse(ROOT / '1080i' / name).getroot().iter():
-            if node.tag in ('visible', 'start', 'stop', 'reset'):
+            boolean = node.tag in ('visible', 'start', 'stop', 'reset') or (
+                node.tag == 'param' and node.get('name') in ('visible', 'stale'))
+            if boolean:
                 assert not re.search(r'\$(INFO|ESCINFO|VAR)\[', node.text or ''), (
                     f'{name}: $INFO inside a boolean expression: {node.text}')
 
 
 def check_hub_layout(values):
-    """1.12.64: the category page shares Home's landscape cards and pitch, with four full rows."""
-    include = ET.parse(ROOT / '1080i/Includes_CategoryHub.xml').getroot().find("include[@name='RixFlix_CategoryHub']")
-    group = include.find("control[@id='8100']")
+    """1.14.0, the stage: a category page and Coming Soon are Home's row format. One backdrop,
+    one Info_Panel above, and two full landscape rows at Home's pitch, from one definition."""
+    root = ET.parse(ROOT / '1080i/Includes_CategoryHub.xml').getroot()
+    named = lambda name: root.find(f"include[@name='{name}']")
     pitch = int(values['category_row_h'])
-    assert pitch == int(values['home_premiere_item_h']) + 25, 'category pitch must match Home landscape rows'
+    assert pitch == int(values['home_premiere_item_h']) + 25, 'stage pitch must match Home landscape rows'
     # GUIControlGroupList scrolls a focused child to a viewport edge, so only a whole number of
     # pitches keeps every scroll aligned to a row.
-    assert int(values['category_rows_h']) == 4 * pitch, 'category viewport must be exactly four rows'
-    assert group.findtext('itemgap') == '0', 'the row height carries the gutter'
-    rows = group.findall('control')
-    assert len(rows) == 14 and all(row.findtext('height') == 'category_row_h' for row in rows)
-    # 8100 hands focus back to its last child, so a row aimed at it stays stuck on itself.
-    assert (group.findtext('onup'), group.findtext('ondown')) == ('noop', 'noop'), 'a sparse page must not wrap'
-    for number, row in enumerate(rows, 1):
-        moves = row.find("include[@content='List_Premiere_Row']")
-        assert moves.findtext('onup') == (str(8200 + number - 1) if number > 1 else None), f'row {number} Up'
-        assert moves.findtext('ondown') == (str(8200 + number + 1) if number < 14 else None), f'row {number} Down'
-    card_top = int(values['category_rows_t']) + int(values['category_list_t']) + int(values['home_row_offset_y'])
-    assert card_top == 16, 'first card top'
-    assert card_top + 3 * pitch + int(values['home_premiere_item_h']) <= 1064, 'fourth row must fit on screen'
-    for row in rows:
-        lists = row.findall("include[@content='List_Premiere_Row']")
-        assert len(lists) == 1, 'every category row uses the Home landscape list'
-        title = row.find("control[@type='label']")
-        assert (title.findtext('left'), title.findtext('top'), title.findtext('angle')) == ('40', '0', '-90'), (
-            'row titles sit in the left margin as on Home, inside the grouplist clip')
-        content = lists[0].find('content')
-        assert content.get('limit') == '5000' and 'limit=' not in content.text, 'category rows hold the whole genre'
-    # Drawn after the rows, or the rows would cover the fixed title.
-    children = list(include)
-    title = children[-1]
-    assert children.index(group) < children.index(title), 'the title card draws over the rows'
-    assert title.tag == 'include' and title.text == 'RixFlix_CategoryTitleChip'
+    assert int(values['stage_rows_h']) == 2 * pitch, 'the stage viewport must be exactly two rows'
+    card_top = int(values['stage_rows_t']) + int(values['category_list_t']) + int(values['home_row_offset_y'])
+    assert card_top == 552, 'first card top'
+    assert card_top + pitch + int(values['home_premiere_item_h']) <= 1064, 'second row must fit on screen'
+
+    stack = named('RixFlix_Stage_Rows').find('definition/control')
+    assert (stack.get('type'), stack.get('id')) == ('grouplist', '$PARAM[id]')
+    assert (stack.findtext('top'), stack.findtext('height')) == ('stage_rows_t', 'stage_rows_h')
+    assert stack.findtext('itemgap') == '0', 'the row height carries the gutter'
+    # The grouplist hands focus back to its last child, so a row aimed at it stays stuck on itself.
+    assert (stack.findtext('onup'), stack.findtext('ondown')) == ('noop', 'noop'), 'a sparse page must not wrap'
+    assert stack.find('nested') is not None
+
+    row = named('RixFlix_Stage_Row').find('definition/control')
+    assert (row.get('type'), row.get('id'), row.findtext('height')) == ('group', '$PARAM[group]', 'category_row_h')
+    lists = row.findall("include[@content='List_Premiere_Row']")
+    assert len(lists) == 1, 'every stage row is the Home landscape list'
+    assert lists[0].findtext('top') == 'category_list_t' and lists[0].find('nested') is not None
+    assert (lists[0].findtext('onup'), lists[0].findtext('ondown')) == ('$PARAM[up]', '$PARAM[down]')
+    title = row.find("control[@type='label']")
+    assert (title.findtext('left'), title.findtext('top'), title.findtext('angle')) == ('40', '0', '-90'), (
+        'row titles sit in the left margin as on Home, inside the grouplist clip')
+
+    # Home's own panel for the focused card. Its poster-row budget (tagline + 2 lines, "Ends at"
+    # bottom y500, shortcuts/generator widgets_include_row.xml) must clear the first card.
+    info = named('RixFlix_Stage_Info').find(".//include[@content='Info_Panel']")
+    assert params(info)['container'] == 'Container.', 'one panel follows whichever row has focus'
+    assert (params(info)['home_plot'], params(info)['home_plot_variant'], params(info)['home_plot_max_h'],
+            params(info)['home_plot_max_h_heading']) == ('true', 'RowPoster', '120', '80')
+    assert 500 <= int(values['stage_rows_t']), 'the info panel must end above the row stack'
+
+    # The backdrop: the focused card's fanart, with Home's preview window under it.
+    backdrop = named('RixFlix_Stage_Backdrop')
+    video = backdrop.find("include[@content='Background_Video_FlixArt']")
+    assert (params(video)['w'], params(video)['h']) == ('home_preview_w', 'home_preview_h')
+    art = backdrop.find("include[@content='Background_FlixArt']")
+    assert params(art)['texture'] == '$VAR[Image_RixFlix_StageArt]'
+    assert list(backdrop).index(video) < list(backdrop).index(art), 'the fanart fades out over the preview'
+    flixart = ET.parse(ROOT / '1080i/Includes_Background.xml').getroot().find("include[@name='Background_FlixArt']")
+    assert params(flixart)['texture'] == '$VAR[Image_Foreground]', 'every other window keeps its own art'
+    assert flixart.find('definition/control/include').text == 'Background_NotVideo'
+    loading = named('RixFlix_PageLoading').find('definition/control')
+    assert loading.findtext('texture') == 'special://skin/media/rixflix/rixflix-wordmark.png'
+    assert loading.find('animation').get('pulse') == 'true', 'page loading is the pulsing wordmark'
+
+    def page(children, rows_id, count):
+        tags = [(c.text if c.text and c.text.strip() else c.get('content')) for c in children if c.tag == 'include']
+        order = ['RixFlix_Stage_Backdrop', 'RixFlix_PageLoading', 'RixFlix_Stage_Empty', 'RixFlix_Stage_Info',
+                 'RixFlix_Stage_Rows', 'RixFlix_CategoryTitleChip']
+        assert tags == order, tags  # drawn in this order: the title card over the rows
+        rows = next(c for c in children if c.get('content') == 'RixFlix_Stage_Rows')
+        assert params(rows)['id'] == rows_id
+        calls = rows.findall('include')
+        assert len(calls) == count
+        return rows, calls
+
+    hub = named('RixFlix_CategoryHub')
+    rows, calls = page(list(hub), '8100', 14)
+    assert params(rows)['onback'] == '8900'
+    assert all(call.get('content') == 'RixFlix_Category_Row' for call in calls)
+    for number, call in enumerate(calls, 1):
+        given = params(call)
+        assert given['n'] == f'{number:02d}'
+        assert given['up'] == (str(8200 + number - 1) if number > 1 else 'noop'), f'row {number} Up'
+        assert given['down'] == (str(8200 + number + 1) if number < 14 else 'noop'), f'row {number} Down'
+        assert given['key'] == given['label'].replace(' ', '') and given['query'] == given['label'].replace(' ', '%20')
+    genre = named('RixFlix_Category_Row').find("definition/include[@content='RixFlix_Stage_Row']")
+    assert (params(genre)['id'], params(genre)['group'], params(genre)['onback']) == (
+        '81$PARAM[n]', '82$PARAM[n]', '8900')
+    content = genre.find('content')
+    assert content.get('limit') == '5000' and 'limit=' not in content.text, 'category rows hold the whole genre'
+    assert content.text.endswith('&genre=$PARAM[query]')
+
+    upcoming = ET.parse(ROOT / '1080i/Custom_1138_ComingSoon.xml').getroot()
+    rows, calls = page(list(upcoming.find('controls')), '8810', 4)
+    assert upcoming.findtext('defaultcontrol') == '8820'
+    for n, call in enumerate(calls):
+        given = params(call)
+        assert call.get('content') == 'RixFlix_Stage_Row'
+        assert (given['id'], given['group']) == (str(8820 + n), str(8830 + n))
+        assert given['up'] == (str(8830 + n - 1) if n else 'noop') and given['down'] == (str(8830 + n + 1) if n < 3 else 'noop')
+        assert call.find('content').get('limit') == '5'
+        assert f'mode=coming_soon&offset={n*5}&limit=5' in call.findtext('content')
+        assert call.findtext('onclick') == (
+            f'RunScript(special://skin/scripts/rixflix_trailer.py,$ESCINFO[Container({8820+n}).ListItem.Trailer],foreground)')
+    busy = next(c for c in upcoming.find('controls') if c.get('content') == 'RixFlix_PageLoading')
+    assert params(busy)['visible'] == 'Container(8820).IsUpdating + Integer.IsEqual(Container(8820).NumItems,0)'
+    assert not upcoming.findall(".//control[@type='label']"), 'no loading sentence: the wordmark is the signal'
+
     chip = ET.parse(ROOT / '1080i/Includes_CategoryHub.xml').getroot().find(
         "include[@name='RixFlix_CategoryTitleChip']")
     assert 'RixFlix.CategoryLabel' in chip.findtext("param[@name='label']")
@@ -478,9 +534,17 @@ def check():
     for tag, action in (('onup', 'Up'), ('ondown', 'Down'), ('onleft', 'Left'),
                         ('onright', 'Right'), ('onclick', 'Select')):
         nodes = forward.findall(tag)
-        assert len(nodes) == 1 and nodes[0].text == f'Action({action},home)', tag
-        assert '$EXP[Exp_RixFlix_PreviewUnderBusy]' in nodes[0].get('condition', ''), tag
-    assert '$EXP[Exp_RixFlix_PreviewPlaying]' in forward.find('onclick').get('condition')
+        # 1.14.0: one forward per preview surface. A builtin's window argument is the skin's
+        # own id (1101); a condition's is Kodi's (11101).
+        assert [(n.text, n.get('condition', '').rsplit(' + ', 1)[-1]) for n in nodes] == [
+            (f'Action({action},home)', 'Window.IsActive(home)'),
+            (f'Action({action},1101)', 'Window.IsActive(11101)'),
+            (f'Action({action},1138)', 'Window.IsActive(11138)')], tag
+        assert all('$EXP[Exp_RixFlix_PreviewUnderBusy]' in n.get('condition', '') for n in nodes), tag
+    assert all('$EXP[Exp_RixFlix_PreviewPlaying]' in n.get('condition') for n in forward.findall('onclick'))
+    expressions = (ROOT / '1080i/Includes_Expressions.xml').read_text()
+    assert ('<expression name="Exp_RixFlix_PreviewSurface">[Window.IsActive(home) | Window.IsActive(11101) | '
+            'Window.IsActive(11138)]</expression>') in expressions
     assert forward.find('onback') is None, 'Back must reach CGUIDialogBusy::OnBack'
     # 1.12.20: caching never opens the timeline (Die My Love, theater 2026-10-20 16:14:
     # each caching flap popped DialogSeekBar in and out). A delayed badge stands in.

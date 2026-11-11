@@ -63,3 +63,25 @@ Sanitized runtime measurements are in
 `/home/rick/tmpbuild/trailer-sustained-20261006.json`. These API/log measurements prove
 decoder activity and ownership behavior, not a listener's subjective audio result
 or a physical TV input switch.
+
+## Cached trailers first — 1.14.0
+
+Measured on the theater, 2026-11-11 00:39 PST, Coming Soon: OK at 00:39:09.3, yt-dlp returned at
+00:39:18.4 (9 s), and inputstream.adaptive parsed the manifest at 00:39:37.3 (19 s later). Rick
+pressed OK twice more while he waited. A live YouTube resolve cannot be made reliable from the box.
+
+The foreground script now asks the box's trailer cache first (`cached_trailer`). The cache worker
+(Rixflix `am9/rixflix-trailer-cache.py`) owns two ledgers under `/storage/.rixflix/trailers`:
+`index.json` for the Home rows (`movie-N.mp4`, `tvshow-N.mp4`) and `extra/index.json` for Coming Soon
+and the rest of the library (`extra/yt-<id>.mp4`). A file counts only when its ledger entry names the
+same trailer URL, the same path and the same byte size; the worker publishes by atomic rename, so that
+is a whole file.
+
+- **Cached:** a private M3U naming the MP4 (`local-<key>.m3u8`, the resident's stable name and bytes)
+  through the same `Player.play(path, windowed=False)` handoff. No resolver, no network, no ISA.
+- **Preview already playing:** the resident holds `foreground.lock`. If its preview is this trailer,
+  the script sets `RixFlix.LocalTrailerPromote` and exits; the resident takes that player fullscreen.
+- **Not cached:** the signed HLS path above, unchanged.
+
+`python3 scripts/check_trailer_handoff.py` covers the three cases plus a truncated cache file, which
+must fall back to the resolver.
