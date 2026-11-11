@@ -164,13 +164,19 @@ def main():
             try:
                 fcntl.flock(owner_lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
             except BlockingIOError:
-                if (home.getProperty(PREVIEW_ACTIVE_PROPERTY)
-                        and home.getProperty(PREVIEW_TRAILER_PROPERTY) == requested):
+                active = home.getProperty(PREVIEW_ACTIVE_PROPERTY)
+                hovered = home.getProperty(PREVIEW_TRAILER_PROPERTY)
+                # A Coming Soon preview is keyed yt-<video id>, which the click itself names.
+                # The hover property comes from a skin timer and was not this card's on
+                # 2026-11-11 04:56:55, four seconds into its own preview: OK did nothing.
+                video = (parse_qs(urlparse(requested).query).get("video_id") or [""])[0]
+                if active and (hovered == requested or active == "yt-" + video):
                     # The owner is this card's hover preview: the same player goes fullscreen.
-                    home.setProperty(PREVIEW_PROMOTE_PROPERTY, home.getProperty(PREVIEW_ACTIVE_PROPERTY))
+                    home.setProperty(PREVIEW_PROMOTE_PROPERTY, active)
                     log("asked the playing preview to go fullscreen")
                 else:
-                    log("ignored duplicate on-demand request (owner active)")
+                    log("ignored duplicate on-demand request (owner active=%r hover matches=%s)"
+                        % (active, hovered == requested))
                 return
             if home.getProperty(RESOLVING_PROPERTY):
                 log("ignored duplicate on-demand request")

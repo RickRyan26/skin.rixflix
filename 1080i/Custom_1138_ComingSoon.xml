@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <window type="window" id="1138">
     <defaultcontrol always="false">8820</defaultcontrol>
+    <onunload>ClearProperty(RixFlix.CategoryReturn.Go,Home)</onunload>
     <controls>
         <!-- The same stage as a category page (Includes_CategoryHub.xml): backdrop, Home's info
              panel, two landscape rows. Four rows of five continue the release order. A card's
              trailer is cached on the box, so it previews on a rest and OK plays it at once. -->
         <include>RixFlix_Stage_Backdrop</include>
+        <include>RixFlix_Stage_Return</include>
         <include content="RixFlix_PageLoading">
             <param name="id">8888</param>
             <param name="visible">Container(8820).IsUpdating + Integer.IsEqual(Container(8820).NumItems,0)</param>
@@ -17,13 +19,15 @@
         <include>RixFlix_Stage_Info</include>
         <include content="RixFlix_Stage_Rows">
             <param name="id">8810</param>
-            <!-- Back names Home, never PreviousMenu: this page is reached only from Home's tile, and on 2026-11-11 03:02 a Back after two fullscreen trailers followed the window history to Search. A category page already returns by name (8900). -->
-            <param name="onback">ActivateWindow(Home)</param>
+            <!-- Back goes Home by name, never PreviousMenu, and never from inside onback: 1.14.5 called
+                 ActivateWindow(Home) here, Kodi then applied a second Back to Home, and Home followed its
+                 history to Search (theater, 2026-11-11 04:59, 50 ms after Home). 8900 defers the switch. -->
+            <param name="onback">8900</param>
             <include content="RixFlix_Stage_Row">
                 <param name="id">8820</param><param name="group">8830</param>
                 <include content="RixFlix_Stage_List">
                     <param name="id">8820</param>
-                    <param name="onback">ActivateWindow(Home)</param>
+                    <param name="onback">8900</param>
                     <param name="up">noop</param><param name="down">8831</param>
                     <onclick>RunScript(special://skin/scripts/rixflix_trailer.py,$ESCINFO[Container(8820).ListItem.Trailer],foreground)</onclick>
                     <content sortby="playlist" limit="5">plugin://plugin.video.rixflix.providers/?mode=coming_soon&amp;offset=0&amp;limit=5</content>
@@ -33,7 +37,7 @@
                 <param name="id">8821</param><param name="group">8831</param>
                 <include content="RixFlix_Stage_List">
                     <param name="id">8821</param>
-                    <param name="onback">ActivateWindow(Home)</param>
+                    <param name="onback">8900</param>
                     <param name="up">8830</param><param name="down">8832</param>
                     <onclick>RunScript(special://skin/scripts/rixflix_trailer.py,$ESCINFO[Container(8821).ListItem.Trailer],foreground)</onclick>
                     <content sortby="playlist" limit="5">plugin://plugin.video.rixflix.providers/?mode=coming_soon&amp;offset=5&amp;limit=5</content>
@@ -43,7 +47,7 @@
                 <param name="id">8822</param><param name="group">8832</param>
                 <include content="RixFlix_Stage_List">
                     <param name="id">8822</param>
-                    <param name="onback">ActivateWindow(Home)</param>
+                    <param name="onback">8900</param>
                     <param name="up">8831</param><param name="down">8833</param>
                     <onclick>RunScript(special://skin/scripts/rixflix_trailer.py,$ESCINFO[Container(8822).ListItem.Trailer],foreground)</onclick>
                     <content sortby="playlist" limit="5">plugin://plugin.video.rixflix.providers/?mode=coming_soon&amp;offset=10&amp;limit=5</content>
@@ -53,7 +57,7 @@
                 <param name="id">8823</param><param name="group">8833</param>
                 <include content="RixFlix_Stage_List">
                     <param name="id">8823</param>
-                    <param name="onback">ActivateWindow(Home)</param>
+                    <param name="onback">8900</param>
                     <param name="up">8832</param><param name="down">noop</param>
                     <onclick>RunScript(special://skin/scripts/rixflix_trailer.py,$ESCINFO[Container(8823).ListItem.Trailer],foreground)</onclick>
                     <content sortby="playlist" limit="5">plugin://plugin.video.rixflix.providers/?mode=coming_soon&amp;offset=15&amp;limit=5</content>

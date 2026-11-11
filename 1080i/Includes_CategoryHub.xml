@@ -157,8 +157,20 @@
         </definition>
     </include>
 
+    <!-- Back for every stage page. A window switch inside a control's onback lets Kodi apply a
+         second, default Back to the window it lands on (Timers.xml, rixflix_home_return). So Back
+         only focuses this button; a timer sees the property and makes the switch. -->
+    <include name="RixFlix_Stage_Return">
+        <control type="button" id="8900">
+            <visible allowhiddenfocus="true">false</visible>
+            <onfocus>SetProperty(RixFlix.CategoryReturn.Go,1,Home)</onfocus>
+            <onback>8900</onback>
+        </control>
+    </include>
+
     <include name="RixFlix_CategoryHub">
         <include>RixFlix_Stage_Backdrop</include>
+        <include>RixFlix_Stage_Return</include>
         <!-- Always load this tiny manifest, even when every genre row is hidden. -->
         <control type="list" id="8999">
             <left>-10</left><width>1</width><height>1</height><enable>false</enable>
@@ -168,11 +180,6 @@
         <control type="button" id="8901">
             <visible allowhiddenfocus="true">false</visible>
             <onup>8100</onup><ondown>8100</ondown><onleft>8100</onleft><onright>8100</onright>
-            <onback>8900</onback>
-        </control>
-        <control type="button" id="8900">
-            <visible allowhiddenfocus="true">false</visible>
-            <onfocus>SetProperty(RixFlix.CategoryReturn.Go,1,Home)</onfocus>
             <onback>8900</onback>
         </control>
         <include content="RixFlix_PageLoading">

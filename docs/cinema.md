@@ -1074,3 +1074,26 @@ and a Request card has no DBID, so an empty `QualityDBID` matched it and the lin
 last library title's text. The rule in `Info_Meta` (`Includes_Info.xml`) now also requires a
 non-empty DBID and an empty `RixFlix.RequestKey`. Library titles are unchanged.
 `validate_cinema.py` asserts both terms. Not yet seen on the box.
+
+### 1.14.8 — Coming Soon Back is deferred; OK on a preview promotes by key
+
+**Back.** 1.14.5 called `ActivateWindow(Home)` inside the page's `onback`. Native proof on
+1.14.7 (theater, 2026-11-11 04:59, receipt `acceptance-9eDDBvIv`): Back reached Home, and 50 ms
+later the window was Search with focus on 3000. A window switch inside `onback` lets Kodi apply
+a second, default Back to the window it lands on; Home then followed its history, and Search
+was in it. The same fact is already recorded on `rixflix_home_return` in `Timers.xml`. It also
+explains the 03:02 result on `PreviousMenu`.
+
+Back now uses the category page's route. The hidden button 8900 moved into the shared include
+`RixFlix_Stage_Return`; both pages include it, and every Coming Soon `onback` is `8900`. Its
+`onfocus` sets `RixFlix.CategoryReturn.Go`. The new timer `rixflix_coming_soon_return` (window
+11138) clears the property and runs `ActivateWindow(Home)` after the key is consumed. The
+category timer is unchanged: it also reloads the hub, which Coming Soon does not need.
+
+**Promotion.** In one of four proof runs (04:56:55) OK on a card four seconds into its own
+preview logged `ignored duplicate on-demand request (owner active)` and did nothing. The script
+compared the click with `RixFlix.LocalTrailerMetadata`, which a skin timer sets; which side
+differed was not logged. A Coming Soon preview is keyed `yt-<video id>` and the click names
+that id, so the script now also promotes when the active key matches the click. The ignore line
+now logs the active key and whether the hover property matched. The cause of the mismatch is
+not established. Not yet seen on the box.

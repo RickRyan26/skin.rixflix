@@ -446,7 +446,8 @@ def check_hub_layout(values):
 
     def page(children, rows_id, count):
         tags = [(c.text if c.text and c.text.strip() else c.get('content')) for c in children if c.tag == 'include']
-        order = ['RixFlix_Stage_Backdrop', 'RixFlix_PageLoading', 'RixFlix_Stage_Empty', 'RixFlix_Stage_Info',
+        # Both pages hold the one hidden Back button, right after the backdrop.
+        order = ['RixFlix_Stage_Backdrop', 'RixFlix_Stage_Return', 'RixFlix_PageLoading', 'RixFlix_Stage_Empty', 'RixFlix_Stage_Info',
                  'RixFlix_Stage_Rows', 'RixFlix_CategoryTitleChip']
         assert tags == order, tags  # drawn in this order: the title card over the rows
         rows = next(c for c in children if c.get('content') == 'RixFlix_Stage_Rows')
@@ -484,12 +485,22 @@ def check_hub_layout(values):
         call = call.find("include[@content='RixFlix_Stage_List']")
         given = params(call)
         assert given['id'] == str(8820 + n)
-        assert given['onback'] == 'ActivateWindow(Home)', 'Coming Soon Back names Home, not the window history'
+        assert given['onback'] == '8900', 'Coming Soon Back only focuses the shared return button'
         assert given['up'] == (str(8830 + n - 1) if n else 'noop') and given['down'] == (str(8830 + n + 1) if n < 3 else 'noop')
         assert call.find('content').get('limit') == '5'
         assert f'mode=coming_soon&offset={n*5}&limit=5' in call.findtext('content')
         assert call.findtext('onclick') == (
             f'RunScript(special://skin/scripts/rixflix_trailer.py,$ESCINFO[Container({8820+n}).ListItem.Trailer],foreground)')
+    soon_text = (ROOT / '1080i' / 'Custom_1138_ComingSoon.xml').read_text()
+    assert not any('ActivateWindow(' in (node.text or '') or 'PreviousMenu' in (node.text or '')
+                   for node in ET.fromstring(soon_text).iter()), (
+        'a window switch inside onback lets Kodi apply a second Back to the next window')
+    assert '<include>RixFlix_Stage_Return</include>' in soon_text
+    assert '<onunload>ClearProperty(RixFlix.CategoryReturn.Go,Home)</onunload>' in soon_text
+    assert ('        <start reset="true">Window.IsActive(11138) + !String.IsEmpty(Window(Home).Property(RixFlix.CategoryReturn.Go))</start>\n'
+            '        <stop>String.IsEmpty(Window(Home).Property(RixFlix.CategoryReturn.Go))</stop>\n'
+            '        <onstart>ClearProperty(RixFlix.CategoryReturn.Go,Home)</onstart>\n'
+            '        <onstart>ActivateWindow(Home)</onstart>') in (ROOT / '1080i' / 'Timers.xml').read_text()
     busy = next(c for c in upcoming.find('controls') if c.get('content') == 'RixFlix_PageLoading')
     assert params(busy)['visible'] == 'Container(8820).IsUpdating + Integer.IsEqual(Container(8820).NumItems,0)'
     assert not upcoming.findall(".//control[@type='label']"), 'no loading sentence: the wordmark is the signal'

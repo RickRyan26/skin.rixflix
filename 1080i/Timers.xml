@@ -105,6 +105,14 @@
         <onstart>ActivateWindow(Home)</onstart>
     </timer>
     <timer>
+        <name>rixflix_coming_soon_return</name>
+        <description>Coming Soon's Back, after the key is consumed: the same hidden button 8900 and property as a category page; nothing to reload, so it only goes Home.</description>
+        <start reset="true">Window.IsActive(11138) + !String.IsEmpty(Window(Home).Property(RixFlix.CategoryReturn.Go))</start>
+        <stop>String.IsEmpty(Window(Home).Property(RixFlix.CategoryReturn.Go))</stop>
+        <onstart>ClearProperty(RixFlix.CategoryReturn.Go,Home)</onstart>
+        <onstart>ActivateWindow(Home)</onstart>
+    </timer>
+    <timer>
         <name>rixflix_category_ready</name>
         <start reset="true">Window.IsActive(11101) + Control.HasFocus(8901) + String.IsEqual(Window(Home).Property(RixFlix.CategoryReady),Window(Home).Property(RixFlix.Category))</start>
         <stop>!Window.IsActive(11101) | !Control.HasFocus(8901) | Integer.IsGreaterOrEqual(Skin.TimerElapsedSecs(rixflix_category_ready),1)</stop>
