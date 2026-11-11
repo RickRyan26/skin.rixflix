@@ -149,9 +149,26 @@ def check_home_rows(constants):
     assert source.findtext('height') == '64'
     assert '$PARAM[include_details]' in source.findtext('visible')
     assert 'RixFlix.Quality' not in source.findtext('visible'), 'late facts must not move the plot'
-    # Home plot budget must fit its panel or the grouplist drops "Ends at" (1.13.1 spotlight).
-    spot = hubs.find("include[@name='Hub_Spotlight_Info']/control")
-    assert spot.findtext('height') == '480', 'spotlight info holds 20+140+36+64+160+60'
+    # Every Home panel's worst-case content must fit its box: a grouplist silently skips
+    # a child that does not fit (1.13.1 spotlight lost "Ends at"). Worst case = spacer 20
+    # + title slot + facts line + quality + the larger plot variant + Ends-at row.
+    # The first <height> in a group wins, as Kodi applies it.
+    meta_h = 60  # Info_Meta's movie/show row group
+    fitted = []
+    for owner in hubs.iter('include'):
+        name = owner.get('name')
+        for group in owner.iter('control'):
+            panel = next((i for i in group.findall('include') if i.get('content') == 'Info_Panel'), None)
+            if panel is None or params(panel).get('home_plot') != 'true':
+                continue
+            p = params(panel)
+            plot = max(int(p['home_plot_max_h']), 40 + int(p['home_plot_max_h_heading']))
+            content = 20 + num('info_title_h') + 36 + 64 + plot + meta_h
+            box = group.findtext('height')
+            assert box is not None and int(box) >= content, (
+                'Home panel content overflows its box; "Ends at" would vanish', name, box, content)
+            fitted.append(name)
+    assert sorted(fitted) == ['Hub_Combined_Info', 'Hub_Spotlight_Info'], fitted
     line = detail.find("include[@content='Info_Line']")
     assert params(line)['height'] == '36'
     assert params(detail.find("include[@content='Info_Meta']"))['visible'] == '$PARAM[visible_meta]'
