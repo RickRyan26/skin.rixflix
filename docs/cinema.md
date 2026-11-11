@@ -994,3 +994,24 @@ All three are public official trailers. The cold foreground fallback now
 allows 30 seconds. Cached MP4 playback bypasses extraction. Cancellation,
 exact player ownership and the separate 20-second playback-start deadline
 remain in place. The diagnostic receipt is recorded in Rixflix's theater doc.
+
+### 1.14.2 — stage rows get their content
+
+1.14.0 and 1.14.1 shipped category pages and Coming Soon with empty rows. The first native
+deploy (theater, 2026-11-11 02:09) failed its category smoke on the first page: focus stayed
+on the hidden loading button `8901`, and Kodi logged no error.
+
+Cause: `RixFlix_Stage_Row` passed the caller's `<content>` on through a `<nested />` placed
+inside its `List_Premiere_Row` include. Kodi's `CGUIIncludes::InsertNested` fills
+`<nested />` only when it is a definition's top node or a direct child of one. One level
+deeper, the caller's children are dropped silently. Every row list had no `<content>`, stayed
+empty and could not take focus. The other 126 `<nested />` uses in the skin are all direct.
+
+Fix: the row is now two includes. `RixFlix_Stage_Row` is the group and label with a direct
+`<nested />`. `RixFlix_Stage_List` has the `List_Premiere_Row` include as its definition's top
+node, so its `<nested />` is direct too. A caller writes the list inside the row and gives it
+`<content>` (and `<onclick>` on Coming Soon). Ids, navigation and geometry are unchanged.
+
+`scripts/validate_cinema.py` gains `check_nested_depth()`: it fails on any include in `1080i/`
+whose `<nested />` is deeper than Kodi fills. It fails on the 1.14.1 file and passes on this one.
+The 1.14.0 source checks could not see this: they checked that the element existed, not where.

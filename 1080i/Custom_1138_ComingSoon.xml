@@ -19,27 +19,39 @@
             <param name="id">8810</param>
             <include content="RixFlix_Stage_Row">
                 <param name="id">8820</param><param name="group">8830</param>
-                <param name="up">noop</param><param name="down">8831</param>
-                <onclick>RunScript(special://skin/scripts/rixflix_trailer.py,$ESCINFO[Container(8820).ListItem.Trailer],foreground)</onclick>
-                <content sortby="playlist" limit="5">plugin://plugin.video.rixflix.providers/?mode=coming_soon&amp;offset=0&amp;limit=5</content>
+                <include content="RixFlix_Stage_List">
+                    <param name="id">8820</param>
+                    <param name="up">noop</param><param name="down">8831</param>
+                    <onclick>RunScript(special://skin/scripts/rixflix_trailer.py,$ESCINFO[Container(8820).ListItem.Trailer],foreground)</onclick>
+                    <content sortby="playlist" limit="5">plugin://plugin.video.rixflix.providers/?mode=coming_soon&amp;offset=0&amp;limit=5</content>
+                </include>
             </include>
             <include content="RixFlix_Stage_Row">
                 <param name="id">8821</param><param name="group">8831</param>
-                <param name="up">8830</param><param name="down">8832</param>
-                <onclick>RunScript(special://skin/scripts/rixflix_trailer.py,$ESCINFO[Container(8821).ListItem.Trailer],foreground)</onclick>
-                <content sortby="playlist" limit="5">plugin://plugin.video.rixflix.providers/?mode=coming_soon&amp;offset=5&amp;limit=5</content>
+                <include content="RixFlix_Stage_List">
+                    <param name="id">8821</param>
+                    <param name="up">8830</param><param name="down">8832</param>
+                    <onclick>RunScript(special://skin/scripts/rixflix_trailer.py,$ESCINFO[Container(8821).ListItem.Trailer],foreground)</onclick>
+                    <content sortby="playlist" limit="5">plugin://plugin.video.rixflix.providers/?mode=coming_soon&amp;offset=5&amp;limit=5</content>
+                </include>
             </include>
             <include content="RixFlix_Stage_Row">
                 <param name="id">8822</param><param name="group">8832</param>
-                <param name="up">8831</param><param name="down">8833</param>
-                <onclick>RunScript(special://skin/scripts/rixflix_trailer.py,$ESCINFO[Container(8822).ListItem.Trailer],foreground)</onclick>
-                <content sortby="playlist" limit="5">plugin://plugin.video.rixflix.providers/?mode=coming_soon&amp;offset=10&amp;limit=5</content>
+                <include content="RixFlix_Stage_List">
+                    <param name="id">8822</param>
+                    <param name="up">8831</param><param name="down">8833</param>
+                    <onclick>RunScript(special://skin/scripts/rixflix_trailer.py,$ESCINFO[Container(8822).ListItem.Trailer],foreground)</onclick>
+                    <content sortby="playlist" limit="5">plugin://plugin.video.rixflix.providers/?mode=coming_soon&amp;offset=10&amp;limit=5</content>
+                </include>
             </include>
             <include content="RixFlix_Stage_Row">
                 <param name="id">8823</param><param name="group">8833</param>
-                <param name="up">8832</param><param name="down">noop</param>
-                <onclick>RunScript(special://skin/scripts/rixflix_trailer.py,$ESCINFO[Container(8823).ListItem.Trailer],foreground)</onclick>
-                <content sortby="playlist" limit="5">plugin://plugin.video.rixflix.providers/?mode=coming_soon&amp;offset=15&amp;limit=5</content>
+                <include content="RixFlix_Stage_List">
+                    <param name="id">8823</param>
+                    <param name="up">8832</param><param name="down">noop</param>
+                    <onclick>RunScript(special://skin/scripts/rixflix_trailer.py,$ESCINFO[Container(8823).ListItem.Trailer],foreground)</onclick>
+                    <content sortby="playlist" limit="5">plugin://plugin.video.rixflix.providers/?mode=coming_soon&amp;offset=15&amp;limit=5</content>
+                </include>
             </include>
         </include>
         <include content="RixFlix_CategoryTitleChip">

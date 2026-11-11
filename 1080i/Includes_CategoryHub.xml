@@ -115,16 +115,25 @@
                     <font>font_mini_bold</font><label>$PARAM[label]</label><textcolor>white</textcolor>
                     <animation effect="fade" start="100" end="70" time="150" condition="!Control.HasFocus($PARAM[id])">Conditional</animation>
                 </control>
-                <!-- Move through the row group, not list to list: a hidden group passes the move on, and the grouplist would refocus this row. -->
-                <include content="List_Premiere_Row">
-                    <param name="id">$PARAM[id]</param>
-                    <top>category_list_t</top><width>1856</width><height>home_premiere_itemlayout_h</height>
-                    <preloaditems>0</preloaditems>
-                    <onup>$PARAM[up]</onup><ondown>$PARAM[down]</ondown>
-                    <onback>$PARAM[onback]</onback>
-                    <nested />
-                </include>
+                <!-- The caller's RixFlix_Stage_List. Kodi fills <nested /> only as a DIRECT child of a definition's top node (CGUIIncludes::InsertNested). 1.14.0 put it inside the list include here, one level deeper: no row got its <content>, every list stayed empty and the page could not take focus (theater, 2026-11-11 02:09). -->
+                <nested />
             </control>
+        </definition>
+    </include>
+
+    <!-- Home's landscape list for one stage row. The include is the definition's top node, so its <nested /> is direct and the caller's <content>/<onclick> reach the list. -->
+    <include name="RixFlix_Stage_List">
+        <param name="onback">PreviousMenu</param>
+        <definition>
+            <!-- Move through the row group, not list to list: a hidden group passes the move on, and the grouplist would refocus this row. -->
+            <include content="List_Premiere_Row">
+                <param name="id">$PARAM[id]</param>
+                <top>category_list_t</top><width>1856</width><height>home_premiere_itemlayout_h</height>
+                <preloaditems>0</preloaditems>
+                <onup>$PARAM[up]</onup><ondown>$PARAM[down]</ondown>
+                <onback>$PARAM[onback]</onback>
+                <nested />
+            </include>
         </definition>
     </include>
 
@@ -134,13 +143,16 @@
                 <param name="id">81$PARAM[n]</param>
                 <param name="group">82$PARAM[n]</param>
                 <param name="label">$PARAM[label]</param>
-                <param name="up">$PARAM[up]</param>
-                <param name="down">$PARAM[down]</param>
-                <param name="onback">8900</param>
                 <param name="visible">String.IsEqual(Window(Home).Property(RixFlix.CategoryReady),Window(Home).Property(RixFlix.Category)) + Integer.IsGreater(Window(Home).Property(RixFlix.CategoryCount.$PARAM[key]),2)</param>
                 <param name="stale">!String.IsEqual(Window(Home).Property(RixFlix.CategoryRow.$PARAM[key]),Window(Home).Property(RixFlix.Category))</param>
-                <!-- No dynamic target: node.target on each native item owns navigation. -->
-                <content limit="5000">plugin://plugin.video.rixflix.providers/?mode=category_genre&amp;cat=$INFO[Window(Home).Property(RixFlix.Category)]&amp;genre=$PARAM[query]</content>
+                <include content="RixFlix_Stage_List">
+                    <param name="id">81$PARAM[n]</param>
+                    <param name="up">$PARAM[up]</param>
+                    <param name="down">$PARAM[down]</param>
+                    <param name="onback">8900</param>
+                    <!-- No dynamic target: node.target on each native item owns navigation. -->
+                    <content limit="5000">plugin://plugin.video.rixflix.providers/?mode=category_genre&amp;cat=$INFO[Window(Home).Property(RixFlix.Category)]&amp;genre=$PARAM[query]</content>
+                </include>
             </include>
         </definition>
     </include>

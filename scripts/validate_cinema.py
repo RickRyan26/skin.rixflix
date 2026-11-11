@@ -352,6 +352,21 @@ def check_hub_conditions():
                     f'{name}: $INFO inside a boolean expression: {node.text}')
 
 
+def check_nested_depth():
+    """Kodi (CGUIIncludes::InsertNested) fills <nested /> only when it is a definition's top
+    node or a direct child of one. Deeper, the caller's children are dropped without any log
+    line: 1.14.0's stage rows lost their <content> that way and every list stayed empty."""
+    for path in sorted((ROOT / '1080i').glob('*.xml')):
+        for include in ET.parse(path).getroot().iter('include'):
+            if not include.get('name'):
+                continue
+            definition = include.find('definition')
+            for top in list(definition if definition is not None else include):
+                allowed = ([top] if top.tag == 'nested' else []) + top.findall('nested')
+                deep = [node for node in top.iter('nested') if node not in allowed]
+                assert not deep, f"{path.name}: {include.get('name')} holds a <nested /> Kodi never fills"
+
+
 def check_hub_layout(values):
     """1.14.0, the stage: a category page and Coming Soon are Home's row format. One backdrop,
     one Info_Panel above, and two full landscape rows at Home's pitch, from one definition."""
@@ -376,7 +391,9 @@ def check_hub_layout(values):
 
     row = named('RixFlix_Stage_Row').find('definition/control')
     assert (row.get('type'), row.get('id'), row.findtext('height')) == ('group', '$PARAM[group]', 'category_row_h')
-    lists = row.findall("include[@content='List_Premiere_Row']")
+    assert row.find('nested') is not None, 'the row group takes the caller\'s RixFlix_Stage_List'
+    # The include is the definition's own top node: only there does Kodi fill its <nested />.
+    lists = named('RixFlix_Stage_List').findall("definition/include[@content='List_Premiere_Row']")
     assert len(lists) == 1, 'every stage row is the Home landscape list'
     assert lists[0].findtext('top') == 'category_list_t' and lists[0].find('nested') is not None
     assert (lists[0].findtext('onup'), lists[0].findtext('ondown')) == ('$PARAM[up]', '$PARAM[down]')
@@ -428,8 +445,10 @@ def check_hub_layout(values):
         assert given['down'] == (str(8200 + number + 1) if number < 14 else 'noop'), f'row {number} Down'
         assert given['key'] == given['label'].replace(' ', '') and given['query'] == given['label'].replace(' ', '%20')
     genre = named('RixFlix_Category_Row').find("definition/include[@content='RixFlix_Stage_Row']")
-    assert (params(genre)['id'], params(genre)['group'], params(genre)['onback']) == (
-        '81$PARAM[n]', '82$PARAM[n]', '8900')
+    assert (params(genre)['id'], params(genre)['group']) == ('81$PARAM[n]', '82$PARAM[n]')
+    genre = genre.find("include[@content='RixFlix_Stage_List']")
+    assert (params(genre)['id'], params(genre)['up'], params(genre)['down'], params(genre)['onback']) == (
+        '81$PARAM[n]', '$PARAM[up]', '$PARAM[down]', '8900')
     content = genre.find('content')
     assert content.get('limit') == '5000' and 'limit=' not in content.text, 'category rows hold the whole genre'
     assert content.text.endswith('&genre=$PARAM[query]')
@@ -441,6 +460,9 @@ def check_hub_layout(values):
         given = params(call)
         assert call.get('content') == 'RixFlix_Stage_Row'
         assert (given['id'], given['group']) == (str(8820 + n), str(8830 + n))
+        call = call.find("include[@content='RixFlix_Stage_List']")
+        given = params(call)
+        assert given['id'] == str(8820 + n)
         assert given['up'] == (str(8830 + n - 1) if n else 'noop') and given['down'] == (str(8830 + n + 1) if n < 3 else 'noop')
         assert call.find('content').get('limit') == '5'
         assert f'mode=coming_soon&offset={n*5}&limit=5' in call.findtext('content')
@@ -463,6 +485,7 @@ def check_hub_layout(values):
 def check():
     check_hub_conditions()
     check_static_content_targets()
+    check_nested_depth()
     constants = {c.get('name'): (c.text or '').strip()
                  for c in ET.parse(ROOT / '1080i/Includes_Constants.xml').getroot().findall('constant')}
     pitch, sizes = check_home_rows(constants)
