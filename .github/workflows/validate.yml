@@ -79,8 +79,14 @@ jobs:
           osd = Path('1080i/Includes_OSD.xml').read_text()
           assert '<param name="infolabel_hdrtype">VideoPlayer.HdrType</param>' in osd
           seekbar = ET.parse('1080i/DialogSeekBar.xml').getroot()
-          pause_condition = ('Player.Paused + [!String.IsEmpty(VideoPlayer.Title) | '
-                             '!String.IsEmpty(Player.Title)]')
+          # 1.13.5 (Rick 2026-11-11): the identity block shows whenever the media has a
+          # title, playing or paused; its status word is Label_OSD_Header (Playing /
+          # Paused / FF 2x / seek). The wordmark header is for untitled media only.
+          pause_condition = ('!String.IsEmpty(VideoPlayer.Title) | '
+                             '!String.IsEmpty(Player.Title)')
+          assert any(node.get('type') == 'group' and node.findtext('visible') ==
+                     'String.IsEmpty(VideoPlayer.Title) + String.IsEmpty(Player.Title)'
+                     for node in seekbar.iter('control'))
           pause_groups = [node for node in seekbar.iter('control')
                           if node.get('type') == 'group' and
                           node.findtext('visible') == pause_condition]
@@ -94,7 +100,7 @@ jobs:
           assert (accent.findtext('width'), accent.findtext('height')) == ('5', '88')
           assert accent.find('texture').get('colordiffuse') == '$VAR[ColorHighlight]'
           assert [node.findtext('label') for node in (state, title, subtitle)] == [
-              '$LOCALIZE[112]', '$VAR[Label_RixFlix_PauseTitle]',
+              '$VAR[Label_OSD_Header]', '$VAR[Label_RixFlix_PauseTitle]',
               '$VAR[Label_RixFlix_PauseSubTitle]']
           assert [node.findtext('font') for node in (state, title, subtitle)] == [
               'font_hint_bold', 'font_midi_bold', 'font_tiny']
@@ -115,7 +121,10 @@ jobs:
           assert '<include>Search_Bar_Help</include>' in active_search
           assert '<include>Search_Bar_Keys</include>' not in active_search
           assert '<hinttext>Press OK to enter a title</hinttext>' in active_search
-          assert '<ondown>601</ondown>' in active_search
+          # Down from the edit box goes to the results row (502) when it holds this
+          # query's results, else to the nav bar (7900); see 1c4c252 and later.
+          assert re.search(r'<ondown condition="Integer\.IsGreater\(Container\(502\)\.NumItems,0\)[^"]*">502</ondown>', active_search)
+          assert re.search(r'<ondown condition="[^"]*Integer\.IsEqual\(Container\(502\)\.NumItems,0\)[^"]*">7900</ondown>', active_search)
 
           timers = ET.parse('1080i/Timers.xml').getroot()
           trailer = next(timer for timer in timers.findall('timer')
@@ -150,11 +159,9 @@ jobs:
           spotlight = hubs[hubs.index('<include name="Hub_Spotlight_List">'):]
           spotlight = spotlight[:spotlight.index('</definition>')]
           assert 'String.IsEmpty(Window(Home).Property(RixFlix.AutoplayTrailer))' in spotlight
-          assert '<param name="label">$VAR[Label_RixFlix_TrailerButton]</param>' in hubs
-          assert 'rixflix_trailer.py,$ESCINFO[Container(301).ListItem.Trailer],foreground' in hubs
-          assert 'RixFlix.UnavailableTrailer' in hubs
-          labels = Path('1080i/Includes_Labels.xml').read_text()
-          assert 'Loading Trailer' in labels
+          # The spotlight is Play-only since 1df4fcd (Rick 2026-10-18): no Play Trailer
+          # button, so no foreground-trailer action or its Loading/Unavailable labels.
+          assert 'Label_RixFlix_TrailerButton' not in hubs
           hero_play = hubs[hubs.index('PlayerControl(Stop)'):]
           assert 'ClearProperty(RixFlix.AutoplayTrailer,Home)' in hero_play
           assert 'ClearProperty(RixFlix.AutoplayTrailerResolved,Home)' in hero_play
