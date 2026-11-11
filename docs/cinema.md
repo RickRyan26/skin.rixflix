@@ -1064,3 +1064,13 @@ time, so the label was the clock. Both end-time lines in the shared `Info_Meta` 
 (`Includes_Info.xml`) now also require `Duration(secs)` above 0: the list item's for the
 movie/episode line, the service item's for the override line. A title with a runtime is
 unchanged. `validate_cinema.py` asserts both guards. Not yet seen on the box.
+
+### 1.14.7: a Request title shows no file quality
+
+The first Information page opened from a Search Request card (theater, 2026-11-11 03:22,
+"Clayface") drew `1080p SDR · DD+ 5.1 · 7.3 Mbps`. The title is not in the library. The
+quality line shows when `RixFlix.QualityType` and `RixFlix.QualityDBID` match the list item,
+and a Request card has no DBID, so an empty `QualityDBID` matched it and the line kept the
+last library title's text. The rule in `Info_Meta` (`Includes_Info.xml`) now also requires a
+non-empty DBID and an empty `RixFlix.RequestKey`. Library titles are unchanged.
+`validate_cinema.py` asserts both terms. Not yet seen on the box.

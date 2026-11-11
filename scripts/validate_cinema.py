@@ -378,6 +378,16 @@ def check_end_time_needs_runtime():
         assert 'Duration(secs),0)' in line, 'an end-time line shows without a runtime'
 
 
+def check_quality_line_needs_library_item():
+    """The quality line is one library file's facts. A Request card has no DBID, so an empty
+    QualityDBID matched it and its Information page drew the last library title's quality."""
+    text = (ROOT / '1080i' / 'Includes_Info.xml').read_text()
+    lines = [line for line in text.splitlines() if '<visible>' in line and 'RixFlix.QualityDBID' in line]
+    assert len(lines) == 1, 'expected one quality-line visibility rule'
+    assert '!String.IsEmpty($PARAM[container]$PARAM[listitem].DBID)' in lines[0], 'quality line shows without a DBID'
+    assert 'Property(RixFlix.RequestKey))' in lines[0], 'quality line shows on a Request title'
+
+
 def check_hub_layout(values):
     """1.14.0, the stage: a category page and Coming Soon are Home's row format. One backdrop,
     one Info_Panel above, and two full landscape rows at Home's pitch, from one definition."""
@@ -499,6 +509,7 @@ def check():
     check_static_content_targets()
     check_nested_depth()
     check_end_time_needs_runtime()
+    check_quality_line_needs_library_item()
     constants = {c.get('name'): (c.text or '').strip()
                  for c in ET.parse(ROOT / '1080i/Includes_Constants.xml').getroot().findall('constant')}
     pitch, sizes = check_home_rows(constants)

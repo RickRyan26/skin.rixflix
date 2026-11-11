@@ -1273,12 +1273,14 @@
                 <control type="group">
                     <height>64</height>
                     <visible>$PARAM[include_details] + [$PARAM[visible_line]] + [String.IsEqual($PARAM[container]$PARAM[listitem].DBTYPE,movie) | String.IsEqual($PARAM[container]$PARAM[listitem].DBTYPE,tvshow) | String.IsEqual($PARAM[container]$PARAM[listitem].DBTYPE,episode)]</visible>
-                    <!-- 8px below the facts line so the two read as one block, not one glued line. -->
+                    <!-- 8px below the facts line so the two read as one block, not one glued line.
+                         A Request card has no file: without the DBID and RequestKey terms its page
+                         drew the last library title's quality (theater 2026-11-11 03:22, Clayface). -->
                     <control type="textbox">
                         <left>40</left><top>8</top><width>1040</width><height>60</height>
                         <font>font_mini</font><textcolor>$PARAM[colordiffuse]_90</textcolor>
                         <label>$INFO[Window(Home).Property(RixFlix.Quality)]</label>
-                        <visible>String.IsEqual(Window(Home).Property(RixFlix.QualityType),$PARAM[container]$PARAM[listitem].DBTYPE) + String.IsEqual(Window(Home).Property(RixFlix.QualityDBID),$PARAM[container]$PARAM[listitem].DBID)</visible>
+                        <visible>String.IsEqual(Window(Home).Property(RixFlix.QualityType),$PARAM[container]$PARAM[listitem].DBTYPE) + String.IsEqual(Window(Home).Property(RixFlix.QualityDBID),$PARAM[container]$PARAM[listitem].DBID) + !String.IsEmpty($PARAM[container]$PARAM[listitem].DBID) + String.IsEmpty($PARAM[container]$PARAM[listitem].Property(RixFlix.RequestKey))</visible>
                     </control>
                 </control>
 
