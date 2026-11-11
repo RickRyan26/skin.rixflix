@@ -2560,9 +2560,39 @@
                     <aspectratio>scale</aspectratio><fadetime>0</fadetime>
                     <texture background="true" diffuse="diffuse/landscape_w570_h320.png">$INFO[ListItem.Art(thumb)]</texture>
                 </control>
+                <control type="label">
+                    <width>$PARAM[item_w]</width><height>$PARAM[item_h]</height>
+                    <align>center</align><aligny>center</aligny>
+                    <font>font_main_bold</font><textcolor>white</textcolor>
+                    <label>$INFO[ListItem.Label]</label>
+                    <visible>String.IsEqual(ListItem.Property(RixFlix.CategoryKey),coming_soon)</visible>
+                </control>
                 <include content="Object_SelectBox" condition="$PARAM[selected]">
                     <param name="card_glow">true</param>
                 </include>
+            </control>
+        </definition>
+    </include>
+    <include name="Layout_ComingSoonPoster">
+        <param name="focused">false</param>
+        <definition>
+            <control type="image" condition="$PARAM[focused]">
+                <left>34</left><width>228</width><height>338</height>
+                <texture colordiffuse="ffe50914">common/white.png</texture>
+            </control>
+            <control type="image">
+                <left>38</left><top>4</top><width>220</width><height>330</height>
+                <aspectratio>scale</aspectratio>
+                <texture background="true">$INFO[ListItem.Art(poster)]</texture>
+            </control>
+            <control type="label">
+                <left>38</left><top>338</top><width>220</width><height>32</height>
+                <font>font_mini_bold</font><textcolor>white</textcolor><label>$INFO[ListItem.Label]</label>
+            </control>
+            <control type="label">
+                <left>38</left><top>370</top><width>220</width><height>26</height>
+                <font>font_mini</font><textcolor>main_fg_70</textcolor>
+                <label>$INFO[ListItem.Property(RixFlix.ComingSoonKind)] · $INFO[ListItem.Label2]</label>
             </control>
         </definition>
     </include>

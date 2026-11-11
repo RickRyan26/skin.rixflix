@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<window type="window" id="1138">
+    <defaultcontrol always="false">8820</defaultcontrol>
+    <controls>
+        <control type="image">
+            <texture colordiffuse="ff080808">common/white.png</texture>
+        </control>
+        <control type="label">
+            <left>110</left><top>40</top><width>1700</width><height>55</height>
+            <font>font_main_bold</font><textcolor>white</textcolor><label>Coming Soon</label>
+        </control>
+        <control type="label">
+            <left>110</left><top>100</top><width>1700</width><height>36</height>
+            <font>font_mini</font><textcolor>main_fg_70</textcolor>
+            <label>Select a poster to watch its trailer · Metadata from TMDb</label>
+        </control>
+        <control type="label">
+            <top>480</top><width>1920</width><height>55</height><align>center</align>
+            <font>font_main_bold</font><textcolor>main_fg_70</textcolor>
+            <label>Loading upcoming trailers…</label>
+            <visible>Container(8820).IsUpdating</visible>
+        </control>
+        <control type="label">
+            <top>480</top><width>1920</width><height>55</height><align>center</align>
+            <font>font_main_bold</font><textcolor>main_fg_70</textcolor>
+            <label>No upcoming trailers available right now.</label>
+            <visible>!Container(8820).IsUpdating + Integer.IsEqual(Container(8820).NumItems,0)</visible>
+        </control>
+        <control type="panel" id="8820">
+            <left>72</left><top>163</top><width>1776</width><height>804</height>
+            <orientation>vertical</orientation>
+            <scrolltime tween="quadratic">240</scrolltime>
+            <onback>PreviousMenu</onback>
+            <onclick condition="String.StartsWith(Container(8820).ListItem.Trailer,plugin://plugin.video.youtube/play/?video_id=)">RunScript(special://skin/scripts/rixflix_trailer.py,$ESCINFO[Container(8820).ListItem.Trailer],foreground)</onclick>
+            <itemlayout width="296" height="402">
+                <include>Layout_ComingSoonPoster</include>
+            </itemlayout>
+            <focusedlayout width="296" height="402">
+                <include content="Layout_ComingSoonPoster">
+                    <param name="focused">true</param>
+                </include>
+            </focusedlayout>
+            <content sortby="playlist" limit="20">plugin://plugin.video.rixflix.providers/?mode=coming_soon</content>
+        </control>
+    </controls>
+</window>

@@ -72,6 +72,15 @@ def check_home_rows(constants):
     cw, ch = sizes['Category']
     assert (cw, ch) == (560, 315)
     category_list = lists.find("include[@name='List_Category_Row']/definition/include")
+    assert category_list.findtext('onclick') == 'ActivateWindow(1138)'
+    assert 'coming_soon' in category_list.find('onclick').get('condition', '')
+    upcoming = ET.parse(ROOT / '1080i/Custom_1138_ComingSoon.xml').getroot()
+    assert upcoming.get('id') == '1138'
+    posters = upcoming.find(".//control[@id='8820']")
+    assert posters.find('content').get('limit') == '20'
+    assert posters.findtext('content').endswith('?mode=coming_soon')
+    assert posters.findtext('onclick') == (
+        'RunScript(special://skin/scripts/rixflix_trailer.py,$ESCINFO[Container(8820).ListItem.Trailer],foreground)')
     assert category_list.findtext('movement') == '2'
     assert 80 + 2 * num('home_category_itemlayout_w') + cw <= 1920 - 16
     for key in ('past_year', 'movies', 'shows', 'reference', 'netflix', 'disney', 'hulu', 'max', 'paramount', 'prime'):
