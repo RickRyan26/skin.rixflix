@@ -262,6 +262,10 @@
     </include>
 
     <include name="Hub_Combined_Info">
+        <param name="home_plot_variant">RowPoster</param>
+        <param name="home_plot_max_h">120</param>
+        <param name="home_plot_max_h_heading">80</param>
+        <definition>
         <control type="group">
             <animation effect="fade" start="0" end="100" delay="399" time="1" condition="!$EXP[Hub_Spotlight_Visible_Expression]">Conditional</animation>
             <animation effect="fade" start="100" end="0" condition="$EXP[Hub_Spotlight_Visible_Expression]">Conditional</animation>
@@ -296,14 +300,16 @@
                     <param name="visible_meta">true</param>
                     <param name="include_title">false</param>
                     <param name="container">Container($PARAM[id]).</param>
-                    <!-- Five plot lines incl. the tagline: Ends-at bottom <= y580, row cards at y644. -->
+                    <!-- Budget per row style comes from widgets_combined_info_home (Home generator);
+                         the defaults (3 lines incl. the tagline) fit every row, and Search. -->
                     <param name="home_plot">true</param>
-                    <param name="home_plot_variant">Row</param>
-                    <param name="home_plot_max_h">200</param>
-                    <param name="home_plot_max_h_heading">160</param>
+                    <param name="home_plot_variant">$PARAM[home_plot_variant]</param>
+                    <param name="home_plot_max_h">$PARAM[home_plot_max_h]</param>
+                    <param name="home_plot_max_h_heading">$PARAM[home_plot_max_h_heading]</param>
                 </include>
             </control>
         </control>
+        </definition>
     </include>
 
     <include name="Hub_Grouplist_OnLeft">

@@ -154,21 +154,46 @@ def check_home_rows(constants):
     # + title slot + facts line + quality + the larger plot variant + Ends-at row.
     # The first <height> in a group wins, as Kodi applies it.
     meta_h = 60  # Info_Meta's movie/show row group
+
+    def plot_content(max_h, max_h_heading):
+        return 20 + num('info_title_h') + 36 + 64 + max(int(max_h), 40 + int(max_h_heading)) + meta_h
+
     fitted = []
     for owner in hubs.iter('include'):
         name = owner.get('name')
+        defaults = params(owner)
         for group in owner.iter('control'):
             panel = next((i for i in group.findall('include') if i.get('content') == 'Info_Panel'), None)
             if panel is None or params(panel).get('home_plot') != 'true':
                 continue
-            p = params(panel)
-            plot = max(int(p['home_plot_max_h']), 40 + int(p['home_plot_max_h_heading']))
-            content = 20 + num('info_title_h') + 36 + 64 + plot + meta_h
+            p = {k: re.sub(r'\$PARAM\[(\w+)\]', lambda m: defaults.get(m.group(1), m.group(0)), v or '')
+                 for k, v in params(panel).items()}
+            content = plot_content(p['home_plot_max_h'], p['home_plot_max_h_heading'])
             box = group.findtext('height')
             assert box is not None and int(box) >= content, (
                 'Home panel content overflows its box; "Ends at" would vanish', name, box, content)
             fitted.append(name)
     assert sorted(fitted) == ['Hub_Combined_Info', 'Hub_Spotlight_Info'], fitted
+
+    # Rick 2026-11-11: the row panel's plot ran into the Continue (poster) cards. The row
+    # panel's content starts at y60 (view_pad - 20 grouplist top); each style's budget must
+    # end above its own first card (cards end at y887: poster top 516, landscape 644).
+    rules = ET.parse(ROOT / 'shortcuts/generator/data/setup/widgets_include_row.xml').getroot()
+    def rule(name, style):
+        for r in rules.find("rules[@name='%s']" % name).findall('rule'):
+            cond = r.findtext('condition')
+            if cond == 'True' or cond == '{item_widget_style}==' + style:
+                return r.findtext('value')
+    card_tops = {'Poster': 500 + card_top, 'Premiere': 887 - ph, 'PremiereFull': 887 - ph}
+    info_template = (ROOT / 'shortcuts/generator/data/parts/widgets_combined_info_home.xmltemplate').read_text()
+    for key in ('variant', 'max_h', 'max_h_heading'):
+        assert '{widget_home_plot_%s}' % key in info_template, key
+    combined_box = int(hubs.find("include[@name='Hub_Combined_Info']/definition/control/control[2]").findtext('height'))
+    for style, top in card_tops.items():
+        content = plot_content(rule('widget_home_plot_max_h', style), rule('widget_home_plot_max_h_heading', style))
+        assert 60 + content <= top, ('row info runs into the cards', style, 60 + content, top)
+        assert content <= combined_box, ('row info exceeds its box', style, content, combined_box)
+    assert rule('widget_home_plot_variant', 'Poster') == 'RowPoster' and rule('widget_home_plot_variant', 'Premiere') == 'Row'
     line = detail.find("include[@content='Info_Line']")
     assert params(line)['height'] == '36'
     assert params(detail.find("include[@content='Info_Meta']"))['visible'] == '$PARAM[visible_meta]'

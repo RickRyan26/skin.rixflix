@@ -33,9 +33,10 @@
                         <include>OSD_Progress_Labels</include>
                         <include>OSD_Progress_Bar</include>
 
+                        <!-- Untitled media only: titled media always shows the identity below. -->
                         <control type="group">
                             <include>OSD_HideControls</include>
-                            <visible>!Player.Paused</visible>
+                            <visible>String.IsEmpty(VideoPlayer.Title) + String.IsEmpty(Player.Title)</visible>
                             <include content="Furniture_Header">
                                 <param name="label">$VAR[Label_OSD_Header]</param>
                                 <param name="include_right">false</param>
@@ -44,10 +45,12 @@
                             </include>
                         </control>
 
-                        <!-- RIXFLIX: compact pause identity in the existing lower-third.
-                             It adds no card or full-width panel over the picture. -->
+                        <!-- RIXFLIX: compact identity in the existing lower-third. It adds no card
+                             or full-width panel over the picture. Rick 2026-11-11: shown while playing
+                             too (the "RIXFLIX | Playing" header repeated the top wordmark); only the
+                             status word changes: Label_OSD_Header = Paused / Playing / FF 2x / seek. -->
                         <control type="group">
-                            <visible>Player.Paused + [!String.IsEmpty(VideoPlayer.Title) | !String.IsEmpty(Player.Title)]</visible>
+                            <visible>!String.IsEmpty(VideoPlayer.Title) | !String.IsEmpty(Player.Title)</visible>
                             <include>OSD_HideControls</include>
                             <left>view_pad</left>
                             <right>view_pad</right>
@@ -69,7 +72,7 @@
                                 <aligny>center</aligny>
                                 <font>font_hint_bold</font>
                                 <textcolor>$VAR[ColorHighlight]</textcolor>
-                                <label>$LOCALIZE[112]</label>
+                                <label>$VAR[Label_OSD_Header]</label>
                             </control>
                             <control type="label">
                                 <left>24</left>

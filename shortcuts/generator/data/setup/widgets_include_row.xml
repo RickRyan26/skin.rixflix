@@ -116,4 +116,39 @@
             <value>home_row_label_t</value>
         </rule>
     </rules>
+    <!-- Home info-panel plot budget per row style (Rick 2026-11-11: plots ran into the
+         Continue rows). Every Home card ends at y887 (validate_cinema), so a poster row's
+         cards start at y516 and a landscape row's at y644; the panel starts at y60.
+         Poster: tagline + 2 lines, Ends-at bottom y500. Landscape: 5 lines, bottom y580.
+         The variant names must match quality.py PLOT_VARIANTS (line totals 3 and 5). -->
+    <rules name="widget_home_plot_variant">
+        <rule>
+            <condition>{item_widget_style}==Poster</condition>
+            <value>RowPoster</value>
+        </rule>
+        <rule>
+            <condition>True</condition>
+            <value>Row</value>
+        </rule>
+    </rules>
+    <rules name="widget_home_plot_max_h">
+        <rule>
+            <condition>{item_widget_style}==Poster</condition>
+            <value>120</value>
+        </rule>
+        <rule>
+            <condition>True</condition>
+            <value>200</value>
+        </rule>
+    </rules>
+    <rules name="widget_home_plot_max_h_heading">
+        <rule>
+            <condition>{item_widget_style}==Poster</condition>
+            <value>80</value>
+        </rule>
+        <rule>
+            <condition>True</condition>
+            <value>160</value>
+        </rule>
+    </rules>
 </contents>

@@ -1,0 +1,6 @@
+<include content="Hub_Combined_Info">
+    <param name="id">{widget_id}</param>
+    <param name="home_plot_variant">{widget_home_plot_variant}</param>
+    <param name="home_plot_max_h">{widget_home_plot_max_h}</param>
+    <param name="home_plot_max_h_heading">{widget_home_plot_max_h_heading}</param>
+</include>
