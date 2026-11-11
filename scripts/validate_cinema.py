@@ -149,6 +149,9 @@ def check_home_rows(constants):
     assert source.findtext('height') == '64'
     assert '$PARAM[include_details]' in source.findtext('visible')
     assert 'RixFlix.Quality' not in source.findtext('visible'), 'late facts must not move the plot'
+    # Home plot budget must fit its panel or the grouplist drops "Ends at" (1.13.1 spotlight).
+    spot = hubs.find("include[@name='Hub_Spotlight_Info']/control")
+    assert spot.findtext('height') == '480', 'spotlight info holds 20+140+36+64+160+60'
     line = detail.find("include[@content='Info_Line']")
     assert params(line)['height'] == '36'
     assert params(detail.find("include[@content='Info_Meta']"))['visible'] == '$PARAM[visible_meta]'

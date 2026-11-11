@@ -488,6 +488,10 @@
             <visible>$EXP[Hub_Spotlight_Visible_Expression]</visible>
             <animation effect="slide" end="0" start="0,-200" time="400" tween="cubic" easing="out" reversible="false" condition="!Control.HasFocus(300)">Visible</animation>
             <animation effect="slide" start="0" end="0,-200" time="400" tween="cubic" easing="out" reversible="false">Hidden</animation>
+            <!-- 1.13.1 grew the plot to four lines (tagline + 3): 20 + 140 + 36 + 64 + 160 + 60
+                 = 480 > Info_Panel_Dimensions' 420, and a grouplist skips a child that does not
+                 fit, so "Ends at" vanished. First <height> wins (as Hub_Combined_Info's 540). -->
+            <height>480</height>
             <include>Info_Panel_Dimensions</include>
             <include content="Info_Panel">
                 <param name="container">Container(301).</param>
