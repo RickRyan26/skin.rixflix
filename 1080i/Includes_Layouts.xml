@@ -2104,6 +2104,28 @@
                     <include content="Object_TraktOverlays" condition="$PARAM[indicator] + [Skin.HasSetting(Indicator.TraktWatchlist) | Skin.HasSetting(Indicator.TraktFavourites)]">
                         <param name="listitem">$PARAM[listitem]</param>
                     </include>
+                    <!-- 1.15.1 (Rick, 2026-11-11): Home's Requested row is vertical posters. A title
+                         still on its way keeps its stage chip; a poster is 260 wide, so one pill
+                         spans it. Only a Request card draws it: Continue posters carry no chip. -->
+                    <control type="group">
+                        <visible>!String.IsEmpty($PARAM[listitem].Property(RixFlix.CardChip)) + !String.IsEmpty($PARAM[listitem].Property(RixFlix.RequestKey))</visible>
+                        <left>8</left>
+                        <top>8</top>
+                        <width>244</width>
+                        <height>40</height>
+                        <control type="image">
+                            <texture colordiffuse="ffe50914" border="20">common/box.png</texture>
+                        </control>
+                        <control type="label">
+                            <width>244</width>
+                            <height>40</height>
+                            <align>center</align>
+                            <aligny>center</aligny>
+                            <font>font_mini_bold</font>
+                            <textcolor>ffffffff</textcolor>
+                            <label>$INFO[$PARAM[listitem].Property(RixFlix.CardChip)]</label>
+                        </control>
+                    </control>
                     <include condition="!$PARAM[selected] + $PARAM[indicator]" content="Object_Indicator">
                         <param name="affix">$PARAM[affix]</param>
                         <param name="listitem">$PARAM[listitem]</param>

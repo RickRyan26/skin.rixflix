@@ -1,5 +1,13 @@
 # Cinema presentation — 1.10.0
 
+## 1.15.1: a stage chip on a poster card
+
+Rick, 2026-11-11: Home's Requested row "should use vertical posters". `Layout_Poster` now
+draws one 244 px crimson pill (the card is 260 wide) when the item has both
+`RixFlix.CardChip` and `RixFlix.RequestKey`, under the focus outline. Only a still-coming
+Request card has both, so Continue posters stay bare. Landscape cards keep
+`RixFlix_Card_Chip` and its two pill widths.
+
 ## 1.15.0: Search on the stage; one card chip; plots that do not scroll
 
 Rick, 2026-11-11: the search results page "needs to be more like the homepage and the

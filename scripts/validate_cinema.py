@@ -697,6 +697,12 @@ def check():
     # The provider reads the text before "&q=" as its query string; q is a refresh token.
     assert request_path.startswith('plugin://plugin.video.rixflix.providers/?mode=request_search&rev=')
     assert request_path.split('&q=')[0].endswith('&live=1') and request_path.endswith('q=$INFO[Window(Home).Property(RixFlix.SearchCompleted)]'), 'Request must load after Results, not beside it'
+    # 1.15.1: a poster card draws one pill, and only for a Request card (Home's Requested row).
+    poster_chip = [n for n in root.find("include[@name='Layout_Poster']/definition").iter('control')
+                   if 'RixFlix.CardChip' in (n.findtext('visible') or '')]
+    assert len(poster_chip) == 1 and 'RixFlix.RequestKey' in poster_chip[0].findtext('visible'), 'poster chip is Request-only'
+    assert float(poster_chip[0].findtext('left')) * 2 + float(poster_chip[0].findtext('width')) <= 260, 'pill fits a 260 poster'
+
     raised = (ROOT / '1080i/Includes_RixFlix.xml').read_text().split('<expression name="Exp_RixFlix_Request_Raised">')[1].split('</expression>')[0]
     assert 'HasFocus' not in raised and '!$EXP[Exp_RixFlix_Results_Ready]' in raised, 'both rows are on screen: focus never moves one'
     # One chip for every landscape card. The provider names it (New Episode, Requested, In library).
