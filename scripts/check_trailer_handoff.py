@@ -115,7 +115,13 @@ def check(case, frames, *, duplicate=False, cancel=False, expected_stops=0, cach
                 module.main()
                 assert properties[module.PREVIEW_PROMOTE_PROPERTY] == "yt-abcdefghijk"
                 assert not state["calls"] and not properties.get(module.RESOLVING_PROPERTY)
+                # 1.14.8: the key alone promotes, even when the skin-timer hover lags.
                 properties[module.PREVIEW_TRAILER_PROPERTY] = "another card"
+                del properties[module.PREVIEW_PROMOTE_PROPERTY]
+                module.main()
+                assert properties[module.PREVIEW_PROMOTE_PROPERTY] == "yt-abcdefghijk"
+                # Another card's preview (neither hover nor key match) is not promoted.
+                properties[module.PREVIEW_ACTIVE_PROPERTY] = "yt-zzzzzzzzzzz"
                 del properties[module.PREVIEW_PROMOTE_PROPERTY]
                 module.main()
                 assert module.PREVIEW_PROMOTE_PROPERTY not in properties
