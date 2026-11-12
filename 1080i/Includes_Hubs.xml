@@ -892,7 +892,8 @@
         <include>Background</include>
         <!-- Overscan the lifted splash to the screen bottom; scale crops without letterboxing. -->
         <control type="group" id="8070">
-            <visible>Window.IsActive(home) + Control.HasFocus(507)</visible>
+            <!-- Categories is Home row 508 since the Requested row took 507 (2026-11-11). -->
+            <visible>Window.IsActive(home) + Control.HasFocus(508)</visible>
             <control type="image">
                 <left>0</left><top>-160</top><width>1920</width><height>1240</height>
                 <aspectratio>scale</aspectratio>

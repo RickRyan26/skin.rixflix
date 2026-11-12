@@ -8,6 +8,10 @@ draws one 244 px crimson pill (the card is 260 wide) when the item has both
 Request card has both, so Continue posters stay bare. Landscape cards keep
 `RixFlix_Card_Chip` and its two pill widths.
 
+The Categories splash backdrop (group 8070) now tests `Control.HasFocus(508)`. It still
+named 507 after the Requested row took that id, so the splash drew behind Requested and
+not behind Categories.
+
 ## 1.15.0: Search on the stage; one card chip; plots that do not scroll
 
 Rick, 2026-11-11: the search results page "needs to be more like the homepage and the
