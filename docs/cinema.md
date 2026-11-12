@@ -1,5 +1,26 @@
 # Cinema presentation — 1.10.0
 
+## 1.16.4: retain the visual gains without reducing readability
+
+The first real before/after comparison used theater tours `tour-Z1XYWECJ` (1.15.1)
+and `tour-KXA9fhtp` (1.16.2), retained under
+`~/.local/state/rix-e2e/rixflix/skin-tour/`. An independent critic picked the new Home,
+series, Coming Soon and empty Search screens. It picked the old Info and category screens.
+
+Info's synopsis crossed faces and microphones. Its text side now has a solid 1120px
+backing, followed by the existing gradient into the artwork. The synopsis width is 1000px
+so it ends before that transition. This backing belongs to the opaque Info dialog;
+it must not be copied behind a stage's video window.
+
+The category comparison also rejected the 80% brightness on unselected cards and the
+low-contrast page label over bright fanart. Cards regain full brightness, and the page
+label regains its dark backing while keeping its alignment with the card grid. The
+existing focus outline remains the selection cue.
+
+These are corrections to measured visual regressions, rather than a claim to beat an
+external streaming app. No external reference images were obtained. The tour missed
+the hover-preview capture because no preview started; it does not prove video visibility.
+
 ## 1.16.3: runtime series panel gates after the theater tour
 
 The 1.16.2 theater tour (`tour-KXA9fhtp/series-page.png`, 2026-11-12) proved the episode

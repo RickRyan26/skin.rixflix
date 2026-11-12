@@ -303,9 +303,8 @@
                 <width>auto</width><height>76</height><enable>false</enable>
                 <textoffsetx>36</textoffsetx><font>font_head_bold</font>
                 <textcolor>white</textcolor><disabledcolor>white</disabledcolor>
-                <!-- 1.16.0: no box. A filled chip read as a button that cannot be pressed. -->
-                <texturenofocus />
-                <texturefocus />
+                <texturenofocus colordiffuse="rix_cinema_surface" border="20">common/box.png</texturenofocus>
+                <texturefocus colordiffuse="rix_cinema_surface" border="20">common/box.png</texturefocus>
                 <label>$PARAM[label]</label>
             </control>
         </control>

@@ -27,7 +27,11 @@
             <animation effect="fade" start="100" end="0" time="200">Hidden</animation>
         </control>
         <control type="image">
-            <left>480</left><top>0</top><width>1100</width><height>810</height>
+            <left>0</left><top>0</top><width>1120</width><height>810</height>
+            <texture colordiffuse="ff080808">common/white.png</texture>
+        </control>
+        <control type="image">
+            <left>1120</left><top>0</top><width>600</width><height>810</height>
             <texture colordiffuse="ff080808">rixflix/scrim-left-full.png</texture>
         </control>
         <control type="image">
@@ -66,7 +70,7 @@
                 <control type="group">
                     <include content="DialogInfo_Info_Group">
                         <param name="extended_include">DialogInfo_VideoDetails</param>
-                        <param name="plotwidth">90%</param>
+                        <param name="plotwidth">1000</param>
                     </include>
                 </control>
             </control>

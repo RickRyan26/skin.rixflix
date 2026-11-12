@@ -2473,10 +2473,6 @@
 
                 <width>$PARAM[item_w]</width>
                 <height>$PARAM[item_h]</height>
-                <!-- 1.16.0 gauntlet: an unfocused card with white art (Zoolander No. 2, Ice Age)
-                     outshone the focused one on the OLED. Every card but the focused one sits at
-                     80% over black. Premiere cards only (chip=true is their marker). -->
-                <include content="RixFlix_Card_Dim" condition="$PARAM[chip] + !$PARAM[selected]" />
 
                 <include content="Object_ItemBack">
                     <param name="selected">$PARAM[selected]</param>
@@ -2598,10 +2594,6 @@
     <!-- The one corner chip of a landscape card: the provider sets RixFlix.CardChip.
          "New Episode" on a series the household was caught up on (Rick 2026-11-11);
          "Requested" / "In library" on a Search Request card. Drawn under the focus outline. -->
-    <include name="RixFlix_Card_Dim">
-        <animation effect="fade" start="100" end="80" time="0" condition="true">Conditional</animation>
-    </include>
-
     <!-- A card that is not in the library (Coming Soon, a Search Request result) has TMDb art
          with no title on it: eight anonymous stills. It gets its title on a bottom fade. A
          library card's landscape art already carries the title, so it gets nothing. The
