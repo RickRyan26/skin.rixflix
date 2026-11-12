@@ -25,6 +25,29 @@
 
             <include>Hub_Window_Refocus_Buttons</include>
             <include>RixFlix_Stage_Backdrop</include>
+        <!-- 1.16.0 gauntlet: the keyboard sat beside 1200px of empty black. While it is up, the
+             first result's fanart fills the right of the stage, faded into the keyboard side
+             and into the rows. Not opaque over the whole stage, and only while typing. -->
+        <control type="group">
+            <visible>Window.IsActive(DialogKeyboard.xml) + $EXP[Exp_RixFlix_Results_Ready] + !String.IsEmpty(Container(502).ListItemAbsolute(0).Art(fanart))</visible>
+            <animation effect="fade" start="0" end="100" time="250">Visible</animation>
+            <animation effect="fade" start="100" end="0" time="150">Hidden</animation>
+            <control type="image">
+                <right>0</right><top>0</top><width>1200</width><height>540</height>
+                <aspectratio scalediffuse="false" align="right" aligny="top">scale</aspectratio>
+                <fadetime>250</fadetime>
+                <texture background="true">$INFO[Container(502).ListItemAbsolute(0).Art(fanart)]</texture>
+                <animation effect="fade" start="100" end="70" time="0" condition="true">Conditional</animation>
+            </control>
+            <control type="image">
+                <left>720</left><top>0</top><width>700</width><height>540</height>
+                <texture colordiffuse="ff080808">rixflix/scrim-left-full.png</texture>
+            </control>
+            <control type="image">
+                <left>720</left><top>300</top><width>1200</width><height>240</height>
+                <texture colordiffuse="ff080808">rixflix/fade-bottom.png</texture>
+            </control>
+        </control>
             <include content="Home_Control">
                 <param name="window">$PARAM[window]</param>
                 <param name="overlay">[false]</param>

@@ -1,5 +1,36 @@
 # Cinema presentation — 1.10.0
 
+## 1.16.0: gauntlet round 1 (the look, judged from the TV's own pictures)
+
+Rick asked (2026-11-12) for the skin to look as good as it can, judged from screenshots of
+the theater. Three critics compared clean captures of the category, Coming Soon, Info and
+Search screens with the Netflix TV app and the Apple TV app (from product knowledge: none
+could fetch a reference image) and each named its biggest gap. This release closes those:
+
+- **Stage scrims** (`RixFlix_Stage_Backdrop`). `rixflix/scrim-left.png` darkens the text side
+  (78% black at the left edge, clear by x=1140) and `rixflix/fade-bottom.png` fades the art
+  into the page colour over the 210px above the first card row. Before, the runtime ran off
+  the haze into bright art, and the art ended in a hard cut at the cards. Both are
+  translucent, so they lie over a playing preview without closing its video hole (see the
+  1.15.0 black-preview note: only an opaque texture behind the video does that).
+- **Page chip** (`RixFlix_CategoryTitleChip`): text only, its right edge on the card grid's
+  right edge (x=1840). The filled box read as a button that cannot be pressed.
+- **Unfocused cards at 80%** (`RixFlix_Card_Dim`, Premiere cards only). White art outshone the
+  focused card on the OLED. The remembered card of an unfocused row keeps full brightness.
+- **Title on a card with no title in its art** (`RixFlix_Card_Title`): Coming Soon and Request
+  cards use TMDb stills. Marker: no DBID and the provider's `RixFlix.CardPlot`.
+- **Info page backdrop** (`DialogVideoInfo.xml`): the title's fanart fills the right 1440px and
+  fades into the text side and the cast row; the poster box hides for a title with fanart.
+  The surface stays `ff080808` (`validate_cinema.py` asserts it).
+- **Search while typing**: the first result's fanart fills the stage beside the keyboard.
+
+The textures are white with alpha only and take their colour from `colordiffuse`. Regenerate
+them with PIL (smoothstep alpha): left scrims are 256x4, bottom fades 4x256.
+
+Not done, by decision or cost: rotated row titles stay (Rick's "row title far left"); no card
+zoom (four cards fill the row, a zoom overlaps its neighbours); the metadata line and the
+Info page's action tabs and facts grid are the next round.
+
 ## 1.15.1: a stage chip on a poster card
 
 Rick, 2026-11-11: Home's Requested row "should use vertical posters". `Layout_Poster` now

@@ -79,6 +79,8 @@
                 <right>0</right>
                 <width>infodialog_poster_w</width>
                 <height>infodialog_poster_h</height>
+                <!-- 1.16.0: the fanart behind the page replaces the poster box for a title that has one. -->
+                <visible>String.IsEmpty(ListItem.Art(fanart)) + String.IsEmpty(ListItem.Art(tvshow.fanart)) | String.IsEqual(ListItem.Property(tmdb_type),person) | !Window.IsVisible(movieinformation)</visible>
                 <include>DialogInfo_Animation_Right</include>
                 <include content="Object_BigPoster" condition="[Window.IsVisible(movieinformation) | Window.IsActive(fullscreenvideo)]">
                     <param name="icon">$PARAM[icon]</param>

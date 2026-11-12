@@ -19,6 +19,11 @@
         <value>$INFO[Container.ListItem.Art(landscape)]</value>
     </variable>
 
+    <variable name="Image_RixFlix_InfoArt">
+        <value condition="!String.IsEmpty(ListItem.Art(fanart))">$INFO[ListItem.Art(fanart)]</value>
+        <value condition="!String.IsEmpty(ListItem.Art(tvshow.fanart))">$INFO[ListItem.Art(tvshow.fanart)]</value>
+    </variable>
+
     <include name="RixFlix_Stage_Backdrop">
         <!-- Only while nothing plays. Kodi 22 draws opaque textures in a first, depth-writing pass
              and punches the video hole with a quad at the far plane (CGUIVideoControl::Render), so a
@@ -41,6 +46,17 @@
             <param name="diffuse">diffuse/flixart/flixart_new.png</param>
         </include>
         <include>Background_Main_Overlay</include>
+        <!-- 1.16.0 gauntlet: text over bright art was unreadable (the runtime ran off the haze into
+             a white sky), and the art ended in a hard cut at the first card row. Translucent, so
+             both also lie over a playing preview without closing its video hole. -->
+        <control type="image">
+            <left>0</left><top>0</top><width>1240</width><height>540</height>
+            <texture colordiffuse="ff000000">rixflix/scrim-left.png</texture>
+        </control>
+        <control type="image">
+            <left>0</left><top>330</top><width>1920</width><height>210</height>
+            <texture colordiffuse="ff080808">rixflix/fade-bottom.png</texture>
+        </control>
     </include>
 
     <include name="RixFlix_PageLoading">
@@ -265,7 +281,7 @@
         <definition>
         <!-- Fixed over the rows, so it comes last. A button is the one control whose background follows its label's width, and the grouplist's right alignment keeps its right edge fixed. The first button is the shadow: same label and font, 40px larger every way, like Texture_Shadow_40. Disabled, so neither can take focus. -->
         <control type="grouplist">
-            <right>-24</right><top>-24</top><width>1000</width><height>156</height>
+            <right>4</right><top>-10</top><width>1000</width><height>156</height>
             <orientation>horizontal</orientation><align>right</align><itemgap>0</itemgap>
             <control type="button">
                 <width>auto</width><height>156</height><enable>false</enable>
@@ -277,14 +293,15 @@
             </control>
         </control>
         <control type="grouplist">
-            <right>16</right><top>16</top><width>1000</width><height>76</height>
+            <right>44</right><top>30</top><width>1000</width><height>76</height>
             <orientation>horizontal</orientation><align>right</align><itemgap>0</itemgap>
             <control type="button">
                 <width>auto</width><height>76</height><enable>false</enable>
                 <textoffsetx>36</textoffsetx><font>font_head_bold</font>
                 <textcolor>white</textcolor><disabledcolor>white</disabledcolor>
-                <texturenofocus colordiffuse="rix_cinema_surface" border="20">common/box.png</texturenofocus>
-                <texturefocus colordiffuse="rix_cinema_surface" border="20">common/box.png</texturefocus>
+                <!-- 1.16.0: no box. A filled chip read as a button that cannot be pressed. -->
+                <texturenofocus />
+                <texturefocus />
                 <label>$PARAM[label]</label>
             </control>
         </control>
