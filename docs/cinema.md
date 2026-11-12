@@ -1,6 +1,6 @@
 # Cinema presentation — 1.10.0
 
-## 1.16.1: finished series page
+## 1.16.2: finished series page (1.16.1 source follow-up)
 
 The theater's One Piece capture showed a white focused card, empty thumbnails, a portrait
 poster behind the tabs, a malformed episode heading, no synopsis and footer debris.
@@ -19,6 +19,8 @@ poster behind the tabs, a malformed episode heading, no synopsis and footer debr
   The 180px heading/plot block leaves room between the end-time line and the season tabs.
 - All seasons loses Kodi's literal asterisk; other tabs use 70% text rather than 30%.
   Item counts and the studio/network footer stay hidden on seasons content.
+  The tab classifier uses the native asterisk prefix: Kodi suppresses negative Season
+  labels, so testing ListItem.Season=-1 cannot identify its All seasons virtual item.
 
 All-season navigation, row ids, next-episode landing and playback ownership are unchanged.
 Metadata repair belongs to the catalogue/sync lane; home-16 received the live evidence.
