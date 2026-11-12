@@ -388,17 +388,15 @@ def check_quality_line_needs_library_item():
     assert 'Property(RixFlix.RequestKey))' in lines[0], 'quality line shows on a Request title'
 
 
-def check_request_chip_widths():
-    """The Request chip has two pills: 176 for "Requested", 288 for a stage with a date. Exactly
-    one may show, so both must test RixFlix.RequestChipWide, in opposite senses."""
-    text = (ROOT / '1080i' / 'Includes_Layouts.xml').read_text()
-    start = text.index('<include name="Layout_Request">')
-    block = text[start:text.index('<include name=', start + 1)] if '<include name=' in text[start + 1:] else text[start:]
-    narrow = '!String.IsEmpty(ListItem.Property(RixFlix.RequestChip)) + String.IsEmpty(ListItem.Property(RixFlix.RequestChipWide))'
-    wide = '!String.IsEmpty(ListItem.Property(RixFlix.RequestChip)) + !String.IsEmpty(ListItem.Property(RixFlix.RequestChipWide))'
-    assert block.count(narrow) == 1 and block.count(wide) == 1, 'Request chip needs one narrow and one wide pill'
-    assert block.index(narrow) < block.index('<width>176</width>') < block.index(wide) < block.index('<width>288</width>'), \
-        'Request chip pills are not 176 (narrow) then 288 (wide)'
+def check_card_chip_widths():
+    """The card chip has two pills: 176 for "Requested" / "New Episode", 288 for a stage with a
+    date (1.14.10). Exactly one may show, so both test RixFlix.CardChipWide, in opposite senses."""
+    root = ET.parse(ROOT / '1080i' / 'Includes_Layouts.xml').getroot()
+    chip = root.find("include[@name='RixFlix_Card_Chip']/definition/control")
+    wide = '$PARAM[listitem].Property(RixFlix.CardChipWide)'
+    pills = [(n.get('type'), n.findtext('width'), n.findtext('visible')) for n in chip.findall('control')]
+    assert pills == [('image', '176', 'String.IsEmpty(%s)' % wide), ('label', '176', 'String.IsEmpty(%s)' % wide),
+                     ('image', '288', '!String.IsEmpty(%s)' % wide), ('label', '288', '!String.IsEmpty(%s)' % wide)], pills
 
 
 def check_hub_layout(values):
@@ -537,7 +535,7 @@ def check():
     check_nested_depth()
     check_end_time_needs_runtime()
     check_quality_line_needs_library_item()
-    check_request_chip_widths()
+    check_card_chip_widths()
     constants = {c.get('name'): (c.text or '').strip()
                  for c in ET.parse(ROOT / '1080i/Includes_Constants.xml').getroot().findall('constant')}
     pitch, sizes = check_home_rows(constants)
@@ -649,9 +647,41 @@ def check():
     # when neither row has anything; the Request row is reached, never skipped.
     assert '!$EXP[Exp_RixFlix_Request_Ready]' in downs['7900'], 'Down must not go Home past a ready Request row'
     assert '!$EXP[Exp_RixFlix_Search_Loading]' in downs['SetFocus(540)'] and '!$EXP[Exp_RixFlix_Results_Ready]' in downs['SetFocus(540)']
-    request = search_root.find("include[@name='Search_Request_Row']/control")
-    row = request.find("include[@content='List_Request_Row']")
-    assert row.findtext("param[@name='id']") == '540'
+    # 1.15.0: Search is a stage page. Its two rows are RixFlix_Stage_Row / RixFlix_Stage_List,
+    # the same includes a category page and Coming Soon use; nothing here is search-only layout.
+    search_text = (ROOT / '1080i/Includes_Search.xml').read_text() + (ROOT / '1080i/Custom_1105_Search.xml').read_text()
+    assert 'info=user_discover' not in search_text and 'info=discover' not in search_text and 'UserDiscover' not in search_text, \
+        'the TMDb Discover dialog has no route from Search'
+    assert [n.text for n in edit.findall('onup')] == ['noop'], 'Up on the field opens nothing'
+    page = search_root.find("include[@name='Search']/definition")
+    assert [n.get('content') or n.text for n in page.findall('include')][:3] == ['Object_Hidden_Button', 'Hub_Window_Refocus_Buttons', 'RixFlix_Stage_Backdrop']
+    assert 'Hub_Combined' not in search_text and 'skinvariables-searchwidgets' not in search_text
+    stage = search_root.find("include[@name='Search_Stage']")
+    info = stage.find("include[@content='RixFlix_Stage_Info']")
+    assert params(info)['visible'] == 'ControlGroup(8500).HasFocus + !Window.IsActive(DialogKeyboard.xml)', 'no hero text beside the keyboard'
+    rows = stage.find("include[@content='RixFlix_Stage_Rows']")
+    assert params(rows) == {'id': '8500', 'onback': '7900'}
+    stage_rows = rows.findall("include[@content='RixFlix_Stage_Row']")
+    assert [(params(r)['id'], params(r)['group'], params(r)['label']) for r in stage_rows] == [
+        ('502', '702', 'Results'), ('540', '541', 'Request')]
+    results, request = stage_rows
+    # Neither row carries a <visible>: Kodi never loads a hidden container (1.13.3). A row
+    # whose cards are not for the typed text fades through the stage row's own stale rule.
+    assert params(results)['stale'] == '!$EXP[Exp_RixFlix_Results_Ready]' and 'visible' not in params(results)
+    assert params(request)['stale'] == '!$EXP[Exp_RixFlix_Request_Ready]' and 'visible' not in params(request)
+    slide = request.findall('animation')
+    assert len(slide) == 1 and slide[0].get('effect') == 'slide' and slide[0].get('end') == '0,-%s' % constants['category_row_h'] \
+        and slide[0].get('condition') == '$EXP[Exp_RixFlix_Request_Raised]', 'Request rises exactly one row pitch'
+    assert 'quadratic' not in (slide[0].get('tween') or ''), "Kodi's quadratic in-out is broken (1.12.32)"
+    row = results.find("include[@content='RixFlix_Stage_List']")
+    content = row.find('content')
+    assert (content.text, content.get('target'), content.get('sortby'), content.get('limit')) == (
+        '$VAR[Path_SearchTerm_Live,plugin://plugin.video.rixflix.providers/?mode=search&live=,]', 'videos', 'playlist', '20'), content.attrib
+    assert (params(row)['id'], params(row)['up'], params(row)['down'], params(row)['onback']) == ('502', 'SetFocus(3000)', 'SetFocus(502)', '7900')
+    assert [(n.get('condition'), n.text) for n in row.findall('ondown')] == [('$EXP[Exp_RixFlix_Request_Ready]', 'SetFocus(540)')]
+    assert not row.findall('onclick'), 'a library result opens by its own path'
+    row = request.find("include[@content='RixFlix_Stage_List']")
+    assert params(row)['id'] == '540'
     content = row.find('content')
     # Static target and playlist order, as every RixFlix provider row (see deploy.sh's
     # dynamic-target and sortby checks); only the path follows the typed text.
@@ -659,32 +689,44 @@ def check():
         '$VAR[Path_RequestSearch]', 'videos', 'playlist', '20'), content.attrib
     # A click asks Seerr through the provider. Nothing here may play or browse the item.
     assert [n.text for n in row.findall('onclick')] == ['RunPlugin($INFO[Container(540).ListItem.FileNameAndPath])']
-    assert [n.text for n in row.findall('ondown')] == ['SetFocus(540)'] and row.findtext('onback') == '7900'
-    assert {n.text for n in row.findall('onup')} == {'SetFocus(502)', 'SetFocus(3000)'}
-    # 1.13.3: no <visible> on the row or its group. Kodi never loads a hidden container, so a
-    # visibility keyed on the row's own items left it empty on the theater box.
-    assert row.find('visible') is None and request.find('visible') is None, 'Request row must stay loadable'
-    assert any(n.get('condition') == '!$EXP[Exp_RixFlix_Request_Ready]' and n.get('effect') == 'fade'
-               for n in request.findall('animation')), 'an unready Request row must be faded out'
+    assert (params(row)['up'], params(row)['down'], params(row)['onback']) == ('noop', 'SetFocus(540)', '7900')
+    assert {(n.get('condition'), n.text) for n in row.findall('onup')} == {
+        ('$EXP[Exp_RixFlix_Results_Ready]', 'SetFocus(502)'), ('!$EXP[Exp_RixFlix_Results_Ready]', 'SetFocus(3000)')}
     paths = ET.parse(ROOT / '1080i/Includes_Paths.xml').getroot()
     request_path = paths.findtext("variable[@name='Path_RequestSearch']/value")
     # The provider reads the text before "&q=" as its query string; q is a refresh token.
     assert request_path.startswith('plugin://plugin.video.rixflix.providers/?mode=request_search&rev=')
     assert request_path.split('&q=')[0].endswith('&live=1') and request_path.endswith('q=$INFO[Window(Home).Property(RixFlix.SearchCompleted)]'), 'Request must load after Results, not beside it'
-    combined = ET.parse(ROOT / '1080i/Includes_Hubs.xml').getroot().find("include[@name='Hub_Combined_Widget']/definition/include")
-    hops = [(n.get('condition'), n.text) for n in combined.findall('ondown') if n.get('condition', '').startswith('Window.IsActive(11105)')]
-    # Order matters: the row keeps itself first, then hands on when a Request row is ready.
-    assert hops == [('Window.IsActive(11105)', 'SetFocus($PARAM[id])'),
-                    ('Window.IsActive(11105) + $EXP[Exp_RixFlix_Request_Ready]', 'SetFocus(540)')], hops
+    raised = (ROOT / '1080i/Includes_RixFlix.xml').read_text().split('<expression name="Exp_RixFlix_Request_Raised">')[1].split('</expression>')[0]
+    assert 'HasFocus' not in raised and '!$EXP[Exp_RixFlix_Results_Ready]' in raised, 'both rows are on screen: focus never moves one'
+    # One chip for every landscape card. The provider names it (New Episode, Requested, In library).
     layouts_root = ET.parse(ROOT / '1080i/Includes_Layouts.xml').getroot()
-    card = layouts_root.find("include[@name='Layout_Request']/definition/control")
-    assert card.find("include[@content='Layout_Landscape']") is not None
-    chip = [g for g in card.findall("control[@type='group']") if 'RixFlix.RequestChip' in (g.findtext('visible') or '')]
-    # 1.14.10: a narrow pill and a wide one (check_request_chip_widths), same label and colour.
-    assert len(chip) == 2, len(chip)
-    for pill in chip:
-        assert pill.find("control[@type='label']").findtext('label') == '$INFO[ListItem.Property(RixFlix.RequestChip)]'
-        assert pill.find("control[@type='image']/texture").get('colordiffuse')[2:] in CRIMSON
+    assert layouts_root.find("include[@name='Layout_Request']") is None, 'Request cards are Home cards'
+    assert params(layouts_root.find("include[@name='Layout_Premiere']/definition/include"))['chip'] == 'true'
+    landscape = layouts_root.find("include[@name='Layout_Landscape']")
+    assert landscape.findtext("param[@name='chip']") == 'false', 'only the Premiere card asks for the chip'
+    order = [n.get('content') for n in landscape.find('definition/control').findall('include')]
+    assert order.index('RixFlix_Card_Chip') < order.index('Object_SelectBox'), 'the focus outline draws over the chip'
+    chip = layouts_root.find("include[@name='RixFlix_Card_Chip']/definition/control")
+    assert chip.findtext('visible') == '!String.IsEmpty($PARAM[listitem].Property(RixFlix.CardChip))'
+    assert {n.findtext('label') for n in chip.findall("control[@type='label']")} == {'$INFO[$PARAM[listitem].Property(RixFlix.CardChip)]'}
+    assert all(n.find('texture').get('colordiffuse')[2:] in CRIMSON for n in chip.findall("control[@type='image']"))
+    # Kodi 22 punches the video hole at the far plane: an opaque image behind the video window
+    # hides the preview (Coming Soon played sound over a black box, 2026-11-11).
+    hub_root = ET.parse(ROOT / '1080i/Includes_CategoryHub.xml').getroot()
+    backdrop = list(hub_root.find("include[@name='RixFlix_Stage_Backdrop']"))
+    video_at = next(i for i, n in enumerate(backdrop) if n.get('content') == 'Background_Video_FlixArt')
+    for node in backdrop[:video_at]:
+        assert node.findtext('visible') == '$EXP[Exp_Video_IsNotPlaying]', 'nothing opaque behind a playing preview'
+    # The stage plot never scrolls; a card with no library row reads the provider's cut text.
+    plot = ET.parse(ROOT / '1080i/Includes_Info.xml').getroot().find("include[@name='RixFlix_Home_Plot']")
+    boxes = plot.findall("definition/control[@type='textbox']")
+    assert len(boxes) == 5 and all(b.findtext('autoscroll') == 'false' for b in boxes), 'no vertical marquee'
+    free = [b for b in boxes if b.findall('visible')[-1].text.endswith('+ String.IsEmpty($PARAM[container]$PARAM[listitem].DBID)')]
+    assert sorted(b.find('height').get('max') for b in free) == ['$PARAM[max_h_free]', '$PARAM[max_h_free_heading]']
+    assert all(b.findtext('label') == '$INFO[$PARAM[container]$PARAM[listitem].Property(RixFlix.CardPlot)]' for b in free)
+    # 39.44px per line (see the include's comment): 6 lines with no heading, 5 under one.
+    assert (plot.findtext("param[@name='max_h_free']"), plot.findtext("param[@name='max_h_free_heading']")) == ('240', '200')
     actions = ET.parse(ROOT / '1080i/Includes_Actions.xml').getroot().find("variable[@name='Action_DialogInfo_PlayMedia']")
     first = actions.find('value')
     assert 'RixFlix.RequestKey' in first.get('condition') and first.text == 'RunPlugin($INFO[ListItem.FileNameAndPath])', \
@@ -714,8 +756,6 @@ def check():
     assert compact.findtext('width') == '628' and compact.findtext('height') == '440'
     assert compact.find("control[@id='300']").findtext('visible') == 'false', 'search is automatic: no visible Done'
     assert not [c for c in compact.findall("control[@type='label']") if c.findtext('label')], 'no hint text row'
-    search = ET.parse(ROOT / '1080i/Includes_Search.xml').getroot()
-    assert search.find("include[@name='Search_Info_Panel']/control").findtext('visible') == '!Window.IsActive(DialogKeyboard.xml)', 'no hero text beside the keyboard'
     letter_row = [keyboard.find("variable[@name='RixFlix_SearchKey%d']" % i).findall('value')[-1].text for i in range(28)]
     assert ''.join(letter_row) == "ABCDEFGHIJKLMNOPQRSTUVWXYZ-'", 'alphabetical 7 x 4 grid: %r' % letter_row
     assert [compact.find("control[@id='%d']" % i).findtext('label') for i in (32, 8)] == ['SPACE', 'DELETE']

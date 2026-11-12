@@ -1176,7 +1176,7 @@
                 <left>40</left><width>$PARAM[width]</width>
                 <height max="$PARAM[max_h_free]">auto</height>
                 <font>font_main_plot</font><textcolor>$PARAM[colordiffuse]_90</textcolor>
-                <label>$INFO[$PARAM[container]$PARAM[listitem].Plot]</label>
+                <label>$INFO[$PARAM[container]$PARAM[listitem].Property(RixFlix.CardPlot)]</label>
             </control>
             <control type="textbox">
                 <autoscroll>false</autoscroll>
@@ -1185,7 +1185,7 @@
                 <left>40</left><width>$PARAM[width]</width>
                 <height max="$PARAM[max_h_free_heading]">auto</height>
                 <font>font_main_plot</font><textcolor>$PARAM[colordiffuse]_90</textcolor>
-                <label>$INFO[$PARAM[container]$PARAM[listitem].Plot]</label>
+                <label>$INFO[$PARAM[container]$PARAM[listitem].Property(RixFlix.CardPlot)]</label>
             </control>
         </definition>
     </include>

@@ -3,10 +3,19 @@
 
 
 
+    <!-- SEARCH ON THE STAGE (1.15.0). Rick, 2026-11-11: "The search results page needs to be more
+         like the homepage and the category pages in a DRY way. The row title should be on the far
+         left and the rows should be closer together", and a focused result shows its details "just
+         like they do on the homepage". So Search is the third stage page (Includes_CategoryHub.xml):
+           RixFlix_Stage_Backdrop  the focused card's fanart, and its preview
+           RixFlix_Stage_Info      Home's Info_Panel for the focused card
+           RixFlix_Stage_Rows      Results (502) and Request (540) at Home's pitch
+         The field and header show while the field has focus. A focused row hides them and puts the
+         query in the page chip, exactly where a category page shows its name. The generated
+         searchwidgets includes, the 601 switcher and the TMDb Discover row are no longer used. -->
     <include name="Search">
         <param name="window">1105</param>
         <definition>
-            <!-- Live search uses the raw Home property; no encoder plugin jobs. -->
             <!-- A numeric target consumes movement before the deferred Home switch. -->
             <include content="Object_Hidden_Button">
                 <param name="id">7900</param>
@@ -14,7 +23,8 @@
                 <onback>7900</onback>
             </include>
 
-            <include>Hub_Window_Background</include>
+            <include>Hub_Window_Refocus_Buttons</include>
+            <include>RixFlix_Stage_Backdrop</include>
             <include content="Home_Control">
                 <param name="window">$PARAM[window]</param>
                 <param name="overlay">[false]</param>
@@ -26,13 +36,13 @@
 
                 <control type="group">
                     <include condition="Skin.HasSetting(HomeSwitcher.Vertical)">Hub_Window_Side_Slide</include>
-                    <include condition="!Skin.HasSetting(Search.DisableCombined)">Search_Footer_Left</include>
 
                     <!-- Content -->
                     <control type="group" id="400">
 
                         <control type="group">
-                            <visible allowhiddenfocus="true">String.IsEmpty(Window.Property(Searchbar.IsHidden)) + !Window.IsActive(DialogKeyboard.xml)</visible>
+                            <!-- The field gives its place to the info panel while a row has focus. -->
+                            <visible allowhiddenfocus="true">String.IsEmpty(Window.Property(Searchbar.IsHidden)) + !Window.IsActive(DialogKeyboard.xml) + !ControlGroup(8500).HasFocus</visible>
                             <animation effect="slide" start="0" end="0,-70" condition="Skin.HasSetting(HomeSwitcher.DisableHeader) | Skin.HasSetting(HomeSwitcher.Vertical)">Conditional</animation>
                             <include>Home_Animation</include>
                             <control type="group">
@@ -52,43 +62,8 @@
                         </control>
 
                         <control type="group">
-
                             <include>Animation_View_WindowChange</include>
-
-                            <control type="group" id="500">
-                                <!-- The Request row takes this position while it has focus. -->
-                                <animation effect="fade" start="100" end="0" time="200" condition="Control.HasFocus(540)">Conditional</animation>
-                                <include content="Hub_Combined_Widget" condition="!Skin.HasSetting(Search.DisableDiscover) + !Skin.HasSetting(Search.DisableCombined)">
-                                    <param name="id">501</param>
-                                    <param name="content"></param>
-                                    <param name="include">List_Poster_Row</param>
-                                    <param name="target">videos</param>
-                                    <param name="visible">String.IsEqual(Container(601).ListItem.Property(guid),discover)</param>
-                                    <param name="allowhiddenfocus">true</param>
-                                </include>
-                                <include condition="!Skin.HasSetting(Search.DisableCombined)">skinvariables-searchwidgets-combined</include>
-                                <include condition="Skin.HasSetting(Search.DisableCombined)">skinvariables-searchwidgets-standard</include>
-                            </control>
-
-                            <control type="group" id="600">
-                                <animation effect="fade" start="100" end="0" time="200" condition="Control.HasFocus(540)">Conditional</animation>
-                                <include content="Hub_Widget_Switcher" condition="!Skin.HasSetting(Search.DisableCombined)">
-                                    <param name="include_content">Search_Switcher_Items</param>
-                                    <param name="top">520</param>
-                                    <param name="wall">false</param>
-                                    <param name="onup">302</param>
-                                </include>
-                                <include content="Hub_Widget_Switcher" condition="Skin.HasSetting(Search.DisableCombined)">
-                                    <param name="include_content">Search_Switcher_Items</param>
-                                    <param name="top">-520</param>
-                                    <param name="wall">false</param>
-                                    <param name="onup">302</param>
-                                </include>
-                            </control>
-
-                            <include>Search_Request_Row</include>
-
-                            <include>Search_Info_Panel</include>
+                            <include>Search_Stage</include>
                         </control>
                     </control>
 
@@ -100,28 +75,71 @@
         </definition>
     </include>
 
-    <include name="Search_Info_Panel">
+    <!-- The stage, Search's part. Results never hides (a hidden list would not load): it fades
+         while its items are not for the typed text. Request sits one pitch below; with nothing in
+         the library it slides up into the first row's place. OK on a Request card asks Seerr once
+         (the provider reloads the row with a chip); a held OK opens the usual Info page. -->
+    <include name="Search_Stage">
+        <!-- No hero text beside the 628-wide keyboard, and none for the field. -->
+        <include content="RixFlix_Stage_Info">
+            <param name="visible">ControlGroup(8500).HasFocus + !Window.IsActive(DialogKeyboard.xml)</param>
+        </include>
+        <include content="RixFlix_Stage_Rows">
+            <param name="id">8500</param>
+            <param name="onback">7900</param>
+            <include content="RixFlix_Stage_Row">
+                <param name="id">502</param><param name="group">702</param>
+                <param name="label">Results</param>
+                <param name="stale">!$EXP[Exp_RixFlix_Results_Ready]</param>
+                <include content="RixFlix_Stage_List">
+                    <param name="id">502</param>
+                    <param name="onback">7900</param>
+                    <param name="up">SetFocus(3000)</param>
+                    <param name="down">SetFocus(502)</param>
+                    <!-- Then on to the Request row when it has titles for this query. -->
+                    <ondown condition="$EXP[Exp_RixFlix_Request_Ready]">SetFocus(540)</ondown>
+                    <onfocus>ClearProperty(Background.ShowOverlay,Home)</onfocus>
+                    <onfocus>ClearProperty(HomeSwitcher.IsVisible,Home)</onfocus>
+                    <onfocus>ClearProperty(InfoPanel.FullSwitch,Home)</onfocus>
+                    <content sortby="playlist" target="videos" limit="20">$VAR[Path_SearchTerm_Live,plugin://plugin.video.rixflix.providers/?mode=search&amp;live=,]</content>
+                </include>
+            </include>
+            <include content="RixFlix_Stage_Row">
+                <param name="id">540</param><param name="group">541</param>
+                <param name="label">Request</param>
+                <!-- Never a <visible> keyed on list 540's own items: Kodi does not load a hidden
+                     container, so the row stayed empty for every query after its first empty
+                     answer (theater, 2026-11-10). The stage row fades instead. -->
+                <param name="stale">!$EXP[Exp_RixFlix_Request_Ready]</param>
+                <animation effect="slide" start="0,0" end="0,-268" time="300" tween="sine" easing="out" condition="$EXP[Exp_RixFlix_Request_Raised]">Conditional</animation>
+                <include content="RixFlix_Stage_List">
+                    <param name="id">540</param>
+                    <param name="onback">7900</param>
+                    <param name="up">noop</param>
+                    <param name="down">SetFocus(540)</param>
+                    <onup condition="$EXP[Exp_RixFlix_Results_Ready]">SetFocus(502)</onup>
+                    <onup condition="!$EXP[Exp_RixFlix_Results_Ready]">SetFocus(3000)</onup>
+                    <onfocus>ClearProperty(Background.ShowOverlay,Home)</onfocus>
+                    <onfocus>ClearProperty(HomeSwitcher.IsVisible,Home)</onfocus>
+                    <onfocus>ClearProperty(InfoPanel.FullSwitch,Home)</onfocus>
+                    <onclick>RunPlugin($INFO[Container(540).ListItem.FileNameAndPath])</onclick>
+                    <content sortby="playlist" target="videos" limit="20">$VAR[Path_RequestSearch]</content>
+                </include>
+            </include>
+        </include>
+
+        <!-- Nothing found, under the field: never while a row has focus or the keyboard is up. -->
         <control type="group">
-            <!-- The 628-wide keyboard covers less than the plot; nothing peeks out beside it. -->
-            <visible>!Window.IsActive(DialogKeyboard.xml)</visible>
-            <include content="Hub_Combined_Info" condition="!Skin.HasSetting(Search.DisableDiscover) + !Skin.HasSetting(Search.DisableCombined)">
-                <param name="id">501</param>
-            </include>
-            <include>skinvariables-searchwidgets-info</include>
-            <include content="Hub_Combined_Info">
-                <param name="id">540</param>
-            </include>
+            <visible>!Window.IsActive(DialogKeyboard.xml) + !ControlGroup(8500).HasFocus + !$EXP[Exp_RixFlix_Results_Ready] + !$EXP[Exp_RixFlix_Request_Ready]</visible>
             <control type="label">
                 <font>font_head_bold</font>
                 <label>$VAR[Label_Search_Title_NoResults]</label>
                 <align>left</align>
                 <height>80</height>
                 <textcolor>main_fg_90</textcolor>
-                <visible>!Control.HasFocus(540) + [String.IsEmpty(Window.Property(TMDBHelper.WidgetContainer)) | [Integer.IsEqual(Container(601).NumItems,0) + !Skin.HasSetting(Search.DisableCombined)] | [Skin.HasSetting(Search.DisableCombined) + Integer.IsEqual(Container(602).NumItems,0)]]</visible>
                 <include>Home_Animation</include>
                 <left>view_pad</left>
                 <top>280</top>
-                <!-- <visible>Skin.HasSetting(HomeSwitcher.DisableHeader)</visible> -->
             </control>
             <control type="label">
                 <wrapmultiline>true</wrapmultiline>
@@ -130,7 +148,6 @@
                 <align>left</align>
                 <height>80</height>
                 <textcolor>rix_cinema_muted</textcolor>
-                <visible>!Control.HasFocus(540) + [String.IsEmpty(Window.Property(TMDBHelper.WidgetContainer)) | [Integer.IsEqual(Container(601).NumItems,0) + !Skin.HasSetting(Search.DisableCombined)] | [Skin.HasSetting(Search.DisableCombined) + Integer.IsEqual(Container(602).NumItems,0)]]</visible>
                 <include>Home_Animation</include>
                 <left>view_pad</left>
                 <top>360</top>
@@ -141,86 +158,25 @@
                 <top>370</top>
                 <width>60</width>
                 <height>60</height>
-                <visible>!String.IsEmpty(Control.GetLabel(3000).index(1)) + Integer.IsEqual(Container(601).NumItems,0) + $EXP[Exp_RixFlix_Search_Loading]</visible>
+                <visible>!String.IsEmpty(Control.GetLabel(3000).index(1)) + $EXP[Exp_RixFlix_Search_Loading]</visible>
                 <include content="Furniture_Busy_Spinner">
                     <param name="spinspinner">true</param>
                 </include>
             </control>
         </control>
-    </include>
 
-    <!-- Request (Rick, 2026-11-10): Seerr-side titles for the same query, one row under
-         Results. It peeks from the bottom edge; with focus, or when the library has nothing,
-         it slides up into the Results position. OK requests the title (the provider asks
-         Seerr once and reloads the row with a chip); a held OK opens the usual Info page.
-         Down keeps the row, Up returns to Results or the field, Back goes Home. -->
-    <include name="Search_Request_Row">
-        <control type="group" id="541">
-            <!-- Never a <visible> keyed on list 540's own items, here or on the list: Kodi
-                 does not load a hidden container, so the row stayed empty for every query
-                 after its first empty answer (theater, 2026-11-10). Fade it out instead. -->
-            <animation effect="fade" start="100" end="0" time="0" condition="!$EXP[Exp_RixFlix_Request_Ready]">Conditional</animation>
-            <animation effect="slide" start="0,0" end="0,380" time="300" tween="quadratic" condition="!$EXP[Exp_RixFlix_Request_Raised]">Conditional</animation>
-            <control type="group">
-                <top>520</top>
-                <height>40</height>
-                <control type="group">
-                    <left>view_pad</left>
-                    <include>View_Line_Divider</include>
-                </control>
-                <control type="label">
-                    <left>view_pad</left>
-                    <centertop>0</centertop>
-                    <width>720</width>
-                    <height>80</height>
-                    <aligny>center</aligny>
-                    <font>font_main_bold</font>
-                    <textcolor>main_fg_90</textcolor>
-                    <label>Request</label>
-                </control>
-            </control>
-            <include content="List_Request_Row">
-                <param name="id">540</param>
-                <top>510</top>
-                <bottom>-40</bottom>
-                <onup condition="$EXP[Exp_RixFlix_Results_Ready]">SetFocus(502)</onup>
-                <onup condition="!$EXP[Exp_RixFlix_Results_Ready]">SetFocus(3000)</onup>
-                <ondown>SetFocus(540)</ondown>
-                <onback>7900</onback>
-                <onfocus>SetProperty(TMDbHelper.WidgetContainer,540)</onfocus>
-                <onfocus>ClearProperty(Background.ShowOverlay,Home)</onfocus>
-                <onfocus>ClearProperty(HomeSwitcher.IsVisible,Home)</onfocus>
-                <onfocus>ClearProperty(InfoPanel.FullSwitch,Home)</onfocus>
-                <onclick>RunPlugin($INFO[Container(540).ListItem.FileNameAndPath])</onclick>
-                <content sortby="playlist" target="videos" limit="20">$VAR[Path_RequestSearch]</content>
-            </include>
-        </control>
-    </include>
-
-    <include name="Search_Switcher_Items">
-        <item>
-            <label>$LOCALIZE[31066]</label>
-            <property name="guid">discover</property>
-            <property name="widget_id">$NUMBER[501]</property>
-            <property name="show_artwork">true</property>
-            <property name="widget_numitems">$INFO[Container(501).NumItems]</property>
-            <onclick>RunPlugin(plugin://plugin.video.themoviedb.helper/?info=user_discover$INFO[Window(Home).Property(TMDbHelper.UserDiscover.Folderpath.ParamString),&amp;,])</onclick>
-            <visible>!Integer.IsEqual(Container(501).NumItems,0)</visible>
-        </item>
-        <include>skinvariables-searchwidgets-selector</include>
-    </include>
-
-    <include name="Search_Footer_Left">
+        <!-- The page chip names the query while a row has focus; the Request row's one hint sits under it. -->
         <control type="group">
-            <!-- The item count would sit on the peeking Request row. -->
-            <visible>!$EXP[Exp_InfoDialogs] + !$EXP[Exp_RixFlix_Request_Ready]</visible>
-            <control type="group">
-                <include>Dimension_Bottombar</include>
-                <include content="View_Furniture_Footer_ViewLine">
-                    <param name="visible">true</param>
-                    <param name="label">$INFO[Container(601).ListItem.Property(widget_numitems),, $LOCALIZE[31022]]</param>
-                    <param name="label_fallback">$INFO[System.AddonVersion(skin.rixflix),RixFlix v,]</param>
-                </include>
+            <visible>ControlGroup(8500).HasFocus + !Window.IsActive(DialogKeyboard.xml)</visible>
+            <include content="RixFlix_CategoryTitleChip">
+                <param name="label">$INFO[Window(Home).Property(RixFlix.SearchText),Search  •  ]</param>
+            </include>
+            <control type="label">
+                <right>24</right><top>100</top><width>900</width><height>40</height>
+                <align>right</align><aligny>center</aligny>
+                <font>font_mini_bold</font><textcolor>rix_cinema_paper</textcolor>
+                <label>$VAR[Label_Search_Request_Help]</label>
+                <visible>Control.HasFocus(540)</visible>
             </control>
         </control>
     </include>
@@ -230,74 +186,6 @@
         <width>800</width>
         <height>80</height>
         <centertop>50%</centertop>
-    </include>
-
-    <include name="Search_Autocompletion_Dropdown">
-        <control type="group">
-            <include>Part_Dim_Overlay</include>
-            <control type="group">
-                <left>40</left>
-                <top>200</top>
-                <width>800</width>
-                <height>840</height>
-                <control type="group">
-                    <include>Part_Background_Panel</include>
-                    <visible>Integer.IsGreater(Container(304).NumItems,8)</visible>
-                </control>
-                <control type="group">
-                    <include>Part_Background_Panel</include>
-                    <visible>Integer.IsEqual(Container(304).NumItems,8)</visible>
-                    <bottom>80</bottom>
-                </control>
-                <control type="group">
-                    <include>Part_Background_Panel</include>
-                    <visible>Integer.IsEqual(Container(304).NumItems,7)</visible>
-                    <bottom>160</bottom>
-                </control>
-                <control type="group">
-                    <include>Part_Background_Panel</include>
-                    <visible>Integer.IsEqual(Container(304).NumItems,6)</visible>
-                    <bottom>240</bottom>
-                </control>
-                <control type="group">
-                    <include>Part_Background_Panel</include>
-                    <visible>Integer.IsEqual(Container(304).NumItems,5)</visible>
-                    <bottom>320</bottom>
-                </control>
-                <control type="group">
-                    <include>Part_Background_Panel</include>
-                    <visible>Integer.IsEqual(Container(304).NumItems,4)</visible>
-                    <bottom>400</bottom>
-                </control>
-                <control type="group">
-                    <include>Part_Background_Panel</include>
-                    <visible>Integer.IsEqual(Container(304).NumItems,3)</visible>
-                    <bottom>480</bottom>
-                </control>
-                <control type="group">
-                    <include>Part_Background_Panel</include>
-                    <visible>Integer.IsEqual(Container(304).NumItems,2)</visible>
-                    <bottom>560</bottom>
-                </control>
-                <control type="group">
-                    <include>Part_Background_Panel</include>
-                    <visible>Integer.IsEqual(Container(304).NumItems,1)</visible>
-                    <bottom>640</bottom>
-                </control>
-                <include content="List_DialogSelect">
-                    <param name="id">304</param>
-                    <param name="itemlayout_include">Layout_DialogBasic</param>
-                    <top>60</top>
-                    <bottom>60</bottom>
-                    <left>60</left>
-                    <right>60</right>
-                    <orientation>vertical</orientation>
-                    <content></content>
-                    <onclick>SetFocus(3000)</onclick>
-                    <onclick>RunScript(script.skinvariables,set_editcontrol=300,window_id=1105,setfocus=300,text=$INFO[Container(304).ListItem.Label])</onclick>
-                </include>
-            </control>
-        </control>
     </include>
 
     <include name="Search_Bar_Edit">
@@ -349,7 +237,8 @@
             <onleft condition="!Skin.HasSetting(HomeSwitcher.Vertical)">$INFO[Container(399).ListItem(-1).Property(action)]</onleft>
             <onright condition="!Skin.HasSetting(HomeSwitcher.Vertical)">$INFO[Container(399).ListItem(1).Property(action)]</onright>
 
-            <onup condition="!Skin.HasSetting(Search.DisableDiscover) + !Skin.HasSetting(Search.DisableCombined)">RunPlugin(plugin://plugin.video.themoviedb.helper/?info=user_discover$INFO[Window(Home).Property(TMDbHelper.UserDiscover.Folderpath.ParamString),&amp;,])</onup>
+            <!-- Up has no target: the TMDb Discover dialog that sat here kept opening (Rick 2026-11-11). -->
+            <onup>noop</onup>
             <ondown condition="Integer.IsGreater(Container(502).NumItems,0) + String.IsEqual(Container(502).ListItem.Property(RixFlix.SearchText),Window(Home).Property(RixFlix.SearchText))">502</ondown>
             <!-- A commit leaves 502 empty for ~1.3 s. A Down then is a request for the results, not -->
             <!-- for Home: hold it, and rixflix_search_down lands it on 502 once they arrive. -->
@@ -388,267 +277,11 @@
             <left>40</left>
             <width>760</width>
             <height>50</height>
-            <font>font_mini_bold</font>
-            <label>OK to open</label>
-            <textcolor>rix_cinema_paper</textcolor>
-            <visible>Control.HasFocus(502) + !Window.IsActive(DialogKeyboard.xml)</visible>
-        </control>
-        <control type="label">
-            <top>95</top>
-            <left>40</left>
-            <width>760</width>
-            <height>50</height>
-            <font>font_mini_bold</font>
-            <label>$VAR[Label_Search_Request_Help]</label>
-            <textcolor>rix_cinema_paper</textcolor>
-            <visible>Control.HasFocus(540) + !Window.IsActive(DialogKeyboard.xml)</visible>
-        </control>
-        <control type="label">
-            <top>95</top>
-            <left>40</left>
-            <width>760</width>
-            <height>50</height>
             <font>font_tiny</font>
             <label>Enter part of a title, choose Done, then browse the results</label>
             <textcolor>rix_cinema_muted</textcolor>
             <align>left</align>
             <visible>String.IsEmpty(Control.GetLabel(3000).index(1))</visible>
-        </control>
-    </include>
-
-
-    <include name="Search_Bar_Keys">
-        <control type="wraplist" id="301">
-            <orientation>horizontal</orientation>
-            <onunfocus condition="Skin.HasSetting(HomeSwitcher.Vertical)">ClearProperty(HomeSwitcher.IsVisible,Home)</onunfocus>
-            <onfocus condition="!Skin.HasSetting(HomeSwitcher.Vertical)">SetProperty(HomeSwitcher.IsVisible,True,Home)</onfocus>
-            <onunfocus>SetProperty(Searchbar.IsHidden,True)</onunfocus>
-            <onfocus>ClearProperty(Searchbar.IsHidden)</onfocus>
-            <!-- <onup>3000</onup> -->
-            <onup>ClearProperty(RefocusMenu)</onup>
-            <onup>3001</onup>
-            <onback>7900</onback>
-            <ondown condition="!Skin.HasSetting(Search.DisableCombined)">601</ondown>
-            <ondown condition="Skin.HasSetting(Search.DisableCombined)">602</ondown>
-            <!-- <width>700</width> -->
-            <width>750</width>
-            <focusposition>7</focusposition>
-            <centerleft>50%</centerleft>
-            <height>100</height>
-            <top>95</top>
-
-            <onfocus>ClearProperty(Background.ShowOverlay,Home)</onfocus>
-
-            <itemlayout width="50" height="50">
-                <control type="label">
-                    <font>font_main</font>
-                    <label>$INFO[ListItem.Label]</label>
-                    <textcolor>dialog_fg_30</textcolor>
-                    <align>center</align>
-                    <height>35</height>
-                </control>
-            </itemlayout>
-
-            <focusedlayout width="50" height="50">
-
-                <control type="label">
-                    <visible>!Control.HasFocus(301)</visible>
-                    <font>font_main</font>
-                    <label>$INFO[ListItem.Label]</label>
-                    <textcolor>dialog_fg_30</textcolor>
-                    <align>center</align>
-                    <height>35</height>
-                </control>
-
-                <control type="group">
-                    <visible>Control.HasFocus(301)</visible>
-                    <control type="label">
-                        <font>font_main_bold</font>
-                        <label>$INFO[ListItem.Label]</label>
-                        <textcolor>dialog_fg_100</textcolor>
-                        <align>center</align>
-                        <height>35</height>
-                    </control>
-                    <control type="image">
-                        <include>Texture_Highlight_Scrollbar_H</include>
-                        <height>scrollbar_w</height>
-                        <bottom>5</bottom>
-                        <width>75%</width>
-                        <centerleft>50%</centerleft>
-                    </control>
-                </control>
-            </focusedlayout>
-
-            <content>
-                <item>
-                    <label>A</label>
-                    <onclick>SetFocus(3000)</onclick>
-                    <include>Object_SearchLetter_Click_a</include>
-                    <onclick>SetFocus(301)</onclick>
-                </item>
-                <item>
-                    <label>B</label>
-                    <onclick>SetFocus(3000)</onclick>
-                    <include>Object_SearchLetter_Click_b</include>
-                    <onclick>SetFocus(301)</onclick>
-                </item>
-                <item>
-                    <label>C</label>
-                    <onclick>SetFocus(3000)</onclick>
-                    <include>Object_SearchLetter_Click_c</include>
-                    <onclick>SetFocus(301)</onclick>
-                </item>
-                <item>
-                    <label>D</label>
-                    <onclick>SetFocus(3000)</onclick>
-                    <include>Object_SearchLetter_Click_d</include>
-                    <onclick>SetFocus(301)</onclick>
-                </item>
-                <item>
-                    <label>E</label>
-                    <onclick>SetFocus(3000)</onclick>
-                    <include>Object_SearchLetter_Click_e</include>
-                    <onclick>SetFocus(301)</onclick>
-                </item>
-                <item>
-                    <label>F</label>
-                    <onclick>SetFocus(3000)</onclick>
-                    <include>Object_SearchLetter_Click_f</include>
-                    <onclick>SetFocus(301)</onclick>
-                </item>
-                <item>
-                    <label>G</label>
-                    <onclick>SetFocus(3000)</onclick>
-                    <include>Object_SearchLetter_Click_g</include>
-                    <onclick>SetFocus(301)</onclick>
-                </item>
-                <item>
-                    <label>H</label>
-                    <onclick>SetFocus(3000)</onclick>
-                    <include>Object_SearchLetter_Click_h</include>
-                    <onclick>SetFocus(301)</onclick>
-                </item>
-                <item>
-                    <label>I</label>
-                    <onclick>SetFocus(3000)</onclick>
-                    <include>Object_SearchLetter_Click_i</include>
-                    <onclick>SetFocus(301)</onclick>
-                </item>
-                <item>
-                    <label>J</label>
-                    <onclick>SetFocus(3000)</onclick>
-                    <include>Object_SearchLetter_Click_j</include>
-                    <onclick>SetFocus(301)</onclick>
-                </item>
-                <item>
-                    <label>K</label>
-                    <onclick>SetFocus(3000)</onclick>
-                    <include>Object_SearchLetter_Click_k</include>
-                    <onclick>SetFocus(301)</onclick>
-                </item>
-                <item>
-                    <label>L</label>
-                    <onclick>SetFocus(3000)</onclick>
-                    <include>Object_SearchLetter_Click_l</include>
-                    <onclick>SetFocus(301)</onclick>
-                </item>
-                <item>
-                    <label>M</label>
-                    <onclick>SetFocus(3000)</onclick>
-                    <include>Object_SearchLetter_Click_m</include>
-                    <onclick>SetFocus(301)</onclick>
-                </item>
-                <item>
-                    <label>N</label>
-                    <onclick>SetFocus(3000)</onclick>
-                    <include>Object_SearchLetter_Click_n</include>
-                    <onclick>SetFocus(301)</onclick>
-                </item>
-                <item>
-                    <label>O</label>
-                    <onclick>SetFocus(3000)</onclick>
-                    <include>Object_SearchLetter_Click_o</include>
-                    <onclick>SetFocus(301)</onclick>
-                </item>
-                <item>
-                    <label>P</label>
-                    <onclick>SetFocus(3000)</onclick>
-                    <include>Object_SearchLetter_Click_p</include>
-                    <onclick>SetFocus(301)</onclick>
-                </item>
-                <item>
-                    <label>Q</label>
-                    <onclick>SetFocus(3000)</onclick>
-                    <include>Object_SearchLetter_Click_q</include>
-                    <onclick>SetFocus(301)</onclick>
-                </item>
-                <item>
-                    <label>R</label>
-                    <onclick>SetFocus(3000)</onclick>
-                    <include>Object_SearchLetter_Click_r</include>
-                    <onclick>SetFocus(301)</onclick>
-                </item>
-                <item>
-                    <label>S</label>
-                    <onclick>SetFocus(3000)</onclick>
-                    <include>Object_SearchLetter_Click_s</include>
-                    <onclick>SetFocus(301)</onclick>
-                </item>
-                <item>
-                    <label>T</label>
-                    <onclick>SetFocus(3000)</onclick>
-                    <include>Object_SearchLetter_Click_t</include>
-                    <onclick>SetFocus(301)</onclick>
-                </item>
-                <item>
-                    <label>U</label>
-                    <onclick>SetFocus(3000)</onclick>
-                    <include>Object_SearchLetter_Click_u</include>
-                    <onclick>SetFocus(301)</onclick>
-                </item>
-                <item>
-                    <label>V</label>
-                    <onclick>SetFocus(3000)</onclick>
-                    <include>Object_SearchLetter_Click_v</include>
-                    <onclick>SetFocus(301)</onclick>
-                </item>
-                <item>
-                    <label>W</label>
-                    <onclick>SetFocus(3000)</onclick>
-                    <include>Object_SearchLetter_Click_w</include>
-                    <onclick>SetFocus(301)</onclick>
-                </item>
-                <item>
-                    <label>X</label>
-                    <onclick>SetFocus(3000)</onclick>
-                    <include>Object_SearchLetter_Click_x</include>
-                    <onclick>SetFocus(301)</onclick>
-                </item>
-                <item>
-                    <label>Y</label>
-                    <onclick>SetFocus(3000)</onclick>
-                    <include>Object_SearchLetter_Click_y</include>
-                    <onclick>SetFocus(301)</onclick>
-                </item>
-                <item>
-                    <label>Z</label>
-                    <onclick>SetFocus(3000)</onclick>
-                    <include>Object_SearchLetter_Click_z</include>
-                    <onclick>SetFocus(301)</onclick>
-                </item>
-                <item>
-                    <label>_</label>
-                    <onclick>SetFocus(3000)</onclick>
-                    <include>Object_SearchLetter_Click__</include>
-                    <onclick>SetFocus(301)</onclick>
-                </item>
-                <item>
-                    <label>&lt;</label>
-                    <onclick>SetFocus(3000)</onclick>
-                    <include>Object_SearchLetter_Click_&lt;</include>
-                    <onclick>SetFocus(301)</onclick>
-                </item>
-            </content>
         </control>
     </include>
 

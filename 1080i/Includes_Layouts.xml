@@ -2445,6 +2445,7 @@
         <param name="progress">Progress</param>
         <param name="affix" />
         <param name="badges">true</param>
+        <param name="chip">false</param>
         <definition>
             <control type="group">
 
@@ -2509,6 +2510,10 @@
                     <param name="use_label2">$PARAM[use_label2]</param>
                 </include>
 
+                <include content="RixFlix_Card_Chip" condition="$PARAM[chip]">
+                    <param name="listitem">$PARAM[listitem]</param>
+                </include>
+
                 <include content="Object_SelectBox" condition="$PARAM[selected]">
                         <param name="card_glow">true</param>
                     <param name="affix">$PARAM[affix]</param>
@@ -2542,73 +2547,56 @@
                 <param name="detailed">true</param>
                 <param name="indicator">false</param>
                 <param name="badges">false</param>
+                <param name="chip">true</param>
             </include>
         </definition>
     </include>
 
-    <!-- Search's Request row: a stock landscape card, a chip once the title is requested
-         (the provider sets RixFlix.RequestChip), and the same explicit focus outline the
-         Results row draws. No progress or watched badges: nothing here is in the library. -->
-    <include name="Layout_Request">
-        <param name="selected">false</param>
+    <!-- The one corner chip of a landscape card: the provider sets RixFlix.CardChip.
+         "New Episode" on a series the household was caught up on (Rick 2026-11-11);
+         "Requested" / "In library" on a Search Request card. Drawn under the focus outline. -->
+    <include name="RixFlix_Card_Chip">
+        <param name="listitem">ListItem</param>
         <definition>
             <control type="group">
-                <width>$PARAM[item_w]</width>
-                <height>$PARAM[item_h]</height>
-                <include content="Layout_Landscape">
-                    <param name="selected">$PARAM[selected]</param>
-                    <param name="item_w">$PARAM[item_w]</param>
-                    <param name="item_h">$PARAM[item_h]</param>
-                    <param name="id">$PARAM[id]</param>
-                    <param name="indicator">false</param>
-                    <param name="badges">false</param>
-                </include>
+                <visible>!String.IsEmpty($PARAM[listitem].Property(RixFlix.CardChip))</visible>
+                <left>12</left>
+                <top>12</top>
+                <width>288</width>
+                <height>40</height>
                 <!-- 1.14.10: a stage chip ("Coming in 9 days", "Theaters Dec 18") is longer than
                      "Requested". A label cannot size its own background, so the provider marks
-                     the long ones (RixFlix.RequestChipWide) and they draw on a wider pill. -->
-                <control type="group">
-                    <visible>!String.IsEmpty(ListItem.Property(RixFlix.RequestChip)) + String.IsEmpty(ListItem.Property(RixFlix.RequestChipWide))</visible>
-                    <left>12</left>
-                    <top>12</top>
+                     the long ones (RixFlix.CardChipWide) and they draw on the wider pill. -->
+                <control type="image">
+                    <width>176</width>
+                    <texture colordiffuse="ffe50914" border="20">common/box.png</texture>
+                    <visible>String.IsEmpty($PARAM[listitem].Property(RixFlix.CardChipWide))</visible>
+                </control>
+                <control type="label">
                     <width>176</width>
                     <height>40</height>
-                    <control type="image">
-                        <texture colordiffuse="ffe50914" border="20">common/box.png</texture>
-                    </control>
-                    <control type="label">
-                        <width>176</width>
-                        <height>40</height>
-                        <align>center</align>
-                        <aligny>center</aligny>
-                        <font>font_mini_bold</font>
-                        <textcolor>ffffffff</textcolor>
-                        <label>$INFO[ListItem.Property(RixFlix.RequestChip)]</label>
-                    </control>
+                    <align>center</align>
+                    <aligny>center</aligny>
+                    <font>font_mini_bold</font>
+                    <textcolor>ffffffff</textcolor>
+                    <label>$INFO[$PARAM[listitem].Property(RixFlix.CardChip)]</label>
+                    <visible>String.IsEmpty($PARAM[listitem].Property(RixFlix.CardChipWide))</visible>
                 </control>
-                <control type="group">
-                    <visible>!String.IsEmpty(ListItem.Property(RixFlix.RequestChip)) + !String.IsEmpty(ListItem.Property(RixFlix.RequestChipWide))</visible>
-                    <left>12</left>
-                    <top>12</top>
+                <control type="image">
+                    <width>288</width>
+                    <texture colordiffuse="ffe50914" border="20">common/box.png</texture>
+                    <visible>!String.IsEmpty($PARAM[listitem].Property(RixFlix.CardChipWide))</visible>
+                </control>
+                <control type="label">
                     <width>288</width>
                     <height>40</height>
-                    <control type="image">
-                        <texture colordiffuse="ffe50914" border="20">common/box.png</texture>
-                    </control>
-                    <control type="label">
-                        <width>288</width>
-                        <height>40</height>
-                        <align>center</align>
-                        <aligny>center</aligny>
-                        <font>font_mini_bold</font>
-                        <textcolor>ffffffff</textcolor>
-                        <label>$INFO[ListItem.Property(RixFlix.RequestChip)]</label>
-                    </control>
+                    <align>center</align>
+                    <aligny>center</aligny>
+                    <font>font_mini_bold</font>
+                    <textcolor>ffffffff</textcolor>
+                    <label>$INFO[$PARAM[listitem].Property(RixFlix.CardChip)]</label>
+                    <visible>!String.IsEmpty($PARAM[listitem].Property(RixFlix.CardChipWide))</visible>
                 </control>
-                <include content="Object_Control" condition="$PARAM[selected]">
-                    <param name="control">image</param>
-                    <texture border="20" colordiffuse="rix_cinema_paper">common/selectbox_thin.png</texture>
-                    <visible>Window.IsActive(11105) + Control.HasFocus(540) + !Window.IsActive(DialogKeyboard.xml)</visible>
-                </include>
             </control>
         </definition>
     </include>

@@ -1,5 +1,71 @@
 # Cinema presentation — 1.10.0
 
+## 1.15.0: Search on the stage; one card chip; plots that do not scroll
+
+Rick, 2026-11-11: the search results page "needs to be more like the homepage and the
+category pages in a DRY way. The row title should be on the far left and the rows should be
+closer together", a focused result should show its details as Home does, the TMDb Discover
+pop-up must go, and Coming Soon's trailers played "but there's no visual" while its details
+had "a vertical marquee".
+
+**Search is the third stage page.** `Search` (Includes_Search.xml) now draws
+`RixFlix_Stage_Backdrop`, `RixFlix_Stage_Info` and `RixFlix_Stage_Rows`, the includes a
+category page and Coming Soon use. `Search_Stage` holds two `RixFlix_Stage_Row` calls:
+Results (list 502, group 702) and Request (list 540, group 541), in grouplist 8500.
+
+| Before | Now |
+|---|---|
+| "Results" / "Request" headings over the rows, rows 380 px apart | Home's rotated title at x40, rows one pitch (268 px) apart, card tops y552 and y820 |
+| Logo only (the field hid the panel) | Home's full panel: logo, facts, source line, plot, "Ends at" |
+| Generated `Hub_Combined_Widget` row, 601 switcher, `Search_Request_Row`, `List_Request_Row`, `Layout_Request` | `RixFlix_Stage_List` for both rows; those three includes are deleted |
+| Field and header always shown | Shown with the field. A focused row hides them; the page chip reads `Search • <text>` |
+
+- **Field and rows.** The field group is visible while no row has focus
+  (`!ControlGroup(8500).HasFocus`). Up from Results returns to it. The Request row's one
+  hint ("OK to request • Hold OK for details", or the chip text) sits under the page chip.
+- **Rows never hide.** A row whose cards are not for the typed text fades through the stage
+  row's `stale` rule, so it always loads (the 1.13.3 rule). Request sits in the second row.
+  When the finished search found nothing in the library, a conditional slide moves it up one
+  pitch (`Exp_RixFlix_Request_Raised`). Focus no longer raises it: both rows are on screen.
+- **Ids kept.** 3000, 502, 540, 541, 7900 and every Down/Up route from the field are
+  unchanged. `Exp_RixFlix_Search_Loading` now reads only `SearchCompleted` and list 502.
+- **No preview on Search.** The backdrop is the stage's, but the hover timer still covers
+  Home, a category page and Coming Soon only.
+
+**TMDb Discover is gone from Search.** Up on the field ran TMDb Helper's `user_discover`
+dialog, and a switcher item did the same. Both are deleted with the two window `onload`
+lines that seeded its folder path. Up on the field is `noop`.
+
+**The Coming Soon preview was black.** `RixFlix_Stage_Backdrop` drew an opaque full-screen
+image and then the video window. Kodi 22 draws opaque textures in a first pass that writes
+depth, and `CGUIVideoControl::Render` punches the video hole with a quad at the far plane
+(`DrawQuad(region, 0, …, -1.0f)`), which loses the depth test to any opaque texture behind
+it. Home has nothing behind its video window, so only the stage pages played sound over a
+black box. The base image is now visible only while `Exp_Video_IsNotPlaying`.
+Screenshots cannot show this: the AM9's video plane is not in a Kodi screenshot. It needs
+eyes on the TV.
+
+**No vertical marquee.** The skin's default textbox auto-scrolls. A card with no library
+row (Coming Soon, a Request card) used the two-line fallback box, so its plot crawled.
+
+- All five `RixFlix_Home_Plot` textboxes set `autoscroll` false.
+- A card with an empty DBID draws no quality line (64 px, no longer reserved) and no
+  "Ends at" (60 px). Its plot takes that room: 200 px (5 lines) under a heading, 240 px
+  (6 lines) without (`max_h_free_heading`, `max_h_free`).
+- Those boxes read `RixFlix.CardPlot`, which the provider cuts to whole words + "..." with
+  the resident's `fit_plot` (provider 1.10.0). `ListItem.Plot` stays whole for the Info page.
+
+**One card chip.** `RixFlix_Card_Chip` (Includes_Layouts.xml) is the one corner chip of a
+landscape card. `Layout_Premiere` asks for it (`chip` true); the provider names it in
+`RixFlix.CardChip`: "New Episode" on a series the household was caught up on, "Requested" /
+"In library" on a Request card. It draws under the focus outline. `RixFlix.RequestChip`
+remains for the Info page's button and the hint. The chip keeps 1.14.10's two pills: 176 px,
+or 288 px when the provider sets `RixFlix.CardChipWide` (a stage with a date).
+
+Source checks: `scripts/validate_cinema.py` PASS (stage rows, routes, chip, backdrop order,
+plot boxes). Written without a render: the theater did not answer on 2026-11-11 16:30 PST.
+Native proof is recorded in Rixflix `docs/home-theater.md`.
+
 ## 1.14.4: the Request row loads after Results, not beside it
 
 With both rows keyed on SearchText, every letter started two Python interpreters at
