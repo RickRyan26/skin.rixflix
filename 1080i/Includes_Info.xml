@@ -1121,6 +1121,8 @@
         <param name="visible">true</param>
         <param name="listitem">ListItem</param>
         <param name="width">800</param>
+        <param name="max_h_free">240</param>
+        <param name="max_h_free_heading">200</param>
         <definition>
             <control type="label">
                 <visible>$PARAM[visible]</visible>
@@ -1137,26 +1139,51 @@
                 <label>$INFO[$PARAM[container]$PARAM[listitem].Season,,x]$INFO[$PARAM[container]$PARAM[listitem].Episode,,. ]$INFO[$PARAM[container]$PARAM[listitem].Title]</label>
             </control>
             <control type="textbox">
+                <autoscroll>false</autoscroll>
                 <visible>$PARAM[visible]</visible>
-                <visible>String.IsEqual(Window(Home).Property(RixFlix.PlotType),$PARAM[container]$PARAM[listitem].DBTYPE) + String.IsEqual(Window(Home).Property(RixFlix.PlotDBID),$PARAM[container]$PARAM[listitem].DBID)</visible>
+                <visible>String.IsEqual(Window(Home).Property(RixFlix.PlotType),$PARAM[container]$PARAM[listitem].DBTYPE) + String.IsEqual(Window(Home).Property(RixFlix.PlotDBID),$PARAM[container]$PARAM[listitem].DBID) + !String.IsEmpty($PARAM[container]$PARAM[listitem].DBID)</visible>
                 <left>40</left><width>$PARAM[width]</width>
                 <height max="$PARAM[max_h]">auto</height>
                 <font>font_main_plot</font><textcolor>$PARAM[colordiffuse]_90</textcolor>
                 <label>$INFO[Window(Home).Property(RixFlix.Plot.$PARAM[variant])]</label>
             </control>
             <control type="textbox">
+                <autoscroll>false</autoscroll>
                 <visible>$PARAM[visible]</visible>
-                <visible>![String.IsEqual(Window(Home).Property(RixFlix.PlotType),$PARAM[container]$PARAM[listitem].DBTYPE) + String.IsEqual(Window(Home).Property(RixFlix.PlotDBID),$PARAM[container]$PARAM[listitem].DBID)] + ![!String.IsEqual($PARAM[container]$PARAM[listitem].DBType,episode) + !String.IsEmpty($PARAM[container]$PARAM[listitem].Tagline)] + ![String.IsEqual($PARAM[container]$PARAM[listitem].DBType,episode)]</visible>
+                <visible>![String.IsEqual(Window(Home).Property(RixFlix.PlotType),$PARAM[container]$PARAM[listitem].DBTYPE) + String.IsEqual(Window(Home).Property(RixFlix.PlotDBID),$PARAM[container]$PARAM[listitem].DBID)] + ![!String.IsEqual($PARAM[container]$PARAM[listitem].DBType,episode) + !String.IsEmpty($PARAM[container]$PARAM[listitem].Tagline)] + ![String.IsEqual($PARAM[container]$PARAM[listitem].DBType,episode)] + !String.IsEmpty($PARAM[container]$PARAM[listitem].DBID)</visible>
                 <left>40</left><width>$PARAM[width]</width>
                 <height max="$PARAM[max_h]">auto</height>
                 <font>font_main_plot</font><textcolor>$PARAM[colordiffuse]_90</textcolor>
                 <label>$INFO[$PARAM[container]$PARAM[listitem].Plot]</label>
             </control>
             <control type="textbox">
+                <autoscroll>false</autoscroll>
                 <visible>$PARAM[visible]</visible>
-                <visible>![String.IsEqual(Window(Home).Property(RixFlix.PlotType),$PARAM[container]$PARAM[listitem].DBTYPE) + String.IsEqual(Window(Home).Property(RixFlix.PlotDBID),$PARAM[container]$PARAM[listitem].DBID)] + [[!String.IsEqual($PARAM[container]$PARAM[listitem].DBType,episode) + !String.IsEmpty($PARAM[container]$PARAM[listitem].Tagline)] | [String.IsEqual($PARAM[container]$PARAM[listitem].DBType,episode)]]</visible>
+                <visible>![String.IsEqual(Window(Home).Property(RixFlix.PlotType),$PARAM[container]$PARAM[listitem].DBTYPE) + String.IsEqual(Window(Home).Property(RixFlix.PlotDBID),$PARAM[container]$PARAM[listitem].DBID)] + [[!String.IsEqual($PARAM[container]$PARAM[listitem].DBType,episode) + !String.IsEmpty($PARAM[container]$PARAM[listitem].Tagline)] | [String.IsEqual($PARAM[container]$PARAM[listitem].DBType,episode)]] + !String.IsEmpty($PARAM[container]$PARAM[listitem].DBID)</visible>
                 <left>40</left><width>$PARAM[width]</width>
                 <height max="$PARAM[max_h_heading]">auto</height>
+                <font>font_main_plot</font><textcolor>$PARAM[colordiffuse]_90</textcolor>
+                <label>$INFO[$PARAM[container]$PARAM[listitem].Plot]</label>
+            </control>
+            <!-- A card with no library row (Coming Soon, a Search Request card) draws no quality
+                 line and no "Ends at", so its plot takes that room: 5 lines under a heading, 6
+                 without. Its provider cuts the text to fit (the resident's fit_plot); nothing here
+                 scrolls. The default textbox autoscroll made a two-line box crawl (Rick 2026-11-11). -->
+            <control type="textbox">
+                <autoscroll>false</autoscroll>
+                <visible>$PARAM[visible]</visible>
+                <visible>![!String.IsEqual($PARAM[container]$PARAM[listitem].DBType,episode) + !String.IsEmpty($PARAM[container]$PARAM[listitem].Tagline)] + ![String.IsEqual($PARAM[container]$PARAM[listitem].DBType,episode)] + String.IsEmpty($PARAM[container]$PARAM[listitem].DBID)</visible>
+                <left>40</left><width>$PARAM[width]</width>
+                <height max="$PARAM[max_h_free]">auto</height>
+                <font>font_main_plot</font><textcolor>$PARAM[colordiffuse]_90</textcolor>
+                <label>$INFO[$PARAM[container]$PARAM[listitem].Plot]</label>
+            </control>
+            <control type="textbox">
+                <autoscroll>false</autoscroll>
+                <visible>$PARAM[visible]</visible>
+                <visible>[[!String.IsEqual($PARAM[container]$PARAM[listitem].DBType,episode) + !String.IsEmpty($PARAM[container]$PARAM[listitem].Tagline)] | [String.IsEqual($PARAM[container]$PARAM[listitem].DBType,episode)]] + String.IsEmpty($PARAM[container]$PARAM[listitem].DBID)</visible>
+                <left>40</left><width>$PARAM[width]</width>
+                <height max="$PARAM[max_h_free_heading]">auto</height>
                 <font>font_main_plot</font><textcolor>$PARAM[colordiffuse]_90</textcolor>
                 <label>$INFO[$PARAM[container]$PARAM[listitem].Plot]</label>
             </control>
@@ -1272,7 +1299,7 @@
                 <!-- Reserve two lines before lookup completes. Title-only layers never draw facts. -->
                 <control type="group">
                     <height>64</height>
-                    <visible>$PARAM[include_details] + [$PARAM[visible_line]] + [String.IsEqual($PARAM[container]$PARAM[listitem].DBTYPE,movie) | String.IsEqual($PARAM[container]$PARAM[listitem].DBTYPE,tvshow) | String.IsEqual($PARAM[container]$PARAM[listitem].DBTYPE,episode)]</visible>
+                    <visible>$PARAM[include_details] + [$PARAM[visible_line]] + [String.IsEqual($PARAM[container]$PARAM[listitem].DBTYPE,movie) | String.IsEqual($PARAM[container]$PARAM[listitem].DBTYPE,tvshow) | String.IsEqual($PARAM[container]$PARAM[listitem].DBTYPE,episode)] + !String.IsEmpty($PARAM[container]$PARAM[listitem].DBID)</visible>
                     <!-- 8px below the facts line so the two read as one block, not one glued line.
                          A Request card has no file: without the DBID and RequestKey terms its page
                          drew the last library title's quality (theater 2026-11-11 03:22, Clayface). -->

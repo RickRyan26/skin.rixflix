@@ -20,8 +20,13 @@
     </variable>
 
     <include name="RixFlix_Stage_Backdrop">
+        <!-- Only while nothing plays. Kodi 22 draws opaque textures in a first, depth-writing pass
+             and punches the video hole with a quad at the far plane (CGUIVideoControl::Render), so a
+             fully opaque image BEHIND the video window wins the depth test and the preview is a black
+             box with sound (Rick, Coming Soon, 2026-11-11). Home has nothing behind its video window. -->
         <control type="image">
             <texture colordiffuse="ff080808">common/white.png</texture>
+            <visible>$EXP[Exp_Video_IsNotPlaying]</visible>
         </control>
         <!-- Home's own preview box: a cached trailer plays here once the card has had its dwell,
              and Background_NotVideo fades the fanart out over it (the poster "rotates" to the trailer). -->
