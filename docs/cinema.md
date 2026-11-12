@@ -1,5 +1,27 @@
 # Cinema presentation — 1.10.0
 
+## 1.16.3: runtime series panel gates after the theater tour
+
+The 1.16.2 theater tour (`tour-KXA9fhtp/series-page.png`, 2026-11-12) proved the episode
+fallback art, white focus border, readable season tabs, clean All seasons label and missing
+item-count footer. It also exposed a duplicate heading, a plot pushed under the season tabs,
+art continuing behind the cards, and a studio footer that remained visible.
+
+`MyVideoNav` is retained across navigation. An include `condition` is resolved when the
+window loads; it cannot govern a later content change. The normal plot now receives the
+runtime visibility `!series_plot`, so the series heading and its three-line synopsis own
+one 180px block. The quality spacer already yields its 64px there. The whole right footer
+uses runtime visibility too, including studio/network artwork.
+
+The original 1280x720 background is hidden on seasons content. A separate 960x540 control
+shows native series fanart in a 16:9 stage, ending before the tabs/cards, with the shared
+left scrim and bottom fade. It adds no opaque video backing. One Piece's native fanart is
+itself a beige composition with a portrait-shaped panel; that composition is in its
+Jellyfin backdrop image, not a poster texture selected by the skin.
+
+This source follow-up was prepared offline while the seek/chapter and relay lanes owned
+the theater. The 1.16.2 tour is evidence of the intermediate build, not proof of 1.16.3.
+
 ## 1.16.2: finished series page (1.16.1 source follow-up)
 
 The theater's One Piece capture showed a white focused card, empty thumbnails, a portrait

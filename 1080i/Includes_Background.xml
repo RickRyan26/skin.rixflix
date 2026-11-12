@@ -296,11 +296,21 @@
             <include condition="$PARAM[video_background]">Background_Video</include>
 
             <control type="group">
+                <visible>!Container.Content(seasons)</visible>
                 <include content="Background_Main_Zoomer" condition="$PARAM[include_zoomer]">
                     <param name="condition">$PARAM[condition_zoomer]</param>
                 </include>
                 <include condition="$PARAM[plain_background]">Background_Main_Plain</include>
                 <include condition="!$PARAM[plain_background]">Background_Main_Standard</include>
+            </control>
+            <control type="group">
+                <visible>Container.Content(seasons)</visible>
+                <include content="Background_FlixArt">
+                    <param name="texture">$VAR[Image_RixFlix_SeriesFanart]</param>
+                    <param name="flixart_size_w">960</param>
+                    <param name="flixart_size_h">540</param>
+                    <param name="diffuse">diffuse/flixart/flixart_new.png</param>
+                </include>
             </control>
             <include>$PARAM[include_layer]</include>
             <include>Background_Main_Overlay</include>

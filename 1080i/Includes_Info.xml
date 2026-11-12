@@ -1354,13 +1354,13 @@
                     <param name="max_h">$PARAM[home_plot_max_h]</param>
                     <param name="max_h_heading">$PARAM[home_plot_max_h_heading]</param>
                 </include>
-                <include content="Info_Plot" condition="$PARAM[include_details] + ![$PARAM[home_plot]] + ![$PARAM[series_plot]]">
+                <include content="Info_Plot" condition="$PARAM[include_details] + ![$PARAM[home_plot]]">
                     <param name="colordiffuse">$PARAM[colordiffuse]</param>
                     <param name="container">$PARAM[container]</param>
                     <param name="listitem">$PARAM[listitem]</param>
                     <param name="width">$PARAM[plotwidth]</param>
                     <param name="height">$PARAM[plotheight]</param>
-                    <param name="visible">$PARAM[visible_plot]</param>
+                    <param name="visible">[$PARAM[visible_plot]] + ![$PARAM[series_plot]]</param>
                     <param name="use_textbox">$PARAM[use_textbox]</param>
                 </include>
 
