@@ -910,7 +910,18 @@
                 <visible>[!String.IsEmpty($PARAM[container]$PARAM[listitem].Season) | !String.IsEmpty($PARAM[container]$PARAM[listitem].Episode) | !String.IsEmpty($PARAM[container]$PARAM[listitem].Title)]</visible>
                 <control type="label">
                     <textcolor>$PARAM[colordiffuse]_90</textcolor>
-                    <label>$INFO[$PARAM[container]$PARAM[listitem].Season,,x]$INFO[$PARAM[container]$PARAM[listitem].Episode,0,. ]$INFO[$PARAM[container]$PARAM[listitem].Title,,]</label>
+                    <visible>!String.IsEmpty($PARAM[container]$PARAM[listitem].Episode)</visible>
+                <label>$INFO[$PARAM[container]$PARAM[listitem].Season,S, ]$INFO[$PARAM[container]$PARAM[listitem].Episode,E, · ]$INFO[$PARAM[container]$PARAM[listitem].Title]</label>
+                    <left>40</left>
+                    <height>40</height>
+                    <font>font_main_bold</font>
+                    <width>$PARAM[width]</width>
+                    <visible>!Integer.IsGreater($PARAM[container]$PARAM[listitem].Episode,9)</visible>
+                </control>
+<control type="label">
+                    <textcolor>$PARAM[colordiffuse]_90</textcolor>
+                    <visible>String.IsEmpty($PARAM[container]$PARAM[listitem].Episode)</visible>
+                <label>$INFO[$PARAM[container]$PARAM[listitem].Season,S, · ]$INFO[$PARAM[container]$PARAM[listitem].Title]</label>
                     <left>40</left>
                     <height>40</height>
                     <font>font_main_bold</font>
@@ -919,7 +930,18 @@
                 </control>
                 <control type="label">
                     <textcolor>$PARAM[colordiffuse]_90</textcolor>
-                    <label>$INFO[$PARAM[container]$PARAM[listitem].Season,,x]$INFO[$PARAM[container]$PARAM[listitem].Episode,,. ]$INFO[$PARAM[container]$PARAM[listitem].Title,,]</label>
+                    <visible>!String.IsEmpty($PARAM[container]$PARAM[listitem].Episode)</visible>
+                <label>$INFO[$PARAM[container]$PARAM[listitem].Season,S, ]$INFO[$PARAM[container]$PARAM[listitem].Episode,E, · ]$INFO[$PARAM[container]$PARAM[listitem].Title]</label>
+                    <left>40</left>
+                    <height>40</height>
+                    <font>font_main_bold</font>
+                    <width>$PARAM[width]</width>
+                    <visible>Integer.IsGreater($PARAM[container]$PARAM[listitem].Episode,9)</visible>
+                </control>
+<control type="label">
+                    <textcolor>$PARAM[colordiffuse]_90</textcolor>
+                    <visible>String.IsEmpty($PARAM[container]$PARAM[listitem].Episode)</visible>
+                <label>$INFO[$PARAM[container]$PARAM[listitem].Season,S, · ]$INFO[$PARAM[container]$PARAM[listitem].Title]</label>
                     <left>40</left>
                     <height>40</height>
                     <font>font_main_bold</font>
@@ -1136,7 +1158,16 @@
                 <visible>String.IsEqual($PARAM[container]$PARAM[listitem].DBType,episode)</visible>
                 <left>40</left><width>$PARAM[width]</width><height>40</height>
                 <font>font_main_bold</font><textcolor>$PARAM[colordiffuse]_90</textcolor>
-                <label>$INFO[$PARAM[container]$PARAM[listitem].Season,,x]$INFO[$PARAM[container]$PARAM[listitem].Episode,,. ]$INFO[$PARAM[container]$PARAM[listitem].Title]</label>
+                <visible>!String.IsEmpty($PARAM[container]$PARAM[listitem].Episode)</visible>
+                <label>$INFO[$PARAM[container]$PARAM[listitem].Season,S, ]$INFO[$PARAM[container]$PARAM[listitem].Episode,E, · ]$INFO[$PARAM[container]$PARAM[listitem].Title]</label>
+            </control>
+<control type="label">
+                <visible>$PARAM[visible]</visible>
+                <visible>String.IsEqual($PARAM[container]$PARAM[listitem].DBType,episode)</visible>
+                <left>40</left><width>$PARAM[width]</width><height>40</height>
+                <font>font_main_bold</font><textcolor>$PARAM[colordiffuse]_90</textcolor>
+                <visible>String.IsEmpty($PARAM[container]$PARAM[listitem].Episode)</visible>
+                <label>$INFO[$PARAM[container]$PARAM[listitem].Season,S, · ]$INFO[$PARAM[container]$PARAM[listitem].Title]</label>
             </control>
             <control type="textbox">
                 <autoscroll>false</autoscroll>
@@ -1259,6 +1290,7 @@
         <param name="visible_meta">true</param>
         <param name="listitem">ListItem</param>
         <param name="home_plot">false</param>
+        <param name="series_plot">false</param>
         <definition>
 
             <control type="grouplist">
@@ -1299,7 +1331,7 @@
                 <!-- Reserve two lines before lookup completes. Title-only layers never draw facts. -->
                 <control type="group">
                     <height>64</height>
-                    <visible>$PARAM[include_details] + [$PARAM[visible_line]] + [String.IsEqual($PARAM[container]$PARAM[listitem].DBTYPE,movie) | String.IsEqual($PARAM[container]$PARAM[listitem].DBTYPE,tvshow) | String.IsEqual($PARAM[container]$PARAM[listitem].DBTYPE,episode)] + !String.IsEmpty($PARAM[container]$PARAM[listitem].DBID)</visible>
+                    <visible>![$PARAM[series_plot]] + $PARAM[include_details] + [$PARAM[visible_line]] + [String.IsEqual($PARAM[container]$PARAM[listitem].DBTYPE,movie) | String.IsEqual($PARAM[container]$PARAM[listitem].DBTYPE,tvshow) | String.IsEqual($PARAM[container]$PARAM[listitem].DBTYPE,episode)] + !String.IsEmpty($PARAM[container]$PARAM[listitem].DBID)</visible>
                     <!-- 8px below the facts line so the two read as one block, not one glued line.
                          A Request card has no file: without the DBID and RequestKey terms its page
                          drew the last library title's quality (theater 2026-11-11 03:22, Clayface). -->
@@ -1322,7 +1354,7 @@
                     <param name="max_h">$PARAM[home_plot_max_h]</param>
                     <param name="max_h_heading">$PARAM[home_plot_max_h_heading]</param>
                 </include>
-                <include content="Info_Plot" condition="$PARAM[include_details] + ![$PARAM[home_plot]]">
+                <include content="Info_Plot" condition="$PARAM[include_details] + ![$PARAM[home_plot]] + ![$PARAM[series_plot]]">
                     <param name="colordiffuse">$PARAM[colordiffuse]</param>
                     <param name="container">$PARAM[container]</param>
                     <param name="listitem">$PARAM[listitem]</param>
@@ -1331,6 +1363,37 @@
                     <param name="visible">$PARAM[visible_plot]</param>
                     <param name="use_textbox">$PARAM[use_textbox]</param>
                 </include>
+
+                <control type="group">
+                    <visible>$PARAM[series_plot] + Container.Content(seasons)</visible>
+                    <height>180</height>
+                    <control type="label">
+                        <left>40</left><width>$PARAM[plotwidth]</width><height>40</height>
+                        <font>font_main_bold</font><textcolor>main_fg_90</textcolor>
+                        <visible>!String.IsEmpty($PARAM[container]$PARAM[listitem].Episode)</visible>
+                <label>$INFO[$PARAM[container]$PARAM[listitem].Season,S, ]$INFO[$PARAM[container]$PARAM[listitem].Episode,E, · ]$INFO[$PARAM[container]$PARAM[listitem].Title]</label>
+                    </control>
+<control type="label">
+                        <left>40</left><width>$PARAM[plotwidth]</width><height>40</height>
+                        <font>font_main_bold</font><textcolor>main_fg_90</textcolor>
+                        <visible>String.IsEmpty($PARAM[container]$PARAM[listitem].Episode)</visible>
+                <label>$INFO[$PARAM[container]$PARAM[listitem].Season,S, · ]$INFO[$PARAM[container]$PARAM[listitem].Title]</label>
+                    </control>
+                    <control type="textbox">
+                        <left>40</left><top>44</top><width>$PARAM[plotwidth]</width><height>120</height>
+                        <font>font_main_plot</font><textcolor>main_fg_90</textcolor>
+                        <autoscroll>false</autoscroll>
+                        <visible>!String.IsEmpty($PARAM[container]$PARAM[listitem].Plot)</visible>
+                        <label>$INFO[$PARAM[container]$PARAM[listitem].Plot]</label>
+                    </control>
+                    <control type="textbox">
+                        <left>40</left><top>44</top><width>$PARAM[plotwidth]</width><height>120</height>
+                        <font>font_main_plot</font><textcolor>main_fg_90</textcolor>
+                        <autoscroll>false</autoscroll>
+                        <visible>String.IsEmpty($PARAM[container]$PARAM[listitem].Plot)</visible>
+                        <label>$INFO[Container.ShowPlot]</label>
+                    </control>
+                </control>
 
                 <!-- Meta -->
                 <include content="Info_Meta" condition="$PARAM[include_details]">

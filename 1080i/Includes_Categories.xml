@@ -1,5 +1,75 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <includes>
+    <variable name="Label_RixFlix_Tab_-8">
+        <value condition="Integer.IsEqual(Container.ListItemNoWrap(-8).Season,-1)">All seasons</value>
+        <value>$INFO[Container.ListItemNoWrap(-8).Label]</value>
+    </variable>
+    <variable name="Label_RixFlix_Tab_-7">
+        <value condition="Integer.IsEqual(Container.ListItemNoWrap(-7).Season,-1)">All seasons</value>
+        <value>$INFO[Container.ListItemNoWrap(-7).Label]</value>
+    </variable>
+    <variable name="Label_RixFlix_Tab_-6">
+        <value condition="Integer.IsEqual(Container.ListItemNoWrap(-6).Season,-1)">All seasons</value>
+        <value>$INFO[Container.ListItemNoWrap(-6).Label]</value>
+    </variable>
+    <variable name="Label_RixFlix_Tab_-5">
+        <value condition="Integer.IsEqual(Container.ListItemNoWrap(-5).Season,-1)">All seasons</value>
+        <value>$INFO[Container.ListItemNoWrap(-5).Label]</value>
+    </variable>
+    <variable name="Label_RixFlix_Tab_-4">
+        <value condition="Integer.IsEqual(Container.ListItemNoWrap(-4).Season,-1)">All seasons</value>
+        <value>$INFO[Container.ListItemNoWrap(-4).Label]</value>
+    </variable>
+    <variable name="Label_RixFlix_Tab_-3">
+        <value condition="Integer.IsEqual(Container.ListItemNoWrap(-3).Season,-1)">All seasons</value>
+        <value>$INFO[Container.ListItemNoWrap(-3).Label]</value>
+    </variable>
+    <variable name="Label_RixFlix_Tab_-2">
+        <value condition="Integer.IsEqual(Container.ListItemNoWrap(-2).Season,-1)">All seasons</value>
+        <value>$INFO[Container.ListItemNoWrap(-2).Label]</value>
+    </variable>
+    <variable name="Label_RixFlix_Tab_-1">
+        <value condition="Integer.IsEqual(Container.ListItemNoWrap(-1).Season,-1)">All seasons</value>
+        <value>$INFO[Container.ListItemNoWrap(-1).Label]</value>
+    </variable>
+    <variable name="Label_RixFlix_Tab_0">
+        <value condition="Integer.IsEqual(Container.ListItemNoWrap(0).Season,-1)">All seasons</value>
+        <value>$INFO[Container.ListItemNoWrap(0).Label]</value>
+    </variable>
+    <variable name="Label_RixFlix_Tab_1">
+        <value condition="Integer.IsEqual(Container.ListItemNoWrap(1).Season,-1)">All seasons</value>
+        <value>$INFO[Container.ListItemNoWrap(1).Label]</value>
+    </variable>
+    <variable name="Label_RixFlix_Tab_2">
+        <value condition="Integer.IsEqual(Container.ListItemNoWrap(2).Season,-1)">All seasons</value>
+        <value>$INFO[Container.ListItemNoWrap(2).Label]</value>
+    </variable>
+    <variable name="Label_RixFlix_Tab_3">
+        <value condition="Integer.IsEqual(Container.ListItemNoWrap(3).Season,-1)">All seasons</value>
+        <value>$INFO[Container.ListItemNoWrap(3).Label]</value>
+    </variable>
+    <variable name="Label_RixFlix_Tab_4">
+        <value condition="Integer.IsEqual(Container.ListItemNoWrap(4).Season,-1)">All seasons</value>
+        <value>$INFO[Container.ListItemNoWrap(4).Label]</value>
+    </variable>
+    <variable name="Label_RixFlix_Tab_5">
+        <value condition="Integer.IsEqual(Container.ListItemNoWrap(5).Season,-1)">All seasons</value>
+        <value>$INFO[Container.ListItemNoWrap(5).Label]</value>
+    </variable>
+    <variable name="Label_RixFlix_Tab_6">
+        <value condition="Integer.IsEqual(Container.ListItemNoWrap(6).Season,-1)">All seasons</value>
+        <value>$INFO[Container.ListItemNoWrap(6).Label]</value>
+    </variable>
+    <variable name="Label_RixFlix_Tab_7">
+        <value condition="Integer.IsEqual(Container.ListItemNoWrap(7).Season,-1)">All seasons</value>
+        <value>$INFO[Container.ListItemNoWrap(7).Label]</value>
+    </variable>
+    <variable name="Label_RixFlix_Tab_8">
+        <value condition="Integer.IsEqual(Container.ListItemNoWrap(8).Season,-1)">All seasons</value>
+        <value>$INFO[Container.ListItemNoWrap(8).Label]</value>
+    </variable>
+
+
 
     <include name="Categories_Selector_Fake_Button">
         <control type="button">
@@ -13,7 +83,7 @@
             <textcolor>00ffffff</textcolor>
             <focusedcolor>00ffffff</focusedcolor>
             <selectedcolor>00ffffff</selectedcolor>
-            <label>$INFO[Container($PARAM[id]).ListItemNoWrap($PARAM[pos]).Label]</label>
+            <label>$VAR[Label_RixFlix_Tab_$PARAM[pos]]</label>
             <textoffsetx>0</textoffsetx>
             <onclick>SetFocus($PARAM[id],$PARAM[pos])</onclick>
             <onclick>Action(Select)</onclick>
@@ -37,7 +107,7 @@
             <textcolor>00ffffff</textcolor>
             <focusedcolor>00ffffff</focusedcolor>
             <selectedcolor>00ffffff</selectedcolor>
-            <label>$INFO[Container($PARAM[id]).ListItemNoWrap($PARAM[pos]).Label]</label>
+            <label>$VAR[Label_RixFlix_Tab_$PARAM[pos]]</label>
             <textoffsetx>0</textoffsetx>
             <onclick>SetFocus($PARAM[id],$PARAM[pos])</onclick>
             <onclick>Action(Select)</onclick>
@@ -60,7 +130,7 @@
             <aligny>center</aligny>
             <font>font_main_bold</font>
             <textcolor>$PARAM[color_nf]</textcolor>
-            <label>$INFO[Container($PARAM[id]).ListItemNoWrap($PARAM[pos]).Label]</label>
+            <label>$VAR[Label_RixFlix_Tab_$PARAM[pos]]</label>
             <include content="Categories_Selector_Fake_Item_Visible">
                 <param name="id">$PARAM[id]</param>
                 <param name="altfocusid">$PARAM[altfocusid]</param>
@@ -77,7 +147,7 @@
             <aligny>center</aligny>
             <font>font_main_bold</font>
             <textcolor>main_fg_90</textcolor>
-            <label>$INFO[Container($PARAM[id]).ListItemNoWrap($PARAM[pos]).Label]</label>
+            <label>$VAR[Label_RixFlix_Tab_$PARAM[pos]]</label>
             <include content="Categories_Selector_Fake_Item_Visible">
                 <param name="id">$PARAM[id]</param>
                 <param name="altfocusid">$PARAM[altfocusid]</param>
@@ -94,7 +164,7 @@
             <aligny>center</aligny>
             <font>font_main_bold</font>
             <textcolor>main_fg_100</textcolor>
-            <label>$INFO[Container($PARAM[id]).ListItemNoWrap($PARAM[pos]).Label]</label>
+            <label>$VAR[Label_RixFlix_Tab_$PARAM[pos]]</label>
             <include content="Categories_Selector_Fake_Item_Visible">
                 <param name="id">$PARAM[id]</param>
                 <param name="altfocusid">$PARAM[altfocusid]</param>

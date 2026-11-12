@@ -1,5 +1,28 @@
 # Cinema presentation — 1.10.0
 
+## 1.16.1: finished series page
+
+The theater's One Piece capture showed a white focused card, empty thumbnails, a portrait
+poster behind the tabs, a malformed episode heading, no synopsis and footer debris.
+
+- Episode cards draw dim series fanart under their still. A missing or failed thumbnail
+  leaves that fanart visible. Focus draws the existing white outline without a white fill.
+- Series backgrounds use native series fanart before TMDb Helper's cached original (which
+  was a poster). They share `RixFlix_Stage_Scrims` with stage pages. No opaque backing was
+  added behind the video window.
+- Headings read `S1 E1 · Title`. Missing season or episode values omit their own punctuation.
+  Kodi's live library returned `episode=-1`, `plot=''` for One Piece episode 13598, THE CHEF
+  AND THE CHORE BOY, and other episodes on 2026-11-12. The skin cannot invent those numbers.
+  `VideoGUIInfo.cpp` only emits ListItem.Episode for positive episode numbers.
+- The series panel reserves three static synopsis lines and falls back to Container.ShowPlot
+  when the episode has no plot. It reclaims the two blank quality lines for this purpose.
+  The 180px heading/plot block leaves room between the end-time line and the season tabs.
+- All seasons loses Kodi's literal asterisk; other tabs use 70% text rather than 30%.
+  Item counts and the studio/network footer stay hidden on seasons content.
+
+All-season navigation, row ids, next-episode landing and playback ownership are unchanged.
+Metadata repair belongs to the catalogue/sync lane; home-16 received the live evidence.
+
 ## 1.16.0: gauntlet round 1 (the look, judged from the TV's own pictures)
 
 Rick asked (2026-11-12) for the skin to look as good as it can, judged from screenshots of

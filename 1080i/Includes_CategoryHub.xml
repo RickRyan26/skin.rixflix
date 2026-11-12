@@ -46,6 +46,10 @@
             <param name="diffuse">diffuse/flixart/flixart_new.png</param>
         </include>
         <include>Background_Main_Overlay</include>
+        <include>RixFlix_Stage_Scrims</include>
+    </include>
+
+    <include name="RixFlix_Stage_Scrims">
         <!-- 1.16.0 gauntlet: text over bright art was unreadable (the runtime ran off the haze into
              a white sky), and the art ended in a hard cut at the first card row. Translucent, so
              both also lie over a playing preview without closing its video hole. -->

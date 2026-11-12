@@ -304,6 +304,10 @@
             </control>
             <include>$PARAM[include_layer]</include>
             <include>Background_Main_Overlay</include>
+            <control type="group">
+                <visible>Container.Content(seasons)</visible>
+                <include>RixFlix_Stage_Scrims</include>
+            </control>
             <include condition="Skin.HasSetting(SeasonalTheme.Enable)">Background_SeasonalThemes</include>
         </definition>
     </include>

@@ -317,7 +317,13 @@
         <value condition="Integer.IsEqual(Window.Property(TMDbHelper.WidgetContainer),550)">$INFO[Container(550).ListItem.Art(fanart)]</value>
     </variable>
 
+    <variable name="Image_RixFlix_SeriesFanart">
+        <value condition="!String.IsEmpty(Container.ListItem.Art(tvshow.fanart))">$INFO[Container.ListItem.Art(tvshow.fanart)]</value>
+        <value>$INFO[Container.ListItem.Art(fanart)]</value>
+    </variable>
+
     <variable name="Image_Foreground">
+        <value condition="Container.Content(seasons)">$VAR[Image_RixFlix_SeriesFanart]</value>
         <value condition="$EXP[Exp_BackgroundArtwork_IsSimple]">$INFO[Window(Home).Property(TMDbHelper.SimpleBackground.BlurImage.Original)]</value>
         <value condition="!$EXP[Exp_TMDbHelper_IsBlur]">$VAR[Image_Foreground_NoService]</value>
         <value condition="!String.IsEmpty(Window.Property(TMDbHelper.ListItem.BlurImage.Original))">$INFO[Window.Property(TMDbHelper.ListItem.BlurImage.Original)]</value>
