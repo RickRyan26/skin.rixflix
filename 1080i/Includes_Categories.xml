@@ -83,6 +83,32 @@
             <textcolor>00ffffff</textcolor>
             <focusedcolor>00ffffff</focusedcolor>
             <selectedcolor>00ffffff</selectedcolor>
+            <label>$INFO[Container($PARAM[id]).ListItemNoWrap($PARAM[pos]).Label]</label>
+            <textoffsetx>0</textoffsetx>
+            <onclick>SetFocus($PARAM[id],$PARAM[pos])</onclick>
+            <onclick>Action(Select)</onclick>
+            <hitrect x="0" y="0" w="0" h="0" />
+            <include content="Categories_Selector_Fake_Item_Visible">
+                <param name="id">$PARAM[id]</param>
+                <param name="altfocusid">$PARAM[altfocusid]</param>
+                <param name="pos">$PARAM[pos]</param>
+                <param name="mod">!</param>
+            </include>
+            <visible>$PARAM[visible]</visible>
+            <visible>!Container.Content(seasons)</visible>
+            <include>Texture_Highlight_Underline_H</include>
+        </control>
+        <control type="button">
+            <width max="260">auto</width>
+            <height>70</height>
+            <centertop>50%</centertop>
+            <aligny>center</aligny>
+            <texturenofocus />
+            <texturefocus />
+            <font>font_main_bold</font>
+            <textcolor>00ffffff</textcolor>
+            <focusedcolor>00ffffff</focusedcolor>
+            <selectedcolor>00ffffff</selectedcolor>
             <label>$VAR[Label_RixFlix_Tab_$PARAM[pos]]</label>
             <textoffsetx>0</textoffsetx>
             <onclick>SetFocus($PARAM[id],$PARAM[pos])</onclick>
@@ -95,7 +121,32 @@
                 <param name="mod">!</param>
             </include>
             <visible>$PARAM[visible]</visible>
+            <visible>Container.Content(seasons)</visible>
             <include>Texture_Highlight_Underline_H</include>
+        </control>
+        <control type="button">
+            <width max="260">auto</width>
+            <height>70</height>
+            <centertop>50%</centertop>
+            <aligny>center</aligny>
+            <include>Texture_Highlight_Underline_FakeFocus_H</include>
+            <font>font_main_bold</font>
+            <textcolor>00ffffff</textcolor>
+            <focusedcolor>00ffffff</focusedcolor>
+            <selectedcolor>00ffffff</selectedcolor>
+            <label>$INFO[Container($PARAM[id]).ListItemNoWrap($PARAM[pos]).Label]</label>
+            <textoffsetx>0</textoffsetx>
+            <onclick>SetFocus($PARAM[id],$PARAM[pos])</onclick>
+            <onclick>Action(Select)</onclick>
+            <hitrect x="0" y="0" w="0" h="0" />
+            <include content="Categories_Selector_Fake_Item_Visible">
+                <param name="id">$PARAM[id]</param>
+                <param name="altfocusid">$PARAM[altfocusid]</param>
+                <param name="pos">$PARAM[pos]</param>
+                <param name="mod" />
+            </include>
+            <visible>$PARAM[visible]</visible>
+            <visible>!Container.Content(seasons)</visible>
         </control>
         <control type="button">
             <width max="260">auto</width>
@@ -119,10 +170,29 @@
                 <param name="mod" />
             </include>
             <visible>$PARAM[visible]</visible>
+            <visible>Container.Content(seasons)</visible>
         </control>
     </include>
 
     <include name="Categories_Selector_Fake_Label">
+        <control type="label">
+            <width max="260">auto</width>
+            <height>80</height>
+            <centertop>50%</centertop>
+            <aligny>center</aligny>
+            <font>font_main_bold</font>
+            <textcolor>$PARAM[color_nf]</textcolor>
+            <label>$INFO[Container($PARAM[id]).ListItemNoWrap($PARAM[pos]).Label]</label>
+            <include content="Categories_Selector_Fake_Item_Visible">
+                <param name="id">$PARAM[id]</param>
+                <param name="altfocusid">$PARAM[altfocusid]</param>
+                <param name="pos">$PARAM[pos]</param>
+                <param name="mod">!</param>
+            </include>
+            <visible>$PARAM[visible]</visible>
+            <visible>!Container.Content(seasons)</visible>
+            <visible>!Integer.IsEqual(Container($PARAM[id]).ListItem.CurrentItem,Container($PARAM[id]).ListItemNoWrap($PARAM[pos]).CurrentItem)</visible>
+        </control>
         <control type="label">
             <width max="260">auto</width>
             <height>80</height>
@@ -138,7 +208,26 @@
                 <param name="mod">!</param>
             </include>
             <visible>$PARAM[visible]</visible>
+            <visible>Container.Content(seasons)</visible>
             <visible>!Integer.IsEqual(Container($PARAM[id]).ListItem.CurrentItem,Container($PARAM[id]).ListItemNoWrap($PARAM[pos]).CurrentItem)</visible>
+        </control>
+        <control type="label">
+            <width max="260">auto</width>
+            <height>80</height>
+            <centertop>50%</centertop>
+            <aligny>center</aligny>
+            <font>font_main_bold</font>
+            <textcolor>main_fg_90</textcolor>
+            <label>$INFO[Container($PARAM[id]).ListItemNoWrap($PARAM[pos]).Label]</label>
+            <include content="Categories_Selector_Fake_Item_Visible">
+                <param name="id">$PARAM[id]</param>
+                <param name="altfocusid">$PARAM[altfocusid]</param>
+                <param name="pos">$PARAM[pos]</param>
+                <param name="mod">!</param>
+            </include>
+            <visible>$PARAM[visible]</visible>
+            <visible>!Container.Content(seasons)</visible>
+            <visible>Integer.IsEqual(Container($PARAM[id]).ListItem.CurrentItem,Container($PARAM[id]).ListItemNoWrap($PARAM[pos]).CurrentItem)</visible>
         </control>
         <control type="label">
             <width max="260">auto</width>
@@ -155,7 +244,25 @@
                 <param name="mod">!</param>
             </include>
             <visible>$PARAM[visible]</visible>
+            <visible>Container.Content(seasons)</visible>
             <visible>Integer.IsEqual(Container($PARAM[id]).ListItem.CurrentItem,Container($PARAM[id]).ListItemNoWrap($PARAM[pos]).CurrentItem)</visible>
+        </control>
+        <control type="label">
+            <width max="260">auto</width>
+            <height>80</height>
+            <centertop>50%</centertop>
+            <aligny>center</aligny>
+            <font>font_main_bold</font>
+            <textcolor>main_fg_100</textcolor>
+            <label>$INFO[Container($PARAM[id]).ListItemNoWrap($PARAM[pos]).Label]</label>
+            <include content="Categories_Selector_Fake_Item_Visible">
+                <param name="id">$PARAM[id]</param>
+                <param name="altfocusid">$PARAM[altfocusid]</param>
+                <param name="pos">$PARAM[pos]</param>
+                <param name="mod" />
+            </include>
+            <visible>$PARAM[visible]</visible>
+            <visible>!Container.Content(seasons)</visible>
         </control>
         <control type="label">
             <width max="260">auto</width>
@@ -172,6 +279,7 @@
                 <param name="mod" />
             </include>
             <visible>$PARAM[visible]</visible>
+            <visible>Container.Content(seasons)</visible>
         </control>
     </include>
 
