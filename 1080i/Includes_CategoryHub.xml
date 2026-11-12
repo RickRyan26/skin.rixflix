@@ -19,11 +19,6 @@
         <value>$INFO[Container.ListItem.Art(landscape)]</value>
     </variable>
 
-    <variable name="Image_RixFlix_InfoArt">
-        <value condition="!String.IsEmpty(ListItem.Art(fanart))">$INFO[ListItem.Art(fanart)]</value>
-        <value condition="!String.IsEmpty(ListItem.Art(tvshow.fanart))">$INFO[ListItem.Art(tvshow.fanart)]</value>
-    </variable>
-
     <include name="RixFlix_Stage_Backdrop">
         <!-- Only while nothing plays. Kodi 22 draws opaque textures in a first, depth-writing pass
              and punches the video hole with a quad at the far plane (CGUIVideoControl::Render), so a

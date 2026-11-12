@@ -1,5 +1,21 @@
 # Cinema presentation — 1.10.0
 
+## 1.16.6: keep the winning Info presentation
+
+The final native comparison used `tour-GkqQQqEE` on 1.16.5. The independent critic
+preferred the new series, category and Coming Soon screens. Info lost again: the dark
+text backing fixed contrast, but the narrower synopsis ended at "before" with no ellipsis.
+The baseline Info screenshot showed the complete sentence and a separate portrait poster.
+
+The visual loop therefore keeps the baseline Info composition: black text area, portrait
+poster, original synopsis width. The Info-only fanart overlays, poster-hiding condition
+and unused artwork variable are removed. Search keeps its own artwork and scrim.
+Category brightness, readable page labels, Premiere card titles and series fixes remain.
+
+This is the loop's keep-best exit, not a claim that every attempted redesign improved the
+app. The final series screenshot also exposed a synopsis cut mid-sentence; its bounded
+text fit belongs to the shared plot lane, without scrolling or overlap with season tabs.
+
 ## 1.16.5: episode fallback brightness does not change with focus
 
 The intermediate theater tour showed a brighter focused fallback than its neighbours.

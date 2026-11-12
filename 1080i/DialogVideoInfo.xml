@@ -15,30 +15,6 @@
             <left>0</left><top>0</top><width>1920</width><height>1080</height>
             <texture colordiffuse="ff080808">common/white.png</texture>
         </control>
-        <!-- 1.16.0 gauntlet: the page was a flat slab with a poster in a box. The title's fanart
-             fills the right of the screen and fades into the text side and the cast row. -->
-        <control type="image">
-            <right>0</right><top>0</top><width>1440</width><height>810</height>
-            <aspectratio scalediffuse="false" align="right" aligny="top">scale</aspectratio>
-            <fadetime>300</fadetime>
-            <texture background="true">$VAR[Image_RixFlix_InfoArt]</texture>
-            <visible>!String.IsEqual(ListItem.Property(tmdb_type),person) + !ControlGroup(5000).HasFocus()</visible>
-            <animation effect="fade" start="0" end="100" time="300">Visible</animation>
-            <animation effect="fade" start="100" end="0" time="200">Hidden</animation>
-        </control>
-        <control type="image">
-            <left>0</left><top>0</top><width>1120</width><height>810</height>
-            <texture colordiffuse="ff080808">common/white.png</texture>
-        </control>
-        <control type="image">
-            <left>1120</left><top>0</top><width>600</width><height>810</height>
-            <texture colordiffuse="ff080808">rixflix/scrim-left-full.png</texture>
-        </control>
-        <control type="image">
-            <left>0</left><top>450</top><width>1920</width><height>360</height>
-            <texture colordiffuse="ff080808">rixflix/fade-bottom.png</texture>
-        </control>
-
         <include condition="!String.IsEqual(ListItem.Property(tmdb_type),person)">DialogInfo_VideoButtons</include>
 
         <control type="button" id="8000">
@@ -70,7 +46,7 @@
                 <control type="group">
                     <include content="DialogInfo_Info_Group">
                         <param name="extended_include">DialogInfo_VideoDetails</param>
-                        <param name="plotwidth">1000</param>
+                        <param name="plotwidth">90%</param>
                     </include>
                 </control>
             </control>
