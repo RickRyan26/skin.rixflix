@@ -1,5 +1,24 @@
 # Cinema presentation — 1.10.0
 
+## 1.16.7: series synopsis ends honestly
+
+The final 1.16.5 theater capture (`tour-GkqQQqEE/series-page.png`) showed the series
+fallback cut after “will be”, without an ellipsis. It had three lines and clear tabs,
+but Kodi silently discarded the remaining prose.
+
+The series textbox now reads `RixFlix.Plot.Series` only when PlotType/PlotDBID match
+its episode. Resident 1.19.26 uses the existing `quality.fit_plot` advance table to fit
+three 800px prose lines, adding `...` only when it cuts text. The heading stays separate.
+It uses the native episode plot, else `Container.ShowPlot`, from the same label RPC.
+The resident qualifies focused episode rows 530–538 because unqualified ListItem on
+Videos returns the season tab. Changes to local text invalidate the fitted property
+even if the episode DBID stays unchanged when moving Home -> series.
+
+No box size, tab position, fanart, navigation or scroll rule changes. Until fitted text
+for the current identity is ready, the synopsis stays hidden rather than showing another
+episode or a temporarily clipped raw plot. This release also includes 1.16.6's exact
+Info baseline restoration, judged separately from the series change.
+
 ## 1.16.6: keep the winning Info presentation
 
 The final native comparison used `tour-GkqQQqEE` on 1.16.5. The independent critic
