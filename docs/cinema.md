@@ -1107,3 +1107,13 @@ button 8900. Opening the page again focused 8900, which armed the return and sen
 straight back Home. The timer now runs `SetFocus(8810)` (the rows group) before
 `ActivateWindow(Home)`, as the category timer parks on 8901. `validate_cinema.py` asserts the
 order. Not yet seen on the box.
+
+### 1.14.10: the Request chip has a wide pill for a stage and date
+
+Rick asked for the Requested badge to carry an estimate (2026-11-11). The provider (1.9.4)
+now sets the chip to where the request stands: "Searching", "Arriving now", "Coming in 9
+days", "Theaters Dec 18", "Premieres Dec 5". Those run to 18 characters and "Requested" is 9.
+A Kodi label cannot size its own background image, so `Layout_Request`
+(`Includes_Layouts.xml`) draws one of two pills: 176 px as before, or 288 px when the
+provider sets `RixFlix.RequestChipWide` (any chip over 10 characters). `validate_cinema.py`
+asserts the two pills test that property in opposite senses. Not yet seen on the box.

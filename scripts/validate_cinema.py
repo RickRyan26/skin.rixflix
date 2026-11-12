@@ -388,6 +388,19 @@ def check_quality_line_needs_library_item():
     assert 'Property(RixFlix.RequestKey))' in lines[0], 'quality line shows on a Request title'
 
 
+def check_request_chip_widths():
+    """The Request chip has two pills: 176 for "Requested", 288 for a stage with a date. Exactly
+    one may show, so both must test RixFlix.RequestChipWide, in opposite senses."""
+    text = (ROOT / '1080i' / 'Includes_Layouts.xml').read_text()
+    start = text.index('<include name="Layout_Request">')
+    block = text[start:text.index('<include name=', start + 1)] if '<include name=' in text[start + 1:] else text[start:]
+    narrow = '!String.IsEmpty(ListItem.Property(RixFlix.RequestChip)) + String.IsEmpty(ListItem.Property(RixFlix.RequestChipWide))'
+    wide = '!String.IsEmpty(ListItem.Property(RixFlix.RequestChip)) + !String.IsEmpty(ListItem.Property(RixFlix.RequestChipWide))'
+    assert block.count(narrow) == 1 and block.count(wide) == 1, 'Request chip needs one narrow and one wide pill'
+    assert block.index(narrow) < block.index('<width>176</width>') < block.index(wide) < block.index('<width>288</width>'), \
+        'Request chip pills are not 176 (narrow) then 288 (wide)'
+
+
 def check_hub_layout(values):
     """1.14.0, the stage: a category page and Coming Soon are Home's row format. One backdrop,
     one Info_Panel above, and two full landscape rows at Home's pitch, from one definition."""
@@ -524,6 +537,7 @@ def check():
     check_nested_depth()
     check_end_time_needs_runtime()
     check_quality_line_needs_library_item()
+    check_request_chip_widths()
     constants = {c.get('name'): (c.text or '').strip()
                  for c in ET.parse(ROOT / '1080i/Includes_Constants.xml').getroot().findall('constant')}
     pitch, sizes = check_home_rows(constants)
@@ -666,8 +680,11 @@ def check():
     card = layouts_root.find("include[@name='Layout_Request']/definition/control")
     assert card.find("include[@content='Layout_Landscape']") is not None
     chip = [g for g in card.findall("control[@type='group']") if 'RixFlix.RequestChip' in (g.findtext('visible') or '')]
-    assert len(chip) == 1 and chip[0].find("control[@type='label']").findtext('label') == '$INFO[ListItem.Property(RixFlix.RequestChip)]'
-    assert chip[0].find("control[@type='image']/texture").get('colordiffuse')[2:] in CRIMSON
+    # 1.14.10: a narrow pill and a wide one (check_request_chip_widths), same label and colour.
+    assert len(chip) == 2, len(chip)
+    for pill in chip:
+        assert pill.find("control[@type='label']").findtext('label') == '$INFO[ListItem.Property(RixFlix.RequestChip)]'
+        assert pill.find("control[@type='image']/texture").get('colordiffuse')[2:] in CRIMSON
     actions = ET.parse(ROOT / '1080i/Includes_Actions.xml').getroot().find("variable[@name='Action_DialogInfo_PlayMedia']")
     first = actions.find('value')
     assert 'RixFlix.RequestKey' in first.get('condition') and first.text == 'RunPlugin($INFO[ListItem.FileNameAndPath])', \

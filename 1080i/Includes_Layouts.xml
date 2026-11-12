@@ -2563,8 +2563,11 @@
                     <param name="indicator">false</param>
                     <param name="badges">false</param>
                 </include>
+                <!-- 1.14.10: a stage chip ("Coming in 9 days", "Theaters Dec 18") is longer than
+                     "Requested". A label cannot size its own background, so the provider marks
+                     the long ones (RixFlix.RequestChipWide) and they draw on a wider pill. -->
                 <control type="group">
-                    <visible>!String.IsEmpty(ListItem.Property(RixFlix.RequestChip))</visible>
+                    <visible>!String.IsEmpty(ListItem.Property(RixFlix.RequestChip)) + String.IsEmpty(ListItem.Property(RixFlix.RequestChipWide))</visible>
                     <left>12</left>
                     <top>12</top>
                     <width>176</width>
@@ -2574,6 +2577,25 @@
                     </control>
                     <control type="label">
                         <width>176</width>
+                        <height>40</height>
+                        <align>center</align>
+                        <aligny>center</aligny>
+                        <font>font_mini_bold</font>
+                        <textcolor>ffffffff</textcolor>
+                        <label>$INFO[ListItem.Property(RixFlix.RequestChip)]</label>
+                    </control>
+                </control>
+                <control type="group">
+                    <visible>!String.IsEmpty(ListItem.Property(RixFlix.RequestChip)) + !String.IsEmpty(ListItem.Property(RixFlix.RequestChipWide))</visible>
+                    <left>12</left>
+                    <top>12</top>
+                    <width>288</width>
+                    <height>40</height>
+                    <control type="image">
+                        <texture colordiffuse="ffe50914" border="20">common/box.png</texture>
+                    </control>
+                    <control type="label">
+                        <width>288</width>
                         <height>40</height>
                         <align>center</align>
                         <aligny>center</aligny>
