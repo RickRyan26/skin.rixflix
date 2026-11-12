@@ -1,5 +1,16 @@
 # Cinema presentation — 1.10.0
 
+## 1.16.5: episode fallback brightness does not change with focus
+
+The intermediate theater tour showed a brighter focused fallback than its neighbours.
+The selected white fill had the same load-time DBType condition as the old series plot.
+It now uses runtime visibility on the image control. Fallback fanart uses opaque RGB dim
+`ff999999`, rather than alpha dim `99ffffff`, so nothing below it can wash out the art.
+Focus is the existing white outline; real episode stills remain untinted.
+
+This source follow-up does not advance the app pin by itself. It was prepared while the
+coordinated seek/relay/Search queue needed the installed 1.16.4 source to remain pinned.
+
 ## 1.16.4: retain the visual gains without reducing readability
 
 The first real before/after comparison used theater tours `tour-Z1XYWECJ` (1.15.1)

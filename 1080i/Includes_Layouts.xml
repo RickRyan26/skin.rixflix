@@ -2479,8 +2479,9 @@
                     <param name="shadow_colordiffuse">$PARAM[shadow_colordiffuse]</param>
                 </include>
 
-                <include content="Object_Control" condition="$PARAM[selected] + !String.IsEqual($PARAM[listitem].DBType,episode)">
+                <include content="Object_Control" condition="$PARAM[selected]">
                     <param name="control">image</param>
+                    <visible>!String.IsEqual($PARAM[listitem].DBType,episode)</visible>
                     <include>Texture_Box_Highlight_V</include>
                 </include>
 
@@ -2504,7 +2505,7 @@
                     <visible>String.IsEqual($PARAM[listitem].DBType,episode)</visible>
                     <control type="image">
                         <aspectratio scalediffuse="false">scale</aspectratio>
-                        <texture diffuse="$PARAM[diffuse]" colordiffuse="99ffffff" background="true">$VAR[Image_RixFlix_SeriesFanart]</texture>
+                        <texture diffuse="$PARAM[diffuse]" colordiffuse="ff999999" background="true">$VAR[Image_RixFlix_SeriesFanart]</texture>
                     </control>
                     <control type="image">
                         <aspectratio scalediffuse="false">scale</aspectratio>
