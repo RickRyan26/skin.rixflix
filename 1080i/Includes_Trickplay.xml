@@ -11,36 +11,69 @@
         <value condition="Integer.IsLess(Player.SeekTime(ss),50)">$INFO[Window(Home).Property(RixFlix.TrickplayPrefix)]$INFO[Player.SeekTime(hh)]/$INFO[Player.SeekTime(mm)]/40.jpg</value>
         <value>$INFO[Window(Home).Property(RixFlix.TrickplayPrefix)]$INFO[Player.SeekTime(hh)]/$INFO[Player.SeekTime(mm)]/50.jpg</value>
     </variable>
-    <include name="RixFlix_TrickplayPreview">
-        <control type="group" id="8990">
-            <left>760</left>
-            <top>490</top>
-            <width>400</width>
-            <height>260</height>
+    <variable name="RixFlix_ChapterFrame">
+        <value condition="!String.IsEmpty(ListItem.Property(ischapter)) + !String.IsEmpty(Window(Home).Property(RixFlix.ChapterPrefix))">$INFO[Window(Home).Property(RixFlix.ChapterPrefix)]$INFO[ListItem.Label2].jpg</value>
+        <value>$INFO[ListItem.Art(thumb)]</value>
+    </variable>
+    <include name="RixFlix_TrickplayCard">
+        <param name="left">640</param>
+        <param name="visible">true</param>
+        <definition>
+        <control type="group">
+            <left>$PARAM[left]</left>
+            <visible>$PARAM[visible]</visible>
+            <top>440</top>
+            <width>640</width>
+            <height>400</height>
             <visible>$EXP[Exp_RixFlix_Seeking] + [VideoPlayer.Content(movies) | VideoPlayer.Content(episodes)] + !String.IsEmpty(Window(Home).Property(RixFlix.TrickplayPrefix))</visible>
             <control type="image">
-                <left>-6</left><top>-6</top><width>412</width><height>272</height>
+                <left>-6</left><top>-6</top><width>652</width><height>412</height>
                 <texture border="26" colordiffuse="bbffffff">rixflix/card-focus-glow.png</texture>
             </control>
             <control type="image">
-                <width>400</width><height>260</height>
+                <width>640</width><height>400</height>
                 <texture border="26" colordiffuse="f0101015">rixflix/trickplay-panel.png</texture>
             </control>
             <control type="image">
-                <left>8</left><top>8</top><width>384</width><height>216</height>
+                <left>8</left><top>8</top><width>624</width><height>351</height>
                 <aspectratio>keep</aspectratio>
                 <texture background="true">$VAR[RixFlix_TrickplayFrame]</texture>
             </control>
             <control type="image">
-                <width>400</width><height>260</height>
+                <width>640</width><height>400</height>
                 <texture border="20" colordiffuse="d9ffffff">common/selectbox_thin.png</texture>
             </control>
             <control type="label">
-                <left>8</left><top>224</top><width>384</width><height>30</height>
-                <align>center</align><aligny>center</aligny>
+                <left>8</left><top>360</top><width>244</width><height>30</height>
+                <align>left</align><aligny>center</aligny>
                 <font>font_hint_bold</font><textcolor>ffffffff</textcolor>
                 <label>$VAR[Label_OSD_Time]</label>
             </control>
+            <control type="label">
+                <left>260</left><top>360</top><width>364</width><height>30</height>
+                <align>right</align><aligny>center</aligny><font>font_hint_bold</font>
+                <textcolor>ffffffff</textcolor><label>OK to jump</label>
+                <visible>!String.IsEmpty(Window(Home).Property(RixFlix.SeekConfirm))</visible>
+            </control>
         </control>
+        </definition>
+    </include>
+    <!-- RIXFLIX: larger preview follows pending timeline in bounded native slots. -->
+    <include name="RixFlix_TrickplayPreview">
+        <include content="RixFlix_TrickplayCard"><param name="left">60</param><param name="visible">Integer.IsEqual(Window(Home).Property(RixFlix.SeekSlot),0)</param></include>
+        <include content="RixFlix_TrickplayCard"><param name="left">140</param><param name="visible">Integer.IsEqual(Window(Home).Property(RixFlix.SeekSlot),1)</param></include>
+        <include content="RixFlix_TrickplayCard"><param name="left">220</param><param name="visible">Integer.IsEqual(Window(Home).Property(RixFlix.SeekSlot),2)</param></include>
+        <include content="RixFlix_TrickplayCard"><param name="left">300</param><param name="visible">Integer.IsEqual(Window(Home).Property(RixFlix.SeekSlot),3)</param></include>
+        <include content="RixFlix_TrickplayCard"><param name="left">380</param><param name="visible">Integer.IsEqual(Window(Home).Property(RixFlix.SeekSlot),4)</param></include>
+        <include content="RixFlix_TrickplayCard"><param name="left">460</param><param name="visible">Integer.IsEqual(Window(Home).Property(RixFlix.SeekSlot),5)</param></include>
+        <include content="RixFlix_TrickplayCard"><param name="left">540</param><param name="visible">Integer.IsEqual(Window(Home).Property(RixFlix.SeekSlot),6)</param></include>
+        <include content="RixFlix_TrickplayCard"><param name="left">620</param><param name="visible">Integer.IsEqual(Window(Home).Property(RixFlix.SeekSlot),7)</param></include>
+        <include content="RixFlix_TrickplayCard"><param name="left">700</param><param name="visible">Integer.IsEqual(Window(Home).Property(RixFlix.SeekSlot),8)</param></include>
+        <include content="RixFlix_TrickplayCard"><param name="left">780</param><param name="visible">Integer.IsEqual(Window(Home).Property(RixFlix.SeekSlot),9)</param></include>
+        <include content="RixFlix_TrickplayCard"><param name="left">860</param><param name="visible">Integer.IsEqual(Window(Home).Property(RixFlix.SeekSlot),10)</param></include>
+        <include content="RixFlix_TrickplayCard"><param name="left">940</param><param name="visible">Integer.IsEqual(Window(Home).Property(RixFlix.SeekSlot),11)</param></include>
+        <include content="RixFlix_TrickplayCard"><param name="left">1020</param><param name="visible">Integer.IsEqual(Window(Home).Property(RixFlix.SeekSlot),12)</param></include>
+        <include content="RixFlix_TrickplayCard"><param name="left">1100</param><param name="visible">Integer.IsEqual(Window(Home).Property(RixFlix.SeekSlot),13)</param></include>
+        <include content="RixFlix_TrickplayCard"><param name="left">1180</param><param name="visible">Integer.IsEqual(Window(Home).Property(RixFlix.SeekSlot),14)</param></include>
     </include>
 </includes>

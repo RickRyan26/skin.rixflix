@@ -50,7 +50,7 @@
                              too (the "RIXFLIX | Playing" header repeated the top wordmark); only the
                              status word changes: Label_OSD_Header = Paused / Playing / FF 2x / seek. -->
                         <control type="group">
-                            <visible>!String.IsEmpty(VideoPlayer.Title) | !String.IsEmpty(Player.Title)</visible>
+                            <visible>[!String.IsEmpty(VideoPlayer.Title) | !String.IsEmpty(Player.Title)] + !$EXP[Exp_RixFlix_Seeking]</visible>
                             <include>OSD_HideControls</include>
                             <left>view_pad</left>
                             <right>view_pad</right>
