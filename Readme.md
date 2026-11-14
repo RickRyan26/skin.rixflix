@@ -35,3 +35,7 @@ letter. The search page then moves directly from the title field to the result t
 
 This work is licensed under Creative Commons Attribution-NonCommercial-ShareAlike 4.0 Unported License. To view a copy of this license, visit http://creativecommons.org/licenses/by-nc-sa/4.0/
 or send a letter to Creative Commons, 171 Second Street, Suite 300, San Francisco, California, 94105, USA.
+
+Version 1.16.8 removes the timestamp and jump-hint footer from seek preview cards.
+The image keeps its 624 × 351 size; the panel, outline and glow now fit the image
+with an eight-pixel inset. Native timeline time and seek confirmation behavior remain.
