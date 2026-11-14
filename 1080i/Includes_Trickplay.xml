@@ -44,13 +44,6 @@
                 <texture border="20" colordiffuse="d9ffffff">common/selectbox_thin.png</texture>
             </control>
         </control>
-            <control type="label">
-                <left>260</left><top>360</top><width>364</width><height>30</height>
-                <align>right</align><aligny>center</aligny><font>font_hint_bold</font>
-                <textcolor>ffffffff</textcolor><label>OK to jump</label>
-                <visible>!String.IsEmpty(Window(Home).Property(RixFlix.SeekConfirm))</visible>
-            </control>
-        </control>
         </definition>
     </include>
     <!-- RIXFLIX: larger preview follows pending timeline in bounded native slots. -->
