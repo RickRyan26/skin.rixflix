@@ -16,7 +16,12 @@ Left/Right in a popup lands on a `OSD_CustomDialog_FakeButton`, which closes the
 refocuses the same id in `videoosd`; with no `onfocus` popup there, the row no longer chains
 popups. Timeline Left/Right and `Action_OSD_Button` timeout handling are unchanged.
 
-**Proof owed.** On-device: arrow across the row (no popup), Up from each button (8200), OK on
+**Timeline seek.** Left/Right on timeline 8200 sent `Action(StepBack|StepForward)`, which
+bypassed the resident AccurateDispatcher. They now send `NotifyAll(rixflix.cec,SEEK_BACK|SEEK_FORWARD)`,
+the same tokens as the fullscreen keymap (`Rixflix/am9/rixflix-remote.xml`). OK on 8200 stays
+native `PlayerControl(Play)` and Up stays `Dialog.Close(videoosd)`, so those fail open.
+
+**Proof owed.** On-device: arrow, Left/Right on 8200 (resident seek) across the row, Left/Right on 8200 (resident seek) (no popup), Up from each button (8200), OK on
 each (popup opens; OK inside runs its action).
 
 ## 1.16.7: series synopsis ends honestly

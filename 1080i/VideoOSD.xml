@@ -218,8 +218,8 @@
                         <texturefocus />
                         <texturenofocus />
                         <label />
-                        <onleft>Action(StepBack)</onleft>
-                        <onright>Action(StepForward)</onright>
+                        <onleft>NotifyAll(rixflix.cec,SEEK_BACK)</onleft>
+                        <onright>NotifyAll(rixflix.cec,SEEK_FORWARD)</onright>
                         <onclick>PlayerControl(Play)</onclick>
                         <onup>Dialog.Close(videoosd)</onup>
                         <ondown>6091</ondown>
