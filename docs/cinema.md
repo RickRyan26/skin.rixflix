@@ -1,5 +1,24 @@
 # Cinema presentation — 1.10.0
 
+## 1.16.9: player OSD bottom row opens popups only on OK
+
+Rick: popup menus open only on OK, and Up from every bottom-row button goes to the timeline.
+Before, `VideoOSD.xml` buttons 6003 and 6005-6008 ran `ActivateWindow(1143|1145-1148)` in
+`onfocus` (and 6005-6008 also in `onup`), so moving along the row opened each popup. Changing
+only `onup` would have left the focus-triggered popups.
+
+**Contract.** In `videoosd`, every row button has `onup` 8200. No row button has an `onfocus`
+popup. OK on 6003 (not live TV) opens 1143; OK on 6005/6006/6007/6008 opens 1145/1146/1147/1148.
+Inside a popup, its own button copy (`OSD_CustomDialog_RealButton`) keeps the original OK
+action (skip next, wiki info, audio, subtitle or video settings). Up there enters the popup's
+list (1146 to 6206, 1147 to 6207, 1148 to 7800); 1143 and now 1145 close and focus 8200.
+Left/Right in a popup lands on a `OSD_CustomDialog_FakeButton`, which closes the popup and
+refocuses the same id in `videoosd`; with no `onfocus` popup there, the row no longer chains
+popups. Timeline Left/Right and `Action_OSD_Button` timeout handling are unchanged.
+
+**Proof owed.** On-device: arrow across the row (no popup), Up from each button (8200), OK on
+each (popup opens; OK inside runs its action).
+
 ## 1.16.7: series synopsis ends honestly
 
 The final 1.16.5 theater capture (`tour-GkqQQqEE/series-page.png`) showed the series
