@@ -28,6 +28,18 @@
                 <style>uppercase</style>
             </font>
 
+            <!-- RixFlix screensaver clock and air line (screensaver_layer.py) -->
+            <font>
+                <name>font_rix_clock</name>
+                <filename>LeagueSpartan-ExtraBold.ttf</filename>
+                <size>132</size>
+            </font>
+            <font>
+                <name>font_rix_air</name>
+                <filename>Inter-Bold.ttf</filename>
+                <size>46</size>
+            </font>
+
             <!-- Keyboard Symbol Font -->
             <font>
                 <name>font_midi_iconic</name>

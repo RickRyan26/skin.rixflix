@@ -13,6 +13,13 @@
     </variable>
     <variable name="RixFlix_ChapterFrame">
         <value condition="!String.IsEmpty(ListItem.Property(ischapter)) + !String.IsEmpty(Window(Home).Property(RixFlix.ChapterPrefix))">$INFO[Window(Home).Property(RixFlix.ChapterPrefix)]$INFO[ListItem.Label2].jpg</value>
+        <!-- A chapter with no produced trickplay frame shows the playing title's textless
+             backdrop, never Kodi's empty chapter thumb (grey cards, 2026-11-14). Frames
+             replace it once rixflix_trickplay.py publishes the title's dataset. -->
+        <value condition="!String.IsEmpty(ListItem.Property(ischapter)) + !String.IsEmpty(VideoPlayer.Art(fanart))">$INFO[VideoPlayer.Art(fanart)]</value>
+        <value condition="!String.IsEmpty(ListItem.Property(ischapter)) + !String.IsEmpty(VideoPlayer.Art(tvshow.fanart))">$INFO[VideoPlayer.Art(tvshow.fanart)]</value>
+        <value condition="!String.IsEmpty(ListItem.Property(ischapter)) + !String.IsEmpty(Player.Art(fanart))">$INFO[Player.Art(fanart)]</value>
+        <value condition="!String.IsEmpty(ListItem.Property(ischapter))">$VAR[Image_OSD_Landscape]</value>
         <value>$INFO[ListItem.Art(thumb)]</value>
     </variable>
     <include name="RixFlix_TrickplayCard">
