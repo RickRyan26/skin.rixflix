@@ -53,8 +53,13 @@
             <texture colordiffuse="ff000000">rixflix/scrim-left.png</texture>
         </control>
         <control type="image">
+            <!-- Not on Search over playback (Rick, 2026-11-14 photo): the fade ends opaque at
+                 the first card row, so over the playing video it is a dark band with a hard
+                 edge across the middle. Search has no hover previews, so video there is
+                 always the title playing behind the page, never stage art to blend. -->
             <left>0</left><top>330</top><width>1920</width><height>210</height>
             <texture colordiffuse="ff080808">rixflix/fade-bottom.png</texture>
+            <visible>!Window.IsActive(11105) | $EXP[Exp_Video_IsNotPlaying]</visible>
         </control>
     </include>
 
