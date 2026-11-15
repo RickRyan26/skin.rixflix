@@ -6,6 +6,7 @@
     <rule field="lastplayed" operator="notinthelast">
         <value>14 Days</value>
     </rule>
+    <rule field="tag" operator="isnot"><value>RixFlix Art: Below 1080p</value></rule>
     <limit>30</limit>
     <order direction="ascending">random</order>
 </smartplaylist>

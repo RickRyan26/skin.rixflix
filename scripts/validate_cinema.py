@@ -295,6 +295,10 @@ def check_home_rows(constants):
     assert [Path(t).name for t in slots] == ['RandomSpotlightB.xsp', 'RandomSpotlightA.xsp'], slots
     a, b = ((ROOT / 'extras/playlists' / n).read_text() for n in ('RandomSpotlightA.xsp', 'RandomSpotlightB.xsp'))
     assert a == b and '<limit>30</limit>' in a and '>random</order>' in a
+    # Known-undersized backdrops (rixflix_artfloor.py tags them in Jellyfin) never lead Home.
+    floor = '<rule field="tag" operator="isnot"><value>RixFlix Art: Below 1080p</value></rule>'
+    for name in ('RandomSpotlightA.xsp', 'RandomSpotlightB.xsp', 'RandomMovies.xsp'):
+        assert (ROOT / 'extras/playlists' / name).read_text().count(floor) == 1, name
     return pitch, sizes
 
 

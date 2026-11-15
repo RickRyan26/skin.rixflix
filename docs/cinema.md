@@ -1,5 +1,20 @@
 # Cinema presentation — 1.10.0
 
+## 1.16.10: Home Random never leads with a known-undersized backdrop
+
+Rick wanted the Home Random splash sharper while keeping the draw broad. On 2026-11-14,
+Rixflix `scripts/rixflix_artfloor.py` measured 990 Jellyfin titles. It replaced 27 backdrops
+below 1920×1080 with textless TMDB alternatives. Now 981 titles have a backdrop of at least
+1080p at index 0. Seven have nothing at 1080p even upstream, and it tagged them
+`RixFlix Art: Below 1080p`. jellyfin-kodi syncs that tag into Kodi.
+
+**Contract.** `RandomSpotlightA.xsp`, `RandomSpotlightB.xsp` and `RandomMovies.xsp` each hold
+exactly one `tag isnot "RixFlix Art: Below 1080p"` rule (`validate_cinema.py`). The rule
+excludes only measured, known-undersized titles. A title with no measurement carries no tag,
+so it stays eligible. The deploy-side discovery patch still inserts its own tag rule after
+`<match>all</match>`, and the two rules compose under `match all`. A cap of 30, random order
+and the 14-day last-played rule are unchanged.
+
 ## 1.16.9: player OSD bottom row opens popups only on OK
 
 Rick: popup menus open only on OK, and Up from every bottom-row button goes to the timeline.
