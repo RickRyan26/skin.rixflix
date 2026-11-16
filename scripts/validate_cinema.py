@@ -810,8 +810,9 @@ def check():
     assert timeline.get('type') == 'button', timeline.get('type')
     assert (timeline.findtext('onup'), timeline.findtext('onclick')) == (
         'Dialog.Close(videoosd)', 'PlayerControl(Play)')
+    # 1.16.9: Left/Right seek through the resident dispatcher, one network seek per burst.
     assert (timeline.findtext('onleft'), timeline.findtext('onright')) == (
-        'Action(StepBack)', 'Action(StepForward)')
+        'NotifyAll(rixflix.cec,SEEK_BACK)', 'NotifyAll(rixflix.cec,SEEK_FORWARD)')
     # 1.12.24: Home carries the probe-gated motion debug strip, hidden unless the probe sets its property.
     home = ET.parse(ROOT / '1080i/Home.xml').getroot()
     assert any(i.text == 'Home_Motion_Debug' for i in home.iter('include'))
