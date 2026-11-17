@@ -1,5 +1,25 @@
 # Cinema presentation — 1.10.0
 
+## 1.16.14: pair the UR02 from Settings
+
+**Pair remote** leads the Settings grid and its hub variant. It explains Menu + Volume
+Up until slow blue blinking and requires **Pair now**. Cancel does nothing. The TV remote
+remains the fallback while the UR02 reconnects. An unsuccessful attempt explains the
+Back + Menu reset, then Menu + Volume Up, without retrying automatically.
+
+The action invokes `/storage/.config/rixflix-remote-pair.py --physical-ready`. Rixflix owns
+that shared worker and installs it before skin activation. Its exact radio policy also
+serves `phase7b bt`: Trust + Connect with NoInputNoOutput, targeted stale-bond repair,
+and full BlueZ plus keyboard/mouse acceptance. The worker refuses simultaneous attempts,
+unknown playback and active viewers. Settings also stops its process when playback starts
+or Kodi exits. One attempt has a 100-second worker limit and a 110-second UI limit.
+
+The script runs through RunScript, polls a subprocess, and waits through Kodi's Monitor.
+It adds no resident service or GUI-thread blocking wait. A background progress dialog
+allows navigation. Attempt logs and exit codes stay under `/storage/.rixflix/remote-pair/`.
+Native screenshots, video and physical pairing are parent-owned acceptance and remain
+unmeasured until installation on the attended player.
+
 ## 1.16.10: Home Random never leads with a known-undersized backdrop
 
 Rick wanted the Home Random splash sharper while keeping the draw broad. On 2026-11-14,
